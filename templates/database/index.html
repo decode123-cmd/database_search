@@ -1,0 +1,900 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- Coding by CodingNepal || www.codingnepalweb.com -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.2/css/boxicons.min.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <title>CancerImmuno</title>
+  </head>
+  <body>
+    <!-- navbar -->
+    <nav class="navbar">
+      <div class="logo_item">
+        <i class="bx bx-menu" id="sidebarOpen"></i>
+        </i>CancerImmuno
+      </div>
+
+    
+
+    
+    <div class="navbar_content">
+        <a onclick="location.reload()">
+            <i class="bi bi-house-door"></i>
+            <span>Home</span>
+        </a>
+        <a onclick="openSection('information')">
+            <i class='bx bx-info-circle'></i>
+            <span>Information</span>
+        </a>
+        <a onclick="openSection('data-submission')">
+            <i class='bx bx-upload'></i>
+            <span>Data Submission</span>
+        </a>
+        <a onclick="openSection('developers')">
+            <i class='bx bx-code'></i>
+            <span>Developers</span>
+        </a>
+        <a onclick="openSection('contact')">
+            <i class='bx bx-phone'></i>
+            <span>Contact</span>
+        </a>
+        <a onclick="openSection('assistance')">
+            <i class='bx bx-help-circle'></i>
+            <span>Assistance</span>
+        </a>
+        <a onclick="openSection('related-database')">
+            <i class='bx bx-database'></i>
+            <span>Related Database</span>
+        </a>
+    </div>
+    
+    </nav>
+
+    <!-- sidebar -->
+    <nav class="sidebar">
+      <div class="menu_content">
+               
+        <ul class="menu_items">
+          <div class="menu_title menu_search"> Search</div>
+          <!-- duplicate these li tag if you want to add or remove navlink only -->
+          <!-- Start -->
+          <li class="item">
+            <a href="#" class="nav_link basic">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">Basic</span>
+            </a>
+            
+          </li>
+          <!-- End -->
+
+          <li class="item">
+            <a href="#" class="nav_link conditional">
+              <span class="navlink_icon">
+                <i class="bx bx-loader-circle"></i>
+              </span>
+              <span class="navlink">Conditional</span>
+            </a>
+          </li>
+          
+        </ul>
+        
+        
+        <ul class="menu_items">
+          <div class="menu_title menu_browse"> Browse</div>
+          <!-- duplicate these li tag if you want to add or remove navlink only -->
+          <!-- Start -->
+          <li class="item">
+            <a href="#" class="nav_link Drug_Category" onclick="fetchDrugCategoryData(event)">
+              <span class="navlink_icon">
+                <i class="bx bx-loader-circle"></i>
+              </span>
+              <span class="navlink">Drug Category</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link Technique" onclick="fetchtechnique(event)">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">Technique</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link Cancer" onclick = 'fetchcancer(event)' >
+              <span class="navlink_icon">
+                <i class="bx bx-loader-circle"></i>
+              </span>
+              <span class="navlink">Cancer Type</span>
+            </a>
+          </li>
+          <!-- End -->
+
+          
+          <li class="item">
+            <a href="#" class="nav_link Smiles">
+              <span class="navlink_icon">
+                <i class="bx bx-filter"></i>
+              </span>
+              <span class="navlink">SMILES</span>
+            </a>
+          </li>
+          
+        </ul>
+        <ul class="menu_items">
+          <div class="menu_title menu_browse">Tools </div>
+          <!-- duplicate these li tag if you want to add or remove navlink only -->
+          <!-- Start -->
+          <li class="item">
+              <a href="#" class="nav_link TwoD_search">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">2D Similarity Search</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link substructure">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">Substructure Search</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link ThreeDsearch">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">3D Smilarity Search</span>
+            </a>
+          </li>
+          <!-- End -->
+
+          <li class="item">
+            <a href="#" class="nav_link Maccs">
+              <span class="navlink_icon">
+                <i class="bx bx-loader-circle"></i>
+              </span>
+              <span class="navlink">MACCS Key Search</span>
+            </a>
+          </li>
+         
+         
+        </ul>
+        <!-- Sidebar Open / Close -->
+        <div class="bottom_content">
+          <div class="bottom expand_sidebar">
+            <span> Expand</span>
+            <i class='bx bx-log-in' ></i>
+          </div>
+          <div class="bottom collapse_sidebar">
+            <span> Collapse</span>
+            <i class='bx bx-log-out'></i>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <main class="content_area">
+     
+      <section id="information" class="section" style = 'display:none;'>
+        <div class='information-section'>
+        <div class="information-heading-container">
+            <h2 class="information-heading">Information Page About CancerImmuno</h2>
+        </div>
+        <div class="contents-container">
+            <h3 class="contents-heading">Contents</h3>
+            <ul class="contents-list">
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#field-description">Field Description</a></li>
+                <li><a href="#faqs">FAQs</a></li>
+                <li><a href="#statistics">Statistics</a></li>
+            </ul>
+        </div>
+        <div id="architecture" class="information-subsection">
+            <h3 class="subsection-heading">Architecture of CancerImmuno</h3>
+            <div class="architecture-image">
+                <img src="path-to-architecture-image" alt="Architecture of CancerImmuno">
+            </div>
+        </div>
+        <div id="field-description" class="information-subsection">
+          <h3 class="subsection-heading">Brief description of all the fields in CancerImmuno</h3>
+          <table class="field-description-table">
+              <thead>
+                  <tr>
+                      <th>Name of the Field</th>
+                      <th>Description</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>Name of peptide</td>
+                      <td>This field gives the name of the peptide as mentioned in the article.</td>
+                  </tr>
+                  <tr>
+                      <td>Article PMID</td>
+                      <td>This provides the PMID of the article from which the entry is made.</td>
+                  </tr>
+                  <tr>
+                      <td>Publication year</td>
+                      <td>It gives the year in which the article was published.</td>
+                  </tr>
+                  <tr>
+                      <td>Peptide sequence</td>
+                      <td>This field gives the sequence of the peptide.</td>
+                  </tr>
+                  <tr>
+                      <td>Cyclic/Linear</td>
+                      <td>This field describes whether the peptide is linear or cyclic.</td>
+                  </tr>
+                  <tr>
+                      <td>N-ter modification</td>
+                      <td>It gives information regarding the N-terminus modification incorporated in the peptide e.g. acetylation.</td>
+                  </tr>
+                  <tr>
+                      <td>C-ter modification</td>
+                      <td>It gives information regarding the C-terminus modification incorporated in the peptide e.g. Amidation.</td>
+                  </tr>
+                  <tr>
+                      <td>Origin of peptide</td>
+                      <td>It describes from where the peptide was extracted e.g. Extracted from skin secretions of frog.</td>
+                  </tr>
+                  <tr>
+                      <td>Nature of peptide</td>
+                      <td>It describes the biological property possessed by the peptide besides anticancer property e.g. antimicrobial.</td>
+                  </tr>
+                  <tr>
+                      <td>Anticancer activity</td>
+                      <td>This field gives the value of anticancer activity shown by the peptide.</td>
+                  </tr>
+                  <tr>
+                      <td>Cell line</td>
+                      <td>It gives the cell line on which the peptide was tested.</td>
+                  </tr>
+                  <tr>
+                      <td>Assay type</td>
+                      <td>This field gives name of the assay used to check the anticancer property of the peptide.</td>
+                  </tr>
+                  <tr>
+                      <td>Test time</td>
+                      <td>This field gives the information about the incubation period.</td>
+                  </tr>
+                  <tr>
+                      <td>Cancer type</td>
+                      <td>This gives the name of the cancer type for which the peptide was tested against.</td>
+                  </tr>
+                  <tr>
+                      <td>Chirality</td>
+                      <td>This field provides the information whether the amino acids of the peptide have D conformation or L conformation.</td>
+                  </tr>
+                  <tr>
+                      <td>Modification</td>
+                      <td>This field gives the information about the type of chemical modification or non-natural amino acid incorporated in the peptide e.g. Ornithine.</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <div id="faqs" class="information-subsection">
+        <h3 class="subsection-heading">FAQs (Frequently asked questions)</h3>
+        <div class="faq">
+            <p><strong>Q1. What is CancerImmuno?</strong></p>
+            <p>Ans. CancerImmuno is a manually curated repository of experimentally validated anticancer peptides and proteins.</p>
+        </div>
+        <div class="faq">
+            <p><strong>Q2. What are anticancer peptides?</strong></p>
+            <p>Ans. Anticancer peptides are amphipathic, mostly cationic often derived from antimicrobial peptides. As the name suggests, these selectively kill cancerous cells owing to the differences found between the cell membrane of normal and cancerous cells. The proposed mechanism of their action is either cytoplasmic membrane disruption via micellization/pore formation, or induction of apoptosis.</p>
+        </div>
+        <div class="faq">
+            <p><strong>Q3. Why CancerImmuno Database is created?</strong></p>
+            <p>Ans. In the last decade, small peptides having anticancer properties have emerged as a potential alternative approach for cancer therapy. Peptide-based therapy has numerous advantages over small molecules that involve high specificity, low production cost, high tumor penetration, ease of synthesis and modification etc. Anticancer peptides have benefits over the current anticancer therapies in being more selective, specific and are unaffected by common mechanism of resistance. Keeping in mind their therapeutic importance, we have tried to catalogue all the available updated information on these peptides from literature.</p>
+        </div>
+        <div class="faq">
+            <p><strong>Q4. What is unique about CancerImmuno?</strong></p>
+            <p>Ans. CancerImmuno is a first and unique database of its kind, which provides comprehensive information about anticancer peptides/proteins and the targeted cell lines. It has many online tools. One of the powerful tools is peptide mapping and similarity search, which allows user to search similar peptides/motifs in a query sequence. Also, CancerImmuno database provides 3D structures of anticancer peptides. In addition, Cancer PPD links important databases like CCLE and COSMIC to provide the user with complete information about various cancer cell lines.</p>
+        </div>
+        <div class="faq">
+            <p><strong>Q5. Does this database represent all the experimentally validated anticancer peptides available in literature?</strong></p>
+            <p>Ans. This database is the result of first round curation and the literature is being continuously searched for more studies with the objective of providing an exhaustive repository.</p>
+        </div>
+        <div class="faq">
+            <p><strong>Q6. Why search CancerImmuno?</strong></p>
+            <p>Ans. CancerImmuno provides all the experimentally validated information about anticancer peptides and proteins such as anticancer activity, nature of peptide, origin of peptide, chirality, amino acid sequence, N- and C- terminal modifications, structure of peptide, source of peptide and targeted cell lines. This information may be very useful for researchers working in the area of therapeutic peptides. Apart from this, user can get detailed information about cell lines from linked databases like COSMIC and CCLE.</p>
+        </div>
+        <div class="faq">
+            <p><strong>Q7. How do I process a text search with CancerImmuno database?</strong></p>
+            <p>Ans. User can search a peptide by name, peptide sequence, assay type, anticancer activity, cell line, year and PMID etc.</p>
+        </div>
+        <div class="faq">
+            <p><strong>Q8. Is this database useful if users have their own query sequence?</strong></p>
+            <p>Ans. Yes, user can use tools like BLAST, SMITH-WATERMAN, MUSCLE, peptide mapping, Helical Wheel to obtain information regarding sequence alignment and perform structural studies.</p>
+        </div>
+        <div class="faq">
+            <p><strong>Q9. To whom can I report a discrepancy?</strong></p>
+            <p>Ans. Please refer to the "Contact Us" page.</p>
+        </div>
+    </div>
+    <div id="statistics" class="information-subsection">
+        <h3 class="subsection-heading">Statistical information about CancerImmuno</h3>
+        <div class="statistics-images">
+            <div class="stat-image">
+                <img src="{% static 'img/piechart.png'%}" alt="Statistical Information 1">
+            </div>
+            <div class="stat-image">
+                <img src="{% static 'img/piechart1.png'%}" alt="Statistical Information 2">
+            </div>
+        </div>
+        <div class="statistics-images">
+          <div class="stat-image">
+              <img src="{% static 'img/piechart2.png'%}" alt="Statistical Information 1">
+          </div>
+          
+      </div>
+    </div>
+        <!-- Additional sections can be added here -->
+      </div>
+    </section>
+    <section id="data-submission" class="section" style='display:none;'>
+      <div class = "data-submission-section">
+    <div class="data-submission-heading-container">
+        <h2 class="data-submission-heading">Data Submission Page</h2>
+    </div>
+    <p>This page allows users to submit their data. Users may submit information about an anticancer peptide to the database. All entries submitted by users will be evaluated by the team before adding to the database. For online submission, users need to provide the following information. <a href="#">HELP</a></p>
+    <div class="data-submission-container">
+        <form id="data_submission_form" method="POST" action="">
+            {% csrf_token %}
+            <fieldset style="margin-bottom: 20px;">
+                <legend class="data-submission-legend">Select the database</legend>
+                <div class="checkbox-group">
+                    <label><input type="radio" name="field" value="patient_studies" onchange="loadColumns1(this)"> Search In Patient Studies</label>
+                    <label><input type="radio" name="field" value="animal_studies" onchange="loadColumns1(this)"> Search In Animal Studies</label>
+                    <label><input type="radio" name="field" value="cell_line" onchange="loadColumns1(this)"> Search In Cell Line</label>
+                </div>
+            </fieldset>
+            
+            <fieldset class="data-submission-fieldset">
+                <legend class="data-submission-legend">Submit Information about Anti-Cancer Peptide</legend>
+                <div id="dynamic-fields"></div>
+            </fieldset>
+            
+            <fieldset class="data-submission-fieldset">
+                <legend class="data-submission-legend">Additional Information</legend>
+                <label for="submitters_name" class="data-submission-label">Submitter's Name:</label>
+                <input type="text" id="submitters_name" name="submitters_name" class="data-submission-input">
+                
+                <label for="email_address" class="data-submission-label">Email Address:</label>
+                <input type="email" id="email_address" name="email_address" class="data-submission-input">
+                
+                <label for="mailing_address" class="data-submission-label">Mailing Address (Optional):</label>
+                <input type="text" id="mailing_address" name="mailing_address" class="data-submission-input">
+                
+                <label for="comment" class="data-submission-label">Comment or Suggestion:</label>
+                <textarea id="comment" name="comment" class="data-submission-textarea"></textarea>
+            </fieldset>
+            
+            <div class="data-submission-form-buttons">
+                <button type="submit" class="data-submission-button">Submit Dataset</button>
+                <button type="reset" class="data-submission-button">Clear Data</button>
+            </div>
+        </form>
+    </div>
+  </div>
+</section>
+
+    <section id="developers" class="section" style='display:none;'>
+      <div class="developers-section">
+        <h2>Developers</h2>
+        <p>This database was developed at <a href="http://example.com" style="color: red;"></a></p>
+        
+        <div class="developer-grid">
+            <div class="developer-card">
+                <img src="{% static 'img/praveen.jpeg'%}" alt="Praveen Punia">
+                <p><strong>Praveen Punia</strong></p>
+                <p> Research Scholar,M.D University,Rohtak</p>
+            </div>
+            <div class="developer-card">
+                <img src="{% static 'img/avinash.jpeg'%}" alt="Avinash">
+                <p><strong>Avinash Mishra</strong></p>
+                <p>CEO,Growdea Technology,Gurugram</p>
+            </div>
+            <div class="developer-card">
+                <img src="{% static 'img/sonia.jpeg'%}" alt="mennu kalkal">
+                <p><strong>Dr. Meenu Kalkal</strong></p>
+                <p>Research Scientist,ICMR-NIMR</p>
+            </div>
+            <div class="developer-card">
+                <img src="images/sandeep_singh.jpg" alt="Sandeep Singh">
+                <p><strong>Professor Dr.Sonia Kapoor</strong></p>
+                <p>Biotechnology Engineering,M.D.University Rohtak</p>
+            </div>
+            <div class="developer-card">
+                <img src="images/abhishek_tuknait.jpg" alt="Abhishek Tuknait">
+                <p><strong>Dr. Ashish Khanna,</strong></p>
+                <p>Associate Professor,MAIT,New Delhi</p>
+            </div>
+           
+        
+    </div>
+    </section>
+    <section id="contact" class="section" style='display:none;'>
+      <div class="contact-section">
+        <div class="contact-heading-container">
+            <h2 class="contact-heading">Address for Correspondence</h2>
+        </div>
+        <div class="contact-info">
+            <p>This database was developed at <a href="https://decodelife.co.in/" target="_blank">Decode Life Science </a>, Bioinformatics Centre, Institute of Microbial Technology, Chandigarh, India.</p>
+            <div class="contact-details">
+                <div class="contact-image">
+                    <img src="{%static 'img/praveen.jpeg'%}" alt="Praveen">
+                </div>
+                <div class="contact-text">
+                    <h3>Praveen Punia</h3>
+                    <p>Research Scholar<br>
+                    M.D University<br>
+                    Rohtak, Haryana, India</p>
+                    <p>Email: <a href="mailto:raghava@iiitd.ac.in">raghava@iiitd.ac.in</a>, <a href="mailto:raghavagps@gmail.com">raghavagps@gmail.com</a><br>
+                    Web Site: <a href="http://webs.iiitd.edu.in/raghava/" target="_blank">http://webs.iiitd.edu.in/raghava/</a><br>
+                    Phone: +91-01722690557 or +91-01726665450</p>
+                </div>
+            </div>
+        </div>
+        <div class="feedback-form-container">
+            <h2 class="feedback-heading">Feedback Form</h2>
+            <form id="feedback_form" method="POST" action="">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" id="name" name="name" class="form-input">
+                    
+                    <label for="email" class="form-label">Email-Address:</label>
+                    <input type="email" id="email" name="email" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="comment" class="form-label">Comment:</label>
+                    <textarea id="comment" name="comment" class="form-textarea"></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="form-button">Submit</button>
+                    <button type="reset" class="form-button">Clear</button>
+                </div>
+            </form>
+        </div>
+      </div>
+    </section>
+    
+    <section id="assistance" class="section" style='display:none;'>
+        <p>Assistance content goes here.</p>
+    </section>
+
+    <section id="related-database" class="section" style='display:none;'>
+        <p>Related Database content goes here.</p>
+    </section>
+     
+      <!-- Introduction Section -->
+      <section class="section"  style = "margin-top: 4%;">
+          <div class="container">
+              <h1>Exploring Anticancer Peptides and Proteins</h1>
+              <p>Discover how anticancer peptides (ACPs) interact with cancer cells to inhibit growth and induce apoptosis, contributing to innovative cancer treatments.</p>
+          </div>
+      </section>
+  
+      <!-- Detailed Mechanisms Section -->
+      <section class="section" id='mechanismSection'>
+          <div class="container">
+              <h2>Mechanisms of ACP's Action</h2>
+              <p>Anticancer peptides can disrupt cancer cell membranes through various mechanisms:</p>
+              <ul>
+                  <li><strong>Membranolytic Action:</strong> Peptides bind to the plasma membrane and form pores, leading to cell lysis.</li>
+                  <li><strong>Non-membranolytic Action:</strong> Peptides interfere with intracellular pathways and may induce apoptosis without disrupting the membrane.</li>
+                  <li><strong>Targeting Mitochondria:</strong> Some peptides can pass through the membrane and directly trigger cytochrome C release from mitochondria.</li>
+              </ul>
+              <img src="/static/img/front_img.png" style="width: 95%;
+              margin-top: 20px;">
+          </div>
+      </section>
+      <!--############################################################################ Tools #########################################################################--> 
+      <section class="section" id='2Dsearch' style='display:none;'>
+        <div class="heading-container">
+            <h2 class="heading">2D Similarity Search</h2>
+        </div>
+        <p>2D-Search page assists the user to run a 2D similarity search against the Database. After submission of a job, it returns the list of compounds similar to the query structure. The server provides options to choose different parameters like similarity cutoff and search type. For more information see the HELP page.</p>
+        <div class="container">
+            <div class="search-container">
+                <form id="2D_search_form" method="POST" action="{% url 'tanimoto_search' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
+                            <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
+                            <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Please type or paste your SMILES sequence and Threshold in the box below.</legend>
+                        <label for="smilesInput2D">SMILES sequence:</label>
+                        <input type="text" id="smilesInput2D" name="smiles" placeholder="Example SMILES">
+                        <label for="threshold2D">Threshold:</label>
+                        <input type="text" id="threshold2D" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
+                    </fieldset>
+                    <div class="form-buttons">
+                        <button type="button" onclick="clear2DForm()">Clear All</button>
+                        <button type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div id="searchResults2" style="display:none;">
+                <h2>Search Results</h2>
+                <table id="resultsTable2">
+                    <thead>
+                        <tr id="tableHeaders2">
+                            <!-- Table headers will be added here dynamically -->
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody2">
+                        <!-- Table rows will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+ 
+
+
+
+    <section class="section" id='ThreeDsearch' style='display:none;'>
+      <div class="heading-container">
+          <h2 class="heading">3D Similarity Search</h2>
+      </div>
+      <p>3D-Search page assists the user to run a 3D similarity search against the Database. After submission of a job, it returns the list of compounds similar to the query structure. The server provides options to choose different parameters like similarity cutoff and search type. For more information see the HELP page.</p>
+      <div class="container">
+          <div class="search-container">
+              <form id="3D_search_form" method="POST" action="{% url 'third_search' %}">
+                  {% csrf_token %}
+                  <fieldset>
+                      <div class="checkbox-group">
+                          <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
+                          <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
+                          <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                      </div>
+                  </fieldset>
+                  <fieldset>
+                      <legend>Please type or paste your SMILES sequence and Threshold in the box below.</legend>
+                      <label for="smilesInput3D">SMILES sequence:</label>
+                      <input type="text" id="smilesInput3D" name="smiles" placeholder="Example SMILES">
+                      <label for="threshold3D">Threshold:</label>
+                      <input type="text" id="threshold3D" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
+                  </fieldset>
+                  <div class="form-buttons">
+                      <button type="button" onclick="clear3DForm()">Clear All</button>
+                      <button type="submit">Search</button>
+                  </div>
+              </form>
+          </div>
+          <div id="searchResults3" style="display:none;">
+              <h2>Search Results</h2>
+              <table id="resultsTable3">
+                  <thead>
+                      <tr id="tableHeaders3">
+                          <!-- Table headers will be added here dynamically -->
+                      </tr>
+                  </thead>
+                  <tbody id="tableBody3">
+                      <!-- Table rows will be added here dynamically -->
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </section>
+  
+  <section class="section" id='substructure' style='display:none;'>
+    <div class="heading-container">
+        <h2 class="heading">Substructure Search</h2>
+    </div>
+    <p>Substructure Search assists the user to find compounds in the Database that contain the query substructure. After submission of a job, it returns the list of compounds that match the query substructure. The server provides options to choose different parameters like search type. For more information see the HELP page.</p>
+    <div class="container">
+        <div class="search-container">
+            <form id="substructure_search_form" method="POST" action="{% url 'substructure_search' %}">
+                {% csrf_token %}
+                <fieldset>
+                    <div class="checkbox-group">
+                        <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
+                        <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
+                        <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Please type or paste your SMILES sequence in the box below.</legend>
+                    <label for="smilesInput">SMILES sequence:</label>
+                    <input type="text" id="smilesInput" name="smiles" placeholder="Example SMILES">
+                </fieldset>
+                <div class="form-buttons">
+                    <button type="button" onclick="clearSmilesForm()">Clear All</button>
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+        <div id="resultsTablesubs" style="display:none;">
+            <h2>Search Results</h2>
+            <table id="resultsTable">
+                <thead>
+                    <tr id="tableHeaderssubs">
+                        <!-- Table headers will be added here dynamically -->
+                    </tr>
+                </thead>
+                <tbody id="tableBodysubs">
+                    <!-- Table rows will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<section class="section" id='maccs' style='display:none;'>
+  <div class="heading-container">
+    <h2 class="heading">MACCS Key-Based Similarity Search</h2>
+  </div>
+  <p>MACCS Key-Based Search assists the user to run a similarity search against the Database using MACCS keys. After submission of a job, it returns the list of compounds similar to the query structure based on MACCS key similarity. The server provides options to choose different parameters like similarity cutoff and search type. For more information, see the HELP page.</p>
+  <div class="container">
+    <div class="search-container">
+      <form id="maccs_search_form" method="POST" action="{% url 'maccs_search' %}">
+        {% csrf_token %}
+        <fieldset>
+          <div class="checkbox-group">
+            <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
+            <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
+            <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Please type or paste your SMILES sequence and Threshold in the box below.</legend>
+          <label for="smilesInput">SMILES sequence:</label>
+          <input type="text" id="smilesInput" name="smiles" placeholder="Example SMILES">
+          <label for="threshold">Threshold:</label>
+          <input type="text" id="threshold" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
+        </fieldset>
+        <div class="form-buttons">
+          <button type="button" onclick="clearMaccsForm()">Clear All</button>
+          <button type="submit">Search</button>
+        </div>
+      </form>
+    </div>
+    <div id="searchResultsm" style="display:none;">
+      <h2>Search Results</h2>
+      <table id="resultsTablem">
+        <thead>
+          <tr id="tableHeadersm">
+            <!-- Table headers will be added here dynamically -->
+          </tr>
+        </thead>
+        <tbody id="tableBodym">
+          <!-- Table rows will be added here dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!--########################################## END Of Tools#####################################################################################################-->
+      <section id="searchFormSection" class="section" style = "display:none;">
+        <div class="container">
+            <div class="search-container">
+                <h1>Basic Search</h1>
+                <p>This module allows user to perform a simple search on any field of CancerImmuno.</p>
+                <form id="searchForm" method="POST" action="{% url 'search' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                      <legend>Please paste/insert/type your query to be searched:</legend>
+                        <input type="text" placeholder="Enter Keyword ..." name="query">
+                    </fieldset>
+                      <legend>Select Fields to be SEARCHED</legend>
+                      <div class="checkbox-group">
+                        <label><input type="radio" name="field" value="all_fields" onclick="loadColumns_search(this)"> All Fields</label>
+                          <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns_search(this)"> Search In Patient Studies</label>
+                          <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns_search(this)"> Search In Animal Studies</label>
+                          <label><input type="radio" name="field" value="cell_line" onclick="loadColumns_search(this)"> Search In Cell Line</label>
+                      </div>
+                  </fieldset>
+                   
+                  <fieldset class="fields-to-search" id="fields-to-search">
+                    <legend>Select Specific Columns to Search In</legend>
+                    <div id="column-checkboxes" class="checkboxes-container">
+                        <!-- Checkboxes will be added here dynamically -->
+                    </div>
+                </fieldset>
+                     
+                    
+                    <div class="form-buttons">
+                        <button type="button" onclick="clearForm()">Clear</button>
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section id="Category_section" class="section" style = "display:none;" >
+      <div class="container">
+  <h1>Master List</h1>
+  <table id="peptides-table">
+      <thead>
+          <tr>
+              <th>Drug Category</th>
+              <th>Number of Cell line</th>
+              <th>Number of Animal Studies</th>
+              <th>Number of Patient Studies</th>
+          </tr>
+      </thead>
+      <tbody>
+          <!-- Rows will be populated by JavaScript -->
+      </tbody>
+  </table>
+</div>
+</section>
+<section id="technique_section" class="section" style = "display:none;" >
+  <div class="container">
+<h1>Technique</h1>
+<table id="peptidest-table">
+  <thead>
+      <tr>
+          <th>Technique</th>
+          <th>Number of Cell line</th>
+          <th>Number of Animal Studies</th>
+          <th>Number of Patient Studies</th>
+      </tr>
+  </thead>
+  <tbody>
+      <!-- Rows will be populated by JavaScript -->
+  </tbody>
+</table>
+</div>
+</section>
+
+<section id="cancer_section" class="section" style = "display:none;" >
+  <div class="container">
+<h1>Cancer Type</h1>
+<table id="peptidestc-table">
+  <thead>
+      <tr>
+          <th>Cancer Type</th>
+          <th>Number of Cell line</th>
+          <th>Number of Animal Studies</th>
+          <th>Number of Patient Studies</th>
+      </tr>
+  </thead>
+  <tbody>
+      <!-- Rows will be populated by JavaScript -->
+  </tbody>
+</table>
+</div>
+</section>
+
+    <section id="conditionalSearchFormSection" class = 'section' style = "display:none;">
+      <div class="container">
+          <div class="search-container">
+              <h1>Conditional Search</h1>
+              <p>This module is designed to facilitate complex search using multiple queries joined by logical operators like AND/OR. For more information see <a href="#">HELP</a> page.</p>
+              <form id="conditionalSearchForm" method="POST" action="{% url 'conditional_search' %}">
+                {% csrf_token %}
+                  <table>
+                      <thead>
+                          <tr>
+                              <th>No.</th>
+                              <th>Database</th>
+                              <th>Field</th>
+                              <th>Query</th>
+                              <th>Operator</th>
+                              <th>Add</th>
+                              <th>Remove</th>
+                          </tr>
+                      </thead>
+                      <tbody id="conditionRows">
+                          <tr>
+                              <td>1</td>
+                              <td>
+                                  <select name="table[]" onchange="loadColumns(this, 1)">
+                                    <option value="all_fields">All Fields</option>
+                                      <option value="cell_line">Cell Line</option>
+                                      <option value="animal_studies">Animal Studies</option>
+                                      <option value="patient_studies">Patient Studies</option>
+                                      
+                                  </select>
+                              </td>
+                              <td>
+                                <select name="field[]" id="field-select-1">
+                                    
+                                </select>
+                            </td>
+                             
+                              <td><input type="text" name="query[]"></td>
+                              <td>
+                                  <select name="operator[]">
+                                      <option value="and">AND</option>
+                                      <option value="or">OR</option>
+                                      <option value="not">NOT</option>
+                                      <!-- Add other options as necessary -->
+                                  </select>
+                              </td>
+                              <td><button type="button" onclick="addConditionRow()">+</button></td>
+                              <td><button type="button" onclick="removeConditionRow(this)">-</button></td>
+                          </tr>
+                          <!-- More rows can be dynamically added here -->
+                      </tbody>
+                  </table>
+                  <div class="form-buttons">
+                      <button type="button" onclick="clearForm('conditionalSearchForm')">Clear</button>
+                      <button type="submit">Submit</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </section>
+  <section id="smilesSearchSection" class="section" style = 'display:none;'>
+    <div class="container">
+        <div class="search-container">
+          <form id="smilesSearchForm" method="POST" action="{% url 'smiles_search' %}">
+            {% csrf_token %}
+              <fieldset>
+              <div class="checkbox-group">
+               
+                  <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns(this)"> Search In Patient Studies</label>
+                  <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns(this)"> Search In Animal Studies</label>
+                  <label><input type="radio" name="field" value="cell_line" onclick="loadColumns(this)"> Search In Cell Line</label>
+              </div>
+            </fieldset>
+                <fieldset>
+                  
+                    <legend>Please type or paste your SMILES sequence in the box below.</legend>
+                    <label for="smilesInput">SMILES sequence:</label>
+                    <input type="text" id="smilesInput" name="smiles" placeholder="Example SMILES">
+                </fieldset>
+                <fieldset>
+                    <legend>Select type of search:</legend>
+                    <div class="radio-group">
+                      <label for="pubchemid">Pubchem Id:</label>
+                      <input type="text" id="pubchemid" name="pubchemid" placeholder="Example pubchemid">
+                      <label for="drugbankid">Drug Bank Id</label>
+                    <input type="text" id="drugbankid" name="drugbankid" placeholder="Example drugbankid">
+                       
+                    </div>
+                </fieldset>
+                <div class="form-buttons">
+                    <button type="button" onclick="clearSmilesForm()">Clear All</button>
+                    <button type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+      <!-- Key Features Section -->
+      <section class="section">
+          <div class="container">
+              <h2>Key Features of </h2>
+              <p>Our database provides comprehensive information on anticancer peptides:</p>
+              <dl>
+                  <dt>Data Retrieval:</dt>
+                  <dd>Tools for both simple and advanced data fetching and analysis.</dd>
+                  <dt>Data Analysis:</dt>
+                  <dd>Incorporates BLAST and other sequence analysis tools.</dd>
+                  <dt>Browsing:</dt>
+                  <dd>Convenient browsing options, including structured and similarity-based searches.</dd>
+                  <dt>SMILES and Structures:</dt>
+                  <dd>Access to SMILES and tertiary structures of all peptides.</dd>
+              </dl>
+        
+      </section>
+  </main>
+    <!-- JavaScript -->
+  
+
+<script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>
+

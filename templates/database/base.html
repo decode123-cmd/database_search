@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- Coding by CodingNepal || www.codingnepalweb.com -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.2/css/boxicons.min.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <title>CancerImmuno</title>
+  </head>
+  <body>
+    <!-- navbar -->
+    <nav class="navbar">
+      <div class="logo_item">
+        <i class="bx bx-menu" id="sidebarOpen"></i>
+        </i>CancerImmuno
+      </div>
+
+    
+
+      <div class="navbar_content">
+        <i class="bi bi-house-door"></i>
+        <span>Home</span>
+    
+        <i class='bx bx-info-circle'></i>
+        <span>Information</span>
+    
+        <i class='bx bx-upload'></i>
+        <span>Data Submission</span>
+    
+        <i class='bx bx-code'></i>
+    <span>Developers</span>
+    
+        <i class='bx bx-phone'></i>
+        <span>Contact</span>
+    
+        <i class='bx bx-help-circle'></i>
+        <span>Assistance</span>
+    
+       
+        <i class='bx bx-database'></i>
+        <span>Related Database</span>
+    </div>
+    
+    </nav>
+     <!-- sidebar -->
+     <nav class="sidebar">
+      <div class="menu_content">
+               
+        <ul class="menu_items">
+          <div class="menu_title menu_search"> Search</div>
+          <!-- duplicate these li tag if you want to add or remove navlink only -->
+          <!-- Start -->
+          <li class="item">
+            <a href="#" class="nav_link basic">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">Basic</span>
+            </a>
+            
+          </li>
+          <!-- End -->
+
+          <li class="item">
+            <a href="#" class="nav_link conditional">
+              <span class="navlink_icon">
+                <i class="bx bx-loader-circle"></i>
+              </span>
+              <span class="navlink">Conditional</span>
+            </a>
+          </li>
+          
+        </ul>
+        
+        
+        <ul class="menu_items">
+          <div class="menu_title menu_browse"> Browse</div>
+          <!-- duplicate these li tag if you want to add or remove navlink only -->
+          <!-- Start -->
+          <li class="item">
+            <a href="#" class="nav_link Drug_Category" onclick="fetchDrugCategoryData(event)">
+              <span class="navlink_icon">
+                <i class="bx bx-loader-circle"></i>
+              </span>
+              <span class="navlink">Drug Category</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link Technique" onclick="fetchtechnique(event)">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">Technique</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link Cancer" onclick = 'fetchcancer(event)' >
+              <span class="navlink_icon">
+                <i class="bx bx-loader-circle"></i>
+              </span>
+              <span class="navlink">Cancer Type</span>
+            </a>
+          </li>
+          <!-- End -->
+
+          
+          <li class="item">
+            <a href="#" class="nav_link Smiles">
+              <span class="navlink_icon">
+                <i class="bx bx-filter"></i>
+              </span>
+              <span class="navlink">SMILES</span>
+            </a>
+          </li>
+          
+        </ul>
+        <ul class="menu_items">
+          <div class="menu_title menu_browse">Tools </div>
+          <!-- duplicate these li tag if you want to add or remove navlink only -->
+          <!-- Start -->
+          <li class="item">
+            <a href="#" class="nav_link Tanimoto">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">2D Similarity Search</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link Tanimoto">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">Substructure Search</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link Tanimoto">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">3D Smilarity Search</span>
+            </a>
+          </li>
+          <!-- End -->
+
+          <li class="item">
+            <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-loader-circle"></i>
+              </span>
+              <span class="navlink">MACCS Key-Based Similarity Search</span>
+            </a>
+          </li>
+          <li class="item">
+            <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-loader-circle"></i>
+              </span>
+              <span class="navlink"> Tanimoto Similarity </span>
+            </a>
+          </li>
+         
+        </ul>
+        <!-- Sidebar Open / Close -->
+        <div class="bottom_content">
+          <div class="bottom expand_sidebar">
+            <span> Expand</span>
+            <i class='bx bx-log-in' ></i>
+          </div>
+          <div class="bottom collapse_sidebar">
+            <span> Collapse</span>
+            <i class='bx bx-log-out'></i>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <main class="content_area">
+    </main>
+    
