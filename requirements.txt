@@ -53,9 +53,6 @@ jupyterlab_widgets
 MarkupSafe
 matplotlib-inline
 mistune
-mysql
-mysql-connector
-mysql-connector-python
 nbclient
 nbconvert
 nbformat
