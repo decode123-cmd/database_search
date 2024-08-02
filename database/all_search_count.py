@@ -6,11 +6,11 @@ import psycopg2
 from psycopg2 import sql
 # Database connection parameters
 db_params = {
-    'dbname': 'search',
-    'user': 'postgres',
-    'password': 'new_password',
-    'host': 'localhost',
-    'port': '5432',
+    'dbname': 'railway',       # Use 'search' as default
+    'user':  'postgres',
+    'password': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',
+    'host':${{RAILWAY_PRIVATE_DOMAIN}},
+    'port': 5432,
 }
 connection = psycopg2.connect(**db_params)
 
