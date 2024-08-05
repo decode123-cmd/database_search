@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.http import JsonResponse, HttpResponseBadRequest
 import pandas as pd
+from sqlalchemy import create_engine, text  # Import text from sqlalchemy
 import psycopg2
-from sqlalchemy import create_engine
 
 # Database connection parameters
 connection_url = "postgresql://postgres:ybSxlyKKlCcskPYfuZJwBllGuEyTPmwp@monorail.proxy.rlwy.net:28748/railway"
@@ -23,7 +23,8 @@ def category():
         with engine.connect() as connection:
             dataframes = {}
             for key, query in queries.items():
-                result_proxy = connection.execute(query)
+                # Use text() to execute raw SQL queries
+                result_proxy = connection.execute(text(query))
                 rows = result_proxy.fetchall()
                 column_names = result_proxy.keys()
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
@@ -56,7 +57,7 @@ def techniques():
         with engine.connect() as connection:
             dataframes = {}
             for key, query in queries.items():
-                result_proxy = connection.execute(query)
+                result_proxy = connection.execute(text(query))  # Use text() here
                 rows = result_proxy.fetchall()
                 column_names = result_proxy.keys()
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
@@ -96,7 +97,7 @@ def cancer():
         with engine.connect() as connection:
             dataframes = {}
             for key, query in queries.items():
-                result_proxy = connection.execute(query)
+                result_proxy = connection.execute(text(query))  # Use text() here
                 rows = result_proxy.fetchall()
                 column_names = result_proxy.keys()
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
@@ -127,7 +128,7 @@ def data_get(field):
     if field in query_map:
         query = query_map[field]
         with engine.connect() as connection:
-            result_proxy = connection.execute(query)
+            result_proxy = connection.execute(text(query))  # Use text() here
             rows = result_proxy.fetchall()
             column_names = result_proxy.keys()
             df = pd.DataFrame(rows, columns=column_names)
