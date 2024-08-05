@@ -73,18 +73,15 @@ WSGI_APPLICATION = 'cancer_immuno.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+import dj_database_url
+
 DATABASES = {
-    'default': {
-         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',      # Your database name
-        'USER': 'postgres',          # Your database user
-        'PASSWORD': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',  # Your database password
-        'HOST': '${{RAILWAY_PRIVATE_DOMAIN}}',        # Your database host
-        'PORT': '5432',
-        
-    }
+    'default': dj_database_url.config(
+        default='postgresql://postgres:ybSxlyKKlCcskPYfuZJwBllGuEyTPmwp@monorail.proxy.rlwy.net:28748/railway'
+    )
 }
 
+#postgresql://postgres:yAcChPUaaOWPzUJLCJXwtoRBmEfnfaxw@monorail.proxy.rlwy.net:38139/railway
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',

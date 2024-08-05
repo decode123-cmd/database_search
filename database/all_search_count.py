@@ -5,15 +5,10 @@ import pandas as pd
 import psycopg2
 from psycopg2 import sql
 # Database connection parameters
-db_params = {
-    'dbname': 'railway',       # Use 'search' as default
-    'user':  'postgres',
-    'password': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',
-    'host':${{RAILWAY_PRIVATE_DOMAIN}},
-    'port': 5432,
-}
-connection = psycopg2.connect(**db_params)
 
+connection_url = "postgresql://postgres:ybSxlyKKlCcskPYfuZJwBllGuEyTPmwp@monorail.proxy.rlwy.net:28748/railway"
+
+connection = psycopg2.connect(connection_url)
 def category():
     try:
         response_data = {}
