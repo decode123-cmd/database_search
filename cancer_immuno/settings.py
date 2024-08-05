@@ -79,7 +79,7 @@ DATABASES = {
         'NAME': 'railway',      # Your database name
         'USER': 'postgres',          # Your database user
         'PASSWORD': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',  # Your database password
-        'HOST': 'monorail.proxy.rlwy.net',        # Your database host
+        'HOST': 'cancerimmuno-production.up.railway.app',        # Your database host
         'PORT': '5432',
         
     }
