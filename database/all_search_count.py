@@ -9,7 +9,7 @@ db_params = {
     'dbname': 'railway',       # Use 'search' as default
     'user':  'postgres',
     'password': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',
-    'host':'cancerimmuno-production.up.railway.app',
+    'host':'${{RAILWAY_PRIVATE_DOMAIN}}',
     'port': 5432,
 }
 connection = psycopg2.connect(**db_params)
