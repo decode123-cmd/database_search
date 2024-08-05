@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect,HttpResponseRedirect
 from django.http import JsonResponse, HttpResponseBadRequest
 import pandas as pd
 from dotenv import load_dotenv
-
+import os
 # Load environment variables from a .env file
 load_dotenv()
 
