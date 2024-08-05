@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 db_name = os.getenv('DB_NAME', 'railway')  # Default to 'railway' if not set
 db_user = os.getenv('DB_USER', 'postgres')
 db_password = os.getenv('DB_PASSWORD', 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT')
-db_host = os.getenv('DB_HOST', '${{RAILWAY_PRIVATE_DOMAIN}}')  # Ensure this resolves to an actual host
+db_host = os.getenv('DB_HOST', 'monorail.proxy.rlwy.net')  # Ensure this resolves to an actual host
 db_port = os.getenv('DB_PORT', '5432')
 
 # Construct the connection string
