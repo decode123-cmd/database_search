@@ -63,7 +63,7 @@ def techniques():
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
 
             # Process technique data
-            drug_categories = dataframes['index']['TECHNIQUE'].dropna().unique()  # Drop None values before finding unique
+            drug_categories = dataframes['index']['Technique'].dropna().unique()  # Drop None values before finding unique
             search_terms = {}
 
             for category in drug_categories:
