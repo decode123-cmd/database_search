@@ -4,6 +4,8 @@ from django.http import JsonResponse, HttpResponseBadRequest
 import pandas as pd
 from dotenv import load_dotenv
 import os
+import psycopg2
+from psycopg2 import sql
 # Load environment variables from a .env file
 load_dotenv()
 
@@ -12,7 +14,7 @@ db_params = {
     'dbname': os.getenv('DB_NAME', 'railway'),  # Replace with your actual database name
     'user': os.getenv('DB_USER', 'postgres'),   # Replace with your actual database user
     'password': os.getenv('DB_PASSWORD', 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT'),  # Replace with your actual password
-    'host': os.getenv('DB_HOST', 'cancerimmuno-production.up.railway.app'),  # Replace with your actual host
+    'host': os.getenv('DB_HOST', 'monorail.proxy.rlwy.net:20359'),  # Replace with your actual host
     'port': os.getenv('DB_PORT', '5432'),      # Replace with your actual port
 }
 
