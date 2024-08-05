@@ -2,18 +2,26 @@ from django.shortcuts import render
 from django.shortcuts import render,redirect,HttpResponseRedirect
 from django.http import JsonResponse, HttpResponseBadRequest
 import pandas as pd
-import psycopg2
-from psycopg2 import sql
+from dotenv import load_dotenv
+
+# Load environment variables from a .env file
+load_dotenv()
+
 # Database connection parameters
 db_params = {
-         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',      # Your database name
-        'USER': 'postgres',          # Your database user
-        'PASSWORD': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',  # Your database password
-        'HOST': 'cancerimmuno-production.up.railway.app',        # Your database host
-        'PORT': '5432',
+    'dbname': os.getenv('DB_NAME', 'railway'),  # Replace with your actual database name
+    'user': os.getenv('DB_USER', 'postgres'),   # Replace with your actual database user
+    'password': os.getenv('DB_PASSWORD', 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT'),  # Replace with your actual password
+    'host': os.getenv('DB_HOST', 'cancerimmuno-production.up.railway.app'),  # Replace with your actual host
+    'port': os.getenv('DB_PORT', '5432'),      # Replace with your actual port
 }
-connection = psycopg2.connect(**db_params)
+
+# Establish the connection using psycopg2
+try:
+    connection = psycopg2.connect(**db_params)
+    print("Database connection successful.")
+except psycopg2.Error as e:
+    print(f"Database connection failed: {e}")
 
 def category():
     try:
