@@ -3,16 +3,15 @@ from django.shortcuts import render,redirect,HttpResponseRedirect
 from django.http import JsonResponse, HttpResponseBadRequest
 import pandas as pd
 import psycopg2
+from sqlalchemy import create_engine
+
 from psycopg2 import sql
 # Database connection parameters
-db_params = {
-    'dbname': 'railway',       # Use 'search' as default
-    'user':  'postgres',
-    'password': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',
-    'host':${{RAILWAY_PRIVATE_DOMAIN}},
-    'port': 5432,
-}
-connection = psycopg2.connect(**db_params)
+# Define the connection URL
+connection_url = "postgresql://postgres:ybSxlyKKlCcskPYfuZJwBllGuEyTPmwp@monorail.proxy.rlwy.net:28748/railway"
+
+# Create the SQLAlchemy engine
+connection = create_engine(connection_url, echo=False)
 
 def category():
     try:
