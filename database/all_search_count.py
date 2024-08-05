@@ -1,35 +1,34 @@
-from django.shortcuts import render
-from django.shortcuts import render,redirect,HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.http import JsonResponse, HttpResponseBadRequest
 import pandas as pd
 import psycopg2
 from sqlalchemy import create_engine
 
-from psycopg2 import sql
 # Database connection parameters
-# Define the connection URL
 connection_url = "postgresql://postgres:ybSxlyKKlCcskPYfuZJwBllGuEyTPmwp@monorail.proxy.rlwy.net:28748/railway"
 
 # Create the SQLAlchemy engine
-connection = create_engine(connection_url, echo=False)
+engine = create_engine(connection_url, echo=False)
 
 def category():
     try:
-        response_data = {}
-        with connection.cursor() as cursor:
-            queries = {
-                'index': 'SELECT * FROM "Browse_by_index"',
-                'cell_line': 'SELECT * FROM "Browse_by_cell_line"',
-                'animal_studies': 'SELECT * FROM "Browse_by_animal_studies"',
-                'patients': 'SELECT * FROM "Browse_by_Patient_Studies"'
-            }
+        queries = {
+            'index': 'SELECT * FROM "Browse_by_index"',
+            'cell_line': 'SELECT * FROM "Browse_by_cell_line"',
+            'animal_studies': 'SELECT * FROM "Browse_by_animal_studies"',
+            'patients': 'SELECT * FROM "Browse_by_Patient_Studies"'
+        }
+        
+        # Use SQLAlchemy's engine to connect and execute queries
+        with engine.connect() as connection:
             dataframes = {}
             for key, query in queries.items():
-                cursor.execute(query)
-                rows = cursor.fetchall()
-                column_names = [col[0] for col in cursor.description]
-                dataframes[key] = pd.DataFrame([dict(zip(column_names, row)) for row in rows])
+                result_proxy = connection.execute(query)
+                rows = result_proxy.fetchall()
+                column_names = result_proxy.keys()
+                dataframes[key] = pd.DataFrame(rows, columns=column_names)
 
+            # Extract and process data
             drug_categories = dataframes['index']['Drug category'].unique()
             counts = {
                 category: {
@@ -39,29 +38,30 @@ def category():
                 } for category in drug_categories
             }
             
-    except Exception as e:
-        print(f"Error processing request: {e}")  # This will log to your server logs
-    
-    return counts
+        return counts
 
+    except Exception as e:
+        print(f"Error processing request: {e}")  # Log to your server logs
+        return {}
 
 def techniques():
     try:
-        response_data = {}
-        with connection.cursor() as cursor:
-            queries = {
-                'index': 'SELECT * FROM "Browse_by_index"',
-                'cell_line': 'SELECT * FROM "Browse_by_cell_line"',
-                'animal_studies': 'SELECT * FROM "Browse_by_animal_studies"',
-                'patients': 'SELECT * FROM "Browse_by_Patient_Studies"'
-            }
+        queries = {
+            'index': 'SELECT * FROM "Browse_by_index"',
+            'cell_line': 'SELECT * FROM "Browse_by_cell_line"',
+            'animal_studies': 'SELECT * FROM "Browse_by_animal_studies"',
+            'patients': 'SELECT * FROM "Browse_by_Patient_Studies"'
+        }
+        
+        with engine.connect() as connection:
             dataframes = {}
             for key, query in queries.items():
-                cursor.execute(query)
-                rows = cursor.fetchall()
-                column_names = [col[0] for col in cursor.description]
-                dataframes[key] = pd.DataFrame([dict(zip(column_names, row)) for row in rows])
+                result_proxy = connection.execute(query)
+                rows = result_proxy.fetchall()
+                column_names = result_proxy.keys()
+                dataframes[key] = pd.DataFrame(rows, columns=column_names)
 
+            # Process technique data
             drug_categories = dataframes['index']['TECHNIQUE'].dropna().unique()  # Drop None values before finding unique
             search_terms = {}
 
@@ -81,26 +81,27 @@ def techniques():
             return counts
 
     except Exception as e:
-        print(f"Error processing request: {e}")  # This will log to your server logs
+        print(f"Error processing request: {e}")
         return {}
 
 def cancer():
     try:
-        response_data = {}
-        with connection.cursor() as cursor:
-            queries = {
-                'index': 'SELECT * FROM "Browse_by_index"',
-                'cell_line': 'SELECT * FROM "Browse_by_cell_line"',
-                'animal_studies': 'SELECT * FROM "Browse_by_animal_studies"',
-                'patients': 'SELECT * FROM "Browse_by_Patient_Studies"'
-            }
+        queries = {
+            'index': 'SELECT * FROM "Browse_by_index"',
+            'cell_line': 'SELECT * FROM "Browse_by_cell_line"',
+            'animal_studies': 'SELECT * FROM "Browse_by_animal_studies"',
+            'patients': 'SELECT * FROM "Browse_by_Patient_Studies"'
+        }
+        
+        with engine.connect() as connection:
             dataframes = {}
             for key, query in queries.items():
-                cursor.execute(query)
-                rows = cursor.fetchall()
-                column_names = [col[0] for col in cursor.description]
-                dataframes[key] = pd.DataFrame([dict(zip(column_names, row)) for row in rows])
+                result_proxy = connection.execute(query)
+                rows = result_proxy.fetchall()
+                column_names = result_proxy.keys()
+                dataframes[key] = pd.DataFrame(rows, columns=column_names)
 
+            # Extract cancer type data
             drug_categories = dataframes['index']['Cancer_Type'].unique()
             counts = {
                 category: {
@@ -110,34 +111,11 @@ def cancer():
                 } for category in drug_categories
             }
             
+        return counts
+
     except Exception as e:
-        print(f"Error processing request: {e}")  # This will log to your server logs
-    
-    return counts
-
-
-# def search_drug(pk):
-#     if pk=='cell_line_value':        
-#         with connection.cursor() as cursor:
-#             cursor.execute('SELECT * FROM "Browse_by_cell_line"')  # Adjust the query as needed
-#             rows = cursor.fetchall()
-#             column_names = [col[0] for col in cursor.description]
-            
-#     elif pk=='animal_studies_value':
-#         with connection.cursor() as cursor:
-#             cursor.execute('SELECT * FROM "Browse_by_animal_studies"')  # Adjust the query as needed
-#             rows = cursor.fetchall()
-#             column_names = [col[0] for col in cursor.description]
-            
-#     elif pk=='patient_studies_value':
-#         with connection.cursor() as cursor:
-#             cursor.execute('SELECT * FROM "Browse_by_Patient_Studies"')  # Adjust the query as needed
-#             rows = cursor.fetchall()
-#             column_names = [col[0] for col in cursor.description]
-#     return rows,column_names
-    
-
-
+        print(f"Error processing request: {e}")
+        return {}
 
 def data_get(field):
     query_map = {
@@ -148,10 +126,10 @@ def data_get(field):
 
     if field in query_map:
         query = query_map[field]
-        with connection.cursor() as cursor:
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            column_names = [col[0] for col in cursor.description]
+        with engine.connect() as connection:
+            result_proxy = connection.execute(query)
+            rows = result_proxy.fetchall()
+            column_names = result_proxy.keys()
             df = pd.DataFrame(rows, columns=column_names)
         return df, column_names
     else:
