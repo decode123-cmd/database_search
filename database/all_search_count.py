@@ -18,7 +18,7 @@ def category():
         response_data = {}
         with connection.cursor() as cursor:
             queries = {
-                'index': 'SELECT * FROM "Browse_by_index1"',
+                'index': 'SELECT * FROM "Browse_by_index"',
                 'cell_line': 'SELECT * FROM "Browse_by_cell_line"',
                 'animal_studies': 'SELECT * FROM "Browse_by_animal_studies"',
                 'patients': 'SELECT * FROM "Browse_by_Patient_Studies"'
