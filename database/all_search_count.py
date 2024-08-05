@@ -9,7 +9,7 @@ db_params = {
     'dbname': 'railway',       # Use 'search' as default
     'user':  'postgres',
     'password': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',
-    'host':${{RAILWAY_PRIVATE_DOMAIN}},
+    'host':'monorail.proxy.rlwy.net',
     'port': 5432,
 }
 connection = psycopg2.connect(**db_params)
