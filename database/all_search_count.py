@@ -6,11 +6,12 @@ import psycopg2
 from psycopg2 import sql
 # Database connection parameters
 db_params = {
-    'dbname': 'railway',       # Use 'search' as default
-    'user':  'postgres',
-    'password': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',
-    'host':'${{RAILWAY_PRIVATE_DOMAIN}}',
-    'port': 5432,
+         'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',      # Your database name
+        'USER': 'postgres',          # Your database user
+        'PASSWORD': 'EiwSTHPfQiMNJHeSEAbsGRLpTIiDvEvT',  # Your database password
+        'HOST': 'cancerimmuno-production.up.railway.app',        # Your database host
+        'PORT': '5432',
 }
 connection = psycopg2.connect(**db_params)
 
