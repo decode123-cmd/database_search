@@ -58,7 +58,7 @@ def techniques():
             dataframes = {}
             for key, query in queries.items():
                 result_proxy = connection.execute(text(query))  # Use text() here
-                rows = result_proxy.fetchall()
+                rows = result_proxy.fetchall()  
                 column_names = result_proxy.keys()
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
 
