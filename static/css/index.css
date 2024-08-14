@@ -154,7 +154,7 @@ body {
     font-size: 18px;
   }
 }
-.section{
+section{
  padding: 40px 20px;
   background: var(--white-color);
   margin-bottom: 0px;
@@ -162,7 +162,7 @@ body {
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   width: 81%;
   margin-top: 5%;
-  margin-left: 15%;
+  margin-left: 19%;
 }
 
 .features_section dl dt {
