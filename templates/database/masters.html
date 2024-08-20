@@ -28,22 +28,20 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        let RDKitModule;
-
-        // Initialize RDKitModule and handle data
-        window.initRDKitModule().then(function(instance) {
-            RDKitModule = instance;
-            console.log("RDKit module successfully initialized.");
-            console.log("RDKit version: " + RDKitModule.version());
+        window
+        .initRDKitModule()
+        .then(function (RDKit) {
+          console.log("RDKit version: " + RDKit.version());
+          window.RDKit = RDKit;
         
             const columnNames = {{ column_names|safe }};
             const data = {{ d|safe }};
 
             updateTableWithStructures(columnNames, data);
-        }).catch((error) => {
-            console.error("Error initializing RDKitModule:", error);
+        })
+        .catch(() => {
         });
-            // Simulated data passed from Django template to JavaScript
+   // Simulated data passed from Django template to JavaScript
             
       
 
@@ -55,7 +53,7 @@
         // Function to generate the structure from SMILES and return SVG
         function generateStructure(smiles) {
             try {
-                var mol = RDKitModule.get_mol(smiles);
+                var mol = RDKit.get_mol(smiles);
                 var svg = mol.get_svg();
                 console.log(svg);
                 return svg;
