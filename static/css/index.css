@@ -14,6 +14,8 @@
   --grey-color-light: #aaa;
 }
 body {
+  width:100%;
+  height:100%;
   background-color: #e7f2fd;
   transition: all 0.5s ease;
 }
