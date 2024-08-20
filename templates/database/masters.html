@@ -23,7 +23,8 @@
 <style>
  
 </style>
-<script defer src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
+<script defer src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal-2023.03.1.js"></script>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -32,16 +33,19 @@
         // Initialize RDKitModule and handle data
         window.initRDKitModule().then(function(instance) {
             RDKitModule = instance;
+            console.log("RDKit module successfully initialized.");
             console.log("RDKit version: " + RDKitModule.version());
-
-            // Simulated data passed from Django template to JavaScript
+        
             const columnNames = {{ column_names|safe }};
             const data = {{ d|safe }};
 
             updateTableWithStructures(columnNames, data);
-        }).catch(() => {
-            console.error("Error initializing RDKitModule.");
+        }).catch((error) => {
+            console.error("Error initializing RDKitModule:", error);
         });
+            // Simulated data passed from Django template to JavaScript
+            
+      
 
         // External URLs for PubChem, KEGG, and DrugBank
         var pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
