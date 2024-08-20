@@ -26,6 +26,20 @@
 
 <script>
     let RDKitModule;
+    // Initialize RDKitModule and handle data
+    window.initRDKitModule().then(function (instance) {
+        RDKitModule = instance;
+        console.log("RDKit version: " + RDKitModule.version());
+    
+        // Simulated data passed from Django template to JavaScript
+        const columnNames = {{ column_names|safe }};
+        const data = {{ d|safe }};
+    
+        updateTableWithStructures(columnNames, data);
+    }).catch(() => {
+        console.error("Error initializing RDKitModule.");
+    });
+    
     var pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
     var kegg = 'https://www.genome.jp/entry/';
     var drugbank = 'https://go.drugbank.com/drugs/';
