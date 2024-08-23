@@ -27,20 +27,13 @@
 <script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        window
-        .initRDKitModule()
-        .then(function (RDKit) {
-          console.log("RDKit version: " + RDKit.version());
-          window.RDKit = RDKit;
+   
         
             const columnNames = {{ column_names|safe }};
             const data = {{ d|safe }};
 
             updateTableWithStructures(columnNames, data);
-        })
-        .catch(() => {
-        });
+    
    //Simulated data passed from Django template to JavaScript
             
       
