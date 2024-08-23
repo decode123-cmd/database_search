@@ -8,24 +8,44 @@
     <section class="mechanism_section" id='mechanismSection'>
         <div class="container">
             <h1 style="margin-top: 75px;">Browse Result</h1>
-            <table border="1">
+            <table border="1" id="dataTable">
                 <thead>
                     <tr>
+                        <!-- Render the table headers -->
                         {% for column in column_names %}
                             <th>{{ column }}</th>
                         {% endfor %}
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in d %}
-                        <tr>
-                            {% for column in column_names %}
-                                <td>{{ row[column] }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
+                    <!-- The table body will be populated by JavaScript -->
                 </tbody>
             </table>
         </div>
     </section>
 </main>
+
+<script>
+    // Get the data from Django context
+    const data = {{ d|safe }};
+    const columnNames = {{ column_names|safe }};
+
+    // Get reference to the table body
+    const tableBody = document.querySelector('#dataTable tbody');
+
+    // Function to create and append a row to the table
+    function createRow(rowData) {
+        const row = document.createElement('tr');
+        
+        columnNames.forEach(column => {
+            const cell = document.createElement('td');
+            cell.textContent = rowData[column] || '';
+            row.appendChild(cell);
+        });
+
+        tableBody.appendChild(row);
+    }
+
+    // Populate the table with data
+    data.forEach(createRow);
+</script>
