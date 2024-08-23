@@ -11,7 +11,6 @@
         <div class="container">
             <h1 style="margin-top: 75px;">Browse Result</h1>
             <table id="dynamicTable" border="1">
-                {{ d|safe }}
                 <thead id="tableHead"></thead>
                 <tbody id="tableBody"></tbody>
             </table>
@@ -24,12 +23,12 @@
     const pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
     const kegg = 'https://www.genome.jp/entry/';
     const drugbank = 'https://go.drugbank.com/drugs/';
-    
+
     // Simulated data passed from Django template to JavaScript
     const columnNames = {{ column_names|safe }};
     const data = {{ d|safe }};
-    console.log(column_names);
-    console.log(d);
+    console.log(columnNames);
+    console.log(data);
 
     // Function to update the table with data and generate structures
     function updateTableWithStructures(columnNames, data) {
@@ -72,38 +71,44 @@
                         cell.textContent = "No SMILES available";
                     }
                 } else if (column === 'DRUG_PUBCHEM') {
-                    const value = row[column];
-                    if (value) {
-                        const link = document.createElement('a');
-                        link.href = pubchem + value;
-                        link.target = "_blank";
-                        link.textContent = value;
-                        cell.appendChild(link);
-                    } else {
-                        cell.textContent = "No PubChem ID available";
-                    }
+                    const values = row[column].split(',');
+                    values.forEach(value => {
+                        const trimmedValue = value.trim();
+                        if (trimmedValue) {
+                            const link = document.createElement('a');
+                            link.href = pubchem + trimmedValue;
+                            link.target = "_blank";
+                            link.textContent = trimmedValue;
+                            cell.appendChild(link);
+                            cell.appendChild(document.createElement('br'));
+                        }
+                    });
                 } else if (column === 'Drugbank_ID') {
-                    const value = row[column];
-                    if (value) {
-                        const link = document.createElement('a');
-                        link.href = drugbank + value;
-                        link.target = "_blank";
-                        link.textContent = value;
-                        cell.appendChild(link);
-                    } else {
-                        cell.textContent = "No DrugBank ID available";
-                    }
+                    const values = row[column].split(',');
+                    values.forEach(value => {
+                        const trimmedValue = value.trim();
+                        if (trimmedValue) {
+                            const link = document.createElement('a');
+                            link.href = drugbank + trimmedValue.split(' ')[0]; // Taking only the DB ID
+                            link.target = "_blank";
+                            link.textContent = trimmedValue;
+                            cell.appendChild(link);
+                            cell.appendChild(document.createElement('br'));
+                        }
+                    });
                 } else if (column === 'KEGG DRUG ID') {
-                    const value = row[column];
-                    if (value) {
-                        const link = document.createElement('a');
-                        link.href = kegg + value;
-                        link.target = "_blank";
-                        link.textContent = value;
-                        cell.appendChild(link);
-                    } else {
-                        cell.textContent = "No KEGG ID available";
-                    }
+                    const values = row[column].split(',');
+                    values.forEach(value => {
+                        const trimmedValue = value.trim();
+                        if (trimmedValue) {
+                            const link = document.createElement('a');
+                            link.href = kegg + trimmedValue;
+                            link.target = "_blank";
+                            link.textContent = trimmedValue;
+                            cell.appendChild(link);
+                            cell.appendChild(document.createElement('br'));
+                        }
+                    });
                 } else {
                     cell.textContent = row[column];
                 }
