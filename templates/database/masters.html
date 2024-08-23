@@ -23,17 +23,11 @@
                             {% for column in column_names %}
                                 <td>
                                     {% if column == "DRUG_PUBCHEM" %}
-                                        {% for value in row[column].split(',') %}
-                                            <a href="https://pubchem.ncbi.nlm.nih.gov/#query={{ value|trim }}" target="_blank">{{ value|trim }}</a><br>
-                                        {% endfor %}
+                                        {{ row[column] }}
                                     {% elif column == "Drugbank_ID" %}
-                                        {% for value in row[column].split(',') %}
-                                            <a href="https://go.drugbank.com/drugs/{{ value|trim|slice:':10' }}" target="_blank">{{ value|trim }}</a><br>
-                                        {% endfor %}
+                                        {{ row[column] }}
                                     {% elif column == "KEGG DRUG ID" %}
-                                        {% for value in row[column].split(',') %}
-                                            <a href="https://www.genome.jp/entry/{{ value|trim }}" target="_blank">{{ value|trim }}</a><br>
-                                        {% endfor %}
+                                        {{ row[column] }}
                                     {% else %}
                                         {{ row[column] }}
                                     {% endif %}
