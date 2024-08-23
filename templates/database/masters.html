@@ -41,7 +41,7 @@
         })
         .catch(() => {
         });
-   // Simulated data passed from Django template to JavaScript
+   Simulated data passed from Django template to JavaScript
             
       
 
@@ -51,17 +51,17 @@
         var drugbank = 'https://go.drugbank.com/drugs/';
     
         // Function to generate the structure from SMILES and return SVG
-        function generateStructure(smiles) {
-            try {
-                var mol = RDKit.get_mol(smiles);
-                var svg = mol.get_svg();
-                console.log(svg);
-                return svg;
-            } catch (error) {
-                console.error("Error generating structure:", error);
-                return "Invalid SMILES";
-            }
-        }
+        // function generateStructure(smiles) {
+        //     try {
+        //         var mol = RDKit.get_mol(smiles);
+        //         var svg = mol.get_svg();
+        //         console.log(svg);
+        //         return svg;
+        //     } catch (error) {
+        //         console.error("Error generating structure:", error);
+        //         return "Invalid SMILES";
+        //     }
+        // }
     
         // Function to update the table with data and generate structures
         function updateTableWithStructures(columnNames, data) {
@@ -90,7 +90,7 @@
                     if (column === "Structure") {
                         const smiles = row["STR_LINK (SMILES)"];
                         if (smiles) {
-                            cell.innerHTML = generateStructure(smiles);
+                            cell.innerHTML = "No SMILES available";
                         } else {
                             cell.textContent = "No SMILES available";
                         }
