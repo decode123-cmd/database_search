@@ -44,19 +44,10 @@
     </section>
 </main>
 
-<!-- Safely output JSON data using json_script -->
-{% load json_script %}
-<script id="data-json" type="application/json">
-    {% json_script d as data_json %}
-</script>
-<script id="column-names-json" type="application/json">
-    {% json_script column_names as column_names_json %}
-</script>
-
 <script>
-    // Parse JSON data safely from script tags
-    const data = JSON.parse(document.getElementById('data-json').textContent);
-    const columnNames = JSON.parse(document.getElementById('column-names-json').textContent);
+    // Manually escaping and passing JSON data from Django
+    const data = JSON.parse("{{ d|escapejs }}");
+    const columnNames = JSON.parse("{{ column_names|escapejs }}");
 
     // Debugging: Check if data and column names are correctly passed
     console.log("Column Names:", columnNames);
