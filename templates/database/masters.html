@@ -1,78 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Table</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+{%include 'database/base.html'%}
+{% load static %}
 
-        table, th, td {
-            border: 1px solid black;
-        }
+<script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
+<script src="https://unpkg.com/smiles-drawer/dist/smiles-drawer.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-
+ 
+  
 <main class="content_area">
-    <section class="mechanism_section" id='mechanismSection'>
+    <section class="mechanism_section" id='mechanismSection' >
         <div class="container">
-            <h1 style="margin-top: 20px;">Browse Result</h1>
-            <table id="dataTable">
-                <thead>
-                    <tr id="tableHeaders">
-                        <!-- Table headers will be inserted here -->
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <!-- Table body will be inserted here -->
-                </tbody>
+         
+             <h1 style="margin-top: 75px;">Browse Result</h1>
+            <table id="dynamicTable" border="1">
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody"></tbody>
             </table>
-        </div>
-    </section>
+</div>
+</section>
 </main>
+<style>
+ 
+</style>
 
 <script>
-    // Safely pass JSON data from Django context to JavaScript
-    const data = JSON.parse('{{ d|escapejs }}');
-    const columnNames = JSON.parse('{{ column_names|escapejs }}');
-
-    // Debugging: Check if data and column names are correctly passed
-    console.log("Column Names:", columnNames);
-    console.log("Data:", data);
-
-    // Create table headers
-    const tableHeaders = document.getElementById('tableHeaders');
-    columnNames.forEach(column => {
-        const th = document.createElement('th');
-        th.textContent = column;
-        tableHeaders.appendChild(th);
+    let RDKitModule;
+    var pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
+    var kegg = 'https://www.genome.jp/entry/';
+    var drugbank = 'https://go.drugbank.com/drugs/';
+    
+    // Initialize RDKitModule and handle data
+    window.initRDKitModule().then(function (instance) {
+        RDKitModule = instance;
+        console.log("RDKit version: " + RDKitModule.version());
+    
+        // Simulated data passed from Django template to JavaScript
+        const columnNames = {{ column_names|safe }};
+        const data = {{ d|safe }};
+    
+        updateTableWithStructures(columnNames, data);
+    }).catch(() => {
+        console.error("Error initializing RDKitModule.");
     });
-
-    // Populate table body
-    const tableBody = document.getElementById('tableBody');
-    data.forEach(row => {
-        const tr = document.createElement('tr');
+    
+    // Function to generate the structure from SMILES and return SVG
+    function generateStructure(smiles) {
+        try {
+            var mol = RDKitModule.get_mol(smiles);
+            var svg = mol.get_svg();
+            console.log(svg);
+            return svg;
+        } catch (error) {
+            console.error("Error generating structure:", error);
+            return "Invalid SMILES";
+        }
+    }
+    
+    // Function to update the table with data and generate structures
+    function updateTableWithStructures(columnNames, data) {
+        const tableHead = document.getElementById('tableHead');
+        const tableBody = document.getElementById('tableBody');
+    
+        // Clear any existing content in table head and body
+        tableHead.innerHTML = '';
+        tableBody.innerHTML = '';
+    
+        // Create the table header
+        const headerRow = document.createElement('tr');
+        columnNames.push("Structure"); // Add Structure column
         columnNames.forEach(column => {
-            const td = document.createElement('td');
-            td.textContent = row[column] || '';  // Use an empty string if the value is null/undefined
-            tr.appendChild(td);
+            const headerCell = document.createElement('th');
+            headerCell.textContent = column;
+            headerRow.appendChild(headerCell);
         });
-        tableBody.appendChild(tr);
-    });
+        tableHead.appendChild(headerRow);
+    
+        // Fill the table body with data and structure
+        data.forEach(row => {
+            const dataRow = document.createElement('tr');
+            columnNames.forEach(column => {
+                const cell = document.createElement('td');
+                if (column === "Structure") {
+                    const smiles = row["STR_LINK (SMILES)"];
+                    if (smiles) {
+                        cell.innerHTML = generateStructure(smiles);
+                    } else {
+                        cell.textContent = "No SMILES available";
+                    }
+                } else if (column === 'DRUG_PUBCHEM') {
+                    const value = row[column];
+                    if (value) {
+                        const link = document.createElement('a');
+                        link.href = pubchem + value;
+                        link.target = "_blank";
+                        link.textContent = value;
+                        cell.appendChild(link);
+                    } else {
+                        cell.textContent = "No PubChem ID available";
+                    }
+                } else if (column === 'Drugbank_ID') {
+                    const value = row[column];
+                    if (value) {
+                        const link = document.createElement('a');
+                        link.href = drugbank + value;
+                        link.target = "_blank";
+                        link.textContent = value;
+                        cell.appendChild(link);
+                    } else {
+                        cell.textContent = "No DrugBank ID available";
+                    }
+                } else if (column === 'KEGG DRUG ID') {
+                    const value = row[column];
+                    if (value) {
+                        const link = document.createElement('a');
+                        link.href = kegg + value;
+                        link.target = "_blank";
+                        link.textContent = value;
+                        cell.appendChild(link);
+                    } else {
+                        cell.textContent = "No KEGG ID available";
+                    }
+                } else {
+                    cell.textContent = row[column];
+                }
+                dataRow.appendChild(cell);
+            });
+            tableBody.appendChild(dataRow);
+        });
+    }
 </script>
-
-</body>
-</html>
