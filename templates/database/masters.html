@@ -2,122 +2,54 @@
 {% load static %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
-<script src="https://unpkg.com/smiles-drawer/dist/smiles-drawer.min.js"></script>
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
 
 <main class="content_area">
     <section class="mechanism_section" id='mechanismSection'>
         <div class="container">
             <h1 style="margin-top: 75px;">Browse Result</h1>
-            <table id="dynamicTable" border="1">
-                <thead id="tableHead"></thead>
-                <tbody id="tableBody"></tbody>
+            <table border="1">
+                <thead>
+                    <tr>
+                        {% for column in column_names %}
+                            <th>{{ column }}</th>
+                        {% endfor %}
+                        <th>Structure</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in d %}
+                        <tr>
+                            {% for column in column_names %}
+                                <td>
+                                    {% if column == "DRUG_PUBCHEM" %}
+                                        {% for value in row[column].split(',') %}
+                                            <a href="https://pubchem.ncbi.nlm.nih.gov/#query={{ value|trim }}" target="_blank">{{ value|trim }}</a><br>
+                                        {% endfor %}
+                                    {% elif column == "Drugbank_ID" %}
+                                        {% for value in row[column].split(',') %}
+                                            <a href="https://go.drugbank.com/drugs/{{ value|trim|slice:':10' }}" target="_blank">{{ value|trim }}</a><br>
+                                        {% endfor %}
+                                    {% elif column == "KEGG DRUG ID" %}
+                                        {% for value in row[column].split(',') %}
+                                            <a href="https://www.genome.jp/entry/{{ value|trim }}" target="_blank">{{ value|trim }}</a><br>
+                                        {% endfor %}
+                                    {% else %}
+                                        {{ row[column] }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                            <td>
+                                {% if row.STR_LINK_SMILES %}
+                                    <pre>{{ row.STR_LINK_SMILES }}</pre>
+                                {% else %}
+                                    No SMILES available
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
     </section>
 </main>
-
-<script>
-    // External URLs for PubChem, KEGG, and DrugBank
-    const pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
-    const kegg = 'https://www.genome.jp/entry/';
-    const drugbank = 'https://go.drugbank.com/drugs/';
-
-    // Simulated data passed from Django template to JavaScript
-    const columnNames = {{ column_names|safe }};
-    const data = {{ d|safe }};
-    console.log(columnNames);
-    console.log(data);
-
-    // Function to update the table with data and generate structures
-    function updateTableWithStructures(columnNames, data) {
-        const tableHead = document.getElementById('tableHead');
-        const tableBody = document.getElementById('tableBody');
-
-        // Clear any existing content in table head and body
-        tableHead.innerHTML = '';
-        tableBody.innerHTML = '';
-
-        // Create the table header
-        const headerRow = document.createElement('tr');
-        columnNames.push("Structure"); // Add Structure column
-        columnNames.forEach(column => {
-            const headerCell = document.createElement('th');
-            headerCell.textContent = column;
-            headerRow.appendChild(headerCell);
-        });
-        tableHead.appendChild(headerRow);
-
-        // Fill the table body with data and structure
-        data.forEach(row => {
-            const dataRow = document.createElement('tr');
-            columnNames.forEach(column => {
-                const cell = document.createElement('td');
-
-                if (column === "Structure") {
-                    const smiles = row["STR_LINK (SMILES)"];
-                    if (smiles) {
-                        const drawer = new SmilesDrawer.Drawer({ width: 300, height: 150 });
-                        SmilesDrawer.parse(smiles, function(tree) {
-                            const canvas = document.createElement('canvas');
-                            cell.appendChild(canvas);
-                            drawer.draw(tree, canvas, 'light');
-                        }, function(err) {
-                            console.log('Error parsing SMILES:', err);
-                            cell.textContent = "Invalid SMILES";
-                        });
-                    } else {
-                        cell.textContent = "No SMILES available";
-                    }
-                } else if (column === 'DRUG_PUBCHEM') {
-                    const values = row[column].split(',');
-                    values.forEach(value => {
-                        const trimmedValue = value.trim();
-                        if (trimmedValue) {
-                            const link = document.createElement('a');
-                            link.href = pubchem + trimmedValue;
-                            link.target = "_blank";
-                            link.textContent = trimmedValue;
-                            cell.appendChild(link);
-                            cell.appendChild(document.createElement('br'));
-                        }
-                    });
-                } else if (column === 'Drugbank_ID') {
-                    const values = row[column].split(',');
-                    values.forEach(value => {
-                        const trimmedValue = value.trim();
-                        if (trimmedValue) {
-                            const link = document.createElement('a');
-                            link.href = drugbank + trimmedValue.split(' ')[0]; // Taking only the DB ID
-                            link.target = "_blank";
-                            link.textContent = trimmedValue;
-                            cell.appendChild(link);
-                            cell.appendChild(document.createElement('br'));
-                        }
-                    });
-                } else if (column === 'KEGG DRUG ID') {
-                    const values = row[column].split(',');
-                    values.forEach(value => {
-                        const trimmedValue = value.trim();
-                        if (trimmedValue) {
-                            const link = document.createElement('a');
-                            link.href = kegg + trimmedValue;
-                            link.target = "_blank";
-                            link.textContent = trimmedValue;
-                            cell.appendChild(link);
-                            cell.appendChild(document.createElement('br'));
-                        }
-                    });
-                } else {
-                    cell.textContent = row[column];
-                }
-                dataRow.appendChild(cell);
-            });
-            tableBody.appendChild(dataRow);
-        });
-    }
-
-    // Initialize the table with the provided data
-    updateTableWithStructures(columnNames, data);
-</script>
