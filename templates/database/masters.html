@@ -46,8 +46,12 @@
 
 <script>
     // Simulated data passed from Django template to JavaScript
-    const data = {{ d|safe }};
-    const columnNames = {{ column_names|safe }};
+    const data = JSON.parse('{{ d|safe|escapejs }}');
+    const columnNames = JSON.parse('{{ column_names|safe|escapejs }}');
+
+    // Debugging: Check if data and column names are correctly passed
+    console.log("Column Names:", columnNames);
+    console.log("Data:", data);
 
     // Create table headers
     const tableHeaders = document.getElementById('tableHeaders');
