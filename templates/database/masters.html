@@ -14,32 +14,14 @@
                         {% for column in column_names %}
                             <th>{{ column }}</th>
                         {% endfor %}
-                        <th>Structure</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for row in d %}
                         <tr>
                             {% for column in column_names %}
-                                <td>
-                                    {% if column == "DRUG_PUBCHEM" %}
-                                        {{ row[column] }}
-                                    {% elif column == "Drugbank_ID" %}
-                                        {{ row[column] }}
-                                    {% elif column == "KEGG DRUG ID" %}
-                                        {{ row[column] }}
-                                    {% else %}
-                                        {{ row[column] }}
-                                    {% endif %}
-                                </td>
+                                <td>{{ row[column] }}</td>
                             {% endfor %}
-                            <td>
-                                {% if row.STR_LINK_SMILES %}
-                                    <pre>{{ row.STR_LINK_SMILES }}</pre>
-                                {% else %}
-                                    No SMILES available
-                                {% endif %}
-                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
