@@ -1,24 +1,43 @@
-{% include 'database/base.html' %}
-{% load static %}
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
 
 <main class="content_area">
     <section class="mechanism_section" id='mechanismSection'>
         <div class="container">
-            <h1 style="margin-top: 75px;">Browse Result</h1>
-            <table border="1" id="dataTable">
+            <h1 style="margin-top: 20px;">Browse Result</h1>
+            <table id="dataTable">
                 <thead>
-                    <tr>
-                        <!-- Render the table headers -->
-                        {% for column in column_names %}
-                            <th>{{ column }}</th>
-                        {% endfor %}
+                    <tr id="tableHeaders">
+                        <!-- Table headers will be inserted here -->
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- The table body will be populated by JavaScript -->
+                <tbody id="tableBody">
+                    <!-- Table body will be inserted here -->
                 </tbody>
             </table>
         </div>
@@ -26,26 +45,30 @@
 </main>
 
 <script>
-    // Get the data from Django context
+    // Simulated data passed from Django template to JavaScript
     const data = {{ d|safe }};
     const columnNames = {{ column_names|safe }};
 
-    // Get reference to the table body
-    const tableBody = document.querySelector('#dataTable tbody');
+    // Create table headers
+    const tableHeaders = document.getElementById('tableHeaders');
+    columnNames.forEach(column => {
+        const th = document.createElement('th');
+        th.textContent = column;
+        tableHeaders.appendChild(th);
+    });
 
-    // Function to create and append a row to the table
-    function createRow(rowData) {
-        const row = document.createElement('tr');
-        
+    // Populate table body
+    const tableBody = document.getElementById('tableBody');
+    data.forEach(row => {
+        const tr = document.createElement('tr');
         columnNames.forEach(column => {
-            const cell = document.createElement('td');
-            cell.textContent = rowData[column] || '';
-            row.appendChild(cell);
+            const td = document.createElement('td');
+            td.textContent = row[column] || '';  // Use an empty string if the value is null/undefined
+            tr.appendChild(td);
         });
-
-        tableBody.appendChild(row);
-    }
-
-    // Populate the table with data
-    data.forEach(createRow);
+        tableBody.appendChild(tr);
+    });
 </script>
+
+</body>
+</html>
