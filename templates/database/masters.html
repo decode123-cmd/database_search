@@ -45,9 +45,9 @@
 </main>
 
 <script>
-    // Manually escaping and passing JSON data from Django
-    const data = JSON.parse("{{ d|escapejs }}");
-    const columnNames = JSON.parse("{{ column_names|escapejs }}");
+    // Safely pass JSON data from Django context to JavaScript
+    const data = {{ d|safe|json_script:"data_json" }};
+    const columnNames = {{ column_names|safe|json_script:"columns_json" }};
 
     // Debugging: Check if data and column names are correctly passed
     console.log("Column Names:", columnNames);
