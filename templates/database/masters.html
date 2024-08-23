@@ -27,6 +27,8 @@
     // Simulated data passed from Django template to JavaScript
     const columnNames = {{ column_names|safe }};
     const data = {{ d|safe }};
+    console.log(column_names);
+    console.log(d);
 
     // Function to update the table with data and generate structures
     function updateTableWithStructures(columnNames, data) {
