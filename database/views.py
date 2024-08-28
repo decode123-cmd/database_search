@@ -238,7 +238,7 @@ def get_data(request, category, field, column):
         mask = df[column].apply(lambda x: any(term.strip().lower() in str(x).lower() for term in search_terms))
         filtered_df = df[mask]
 
-        context = {'d': filtered_df.to_json(orient='records'), 'column_names': column_names}
+        context = {'d': filtered_df.to_dict(orient='records'), 'column_names': column_names}
 
         # Render the new template with the context
         return render(request, 'database/masters.html', context)
