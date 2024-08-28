@@ -25,7 +25,7 @@ CSRF_TRUSTED_ORIGINS = [ 'https://cancerimmuno-production.up.railway.app']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','cancerimmuno-production.up.railway.app']
+ALLOWED_HOSTS = ['*','cancerimmuno-production.up.railway.app','*']
 
 
 # Application definition
