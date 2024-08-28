@@ -221,6 +221,8 @@ def search(request):
 #     context = {'d': data, 'column_names': column_names,}
     
 #     return render(request,'database/masters.html',context)
+import json
+
 def get_data(request, category, field, column):
     print("Category:", category)
     print("Field:", field)
@@ -229,6 +231,9 @@ def get_data(request, category, field, column):
     try:
         df, column_names = data_get(field)
         
+        # Ensure column_names is a list of strings
+        column_names = [str(col) for col in column_names]
+
         # Split the category by delimiters
         search_terms = re.split(r'[/,]', category)
         print("Search Terms:", search_terms)
@@ -240,7 +245,7 @@ def get_data(request, category, field, column):
         # Serialize the DataFrame and column names to JSON
         context = {
             'd': filtered_df.to_json(orient='records'),
-            'column_names': column_names.to_json(),
+            'column_names': json.dumps(column_names)
         }
 
         # Render the new template with the context
@@ -251,6 +256,7 @@ def get_data(request, category, field, column):
     except Exception as e:
         print(f"Error: {e}")
         return render(request, 'database/error.html', {'error_message': "An unexpected error occurred"})
+
 
 def conditional_datasearch(request):
     
