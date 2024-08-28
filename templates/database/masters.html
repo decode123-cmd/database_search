@@ -1,6 +1,5 @@
 {%include 'database/base.html'%}
 {% load static %}
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
 <script src="https://unpkg.com/smiles-drawer/dist/smiles-drawer.min.js"></script>
@@ -24,116 +23,109 @@
  
 </style>
 
-<script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
-
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        window
-        .initRDKitModule()
-        .then(function (RDKit) {
-          console.log("RDKit version: " + RDKit.version());
-          window.RDKit = RDKit;
-        
-            const columnNames = {{ column_names|safe }};
-            const data = {{ d|safe }};
-
-            updateTableWithStructures(columnNames, data);
-        })
-        .catch(() => {
-        });
-   // Simulated data passed from Django template to JavaScript
-            
-      
-
-        // External URLs for PubChem, KEGG, and DrugBank
-        var pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
-        var kegg = 'https://www.genome.jp/entry/';
-        var drugbank = 'https://go.drugbank.com/drugs/';
+    let RDKitModule;
+    var pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
+    var kegg = 'https://www.genome.jp/entry/';
+    var drugbank = 'https://go.drugbank.com/drugs/';
     
-        // Function to generate the structure from SMILES and return SVG
-        function generateStructure(smiles) {
-            try {
-                var mol = RDKit.get_mol(smiles);
-                var svg = mol.get_svg();
-                console.log(svg);
-                return svg;
-            } catch (error) {
-                console.error("Error generating structure:", error);
-                return "Invalid SMILES";
-            }
-        }
+    // Initialize RDKitModule and handle data
+    window.initRDKitModule().then(function (instance) {
+        RDKitModule = instance;
+        console.log("RDKit version: " + RDKitModule.version());
     
-        // Function to update the table with data and generate structures
-        function updateTableWithStructures(columnNames, data) {
-            const tableHead = document.getElementById('tableHead');
-            const tableBody = document.getElementById('tableBody');
+        // Simulated data passed from Django template to JavaScript
+        const columnNames = {{ column_names|safe }};
+        const data = {{ d|safe }};
     
-            // Clear any existing content in table head and body
-            tableHead.innerHTML = '';
-            tableBody.innerHTML = '';
-    
-            // Create the table header
-            const headerRow = document.createElement('tr');
-            columnNames.push("Structure"); // Add Structure column
-            columnNames.forEach(column => {
-                const headerCell = document.createElement('th');
-                headerCell.textContent = column;
-                headerRow.appendChild(headerCell);
-            });
-            tableHead.appendChild(headerRow);
-    
-            // Fill the table body with data and structure
-            data.forEach(row => {
-                const dataRow = document.createElement('tr');
-                columnNames.forEach(column => {
-                    const cell = document.createElement('td');
-                    if (column === "Structure") {
-                        const smiles = row["STR_LINK (SMILES)"];
-                        if (smiles) {
-                            cell.innerHTML = generateStructure(smiles);
-                        } else {
-                            cell.textContent = "No SMILES available";
-                        }
-                    } else if (column === 'DRUG_PUBCHEM') {
-                        const value = row[column];
-                        if (value) {
-                            const link = document.createElement('a');
-                            link.href = pubchem + value;
-                            link.target = "_blank";
-                            link.textContent = value;
-                            cell.appendChild(link);
-                        } else {
-                            cell.textContent = "No PubChem ID available";
-                        }
-                    } else if (column === 'Drugbank_ID') {
-                        const value = row[column];
-                        if (value) {
-                            const link = document.createElement('a');
-                            link.href = drugbank + value;
-                            link.target = "_blank";
-                            link.textContent = value;
-                            cell.appendChild(link);
-                        } else {
-                            cell.textContent = "No DrugBank ID available";
-                        }
-                    } else if (column === 'KEGG DRUG ID') {
-                        const value = row[column];
-                        if (value) {
-                            const link = document.createElement('a');
-                            link.href = kegg + value;
-                            link.target = "_blank";
-                            link.textContent = value;
-                            cell.appendChild(link);
-                        } else {
-                            cell.textContent = "No KEGG ID available";
-                        }
-                    } else {
-                        cell.textContent = row[column];
-                    }
-                    dataRow.appendChild(cell);
-                });
-                tableBody.appendChild(dataRow);
-            });
-        }
+        updateTableWithStructures(columnNames, data);
+    }).catch(() => {
+        console.error("Error initializing RDKitModule.");
     });
+    
+    // Function to generate the structure from SMILES and return SVG
+    function generateStructure(smiles) {
+        try {
+            var mol = RDKitModule.get_mol(smiles);
+            var svg = mol.get_svg();
+            console.log(svg);
+            return svg;
+        } catch (error) {
+            console.error("Error generating structure:", error);
+            return "Invalid SMILES";
+        }
+    }
+    
+    // Function to update the table with data and generate structures
+    function updateTableWithStructures(columnNames, data) {
+        const tableHead = document.getElementById('tableHead');
+        const tableBody = document.getElementById('tableBody');
+    
+        // Clear any existing content in table head and body
+        tableHead.innerHTML = '';
+        tableBody.innerHTML = '';
+    
+        // Create the table header
+        const headerRow = document.createElement('tr');
+        columnNames.push("Structure"); // Add Structure column
+        columnNames.forEach(column => {
+            const headerCell = document.createElement('th');
+            headerCell.textContent = column;
+            headerRow.appendChild(headerCell);
+        });
+        tableHead.appendChild(headerRow);
+    
+        // Fill the table body with data and structure
+        data.forEach(row => {
+            const dataRow = document.createElement('tr');
+            columnNames.forEach(column => {
+                const cell = document.createElement('td');
+                if (column === "Structure") {
+                    const smiles = row["STR_LINK (SMILES)"];
+                    if (smiles) {
+                        cell.innerHTML = generateStructure(smiles);
+                    } else {
+                        cell.textContent = "No SMILES available";
+                    }
+                } else if (column === 'DRUG_PUBCHEM') {
+                    const value = row[column];
+                    if (value) {
+                        const link = document.createElement('a');
+                        link.href = pubchem + value;
+                        link.target = "_blank";
+                        link.textContent = value;
+                        cell.appendChild(link);
+                    } else {
+                        cell.textContent = "No PubChem ID available";
+                    }
+                } else if (column === 'Drugbank_ID') {
+                    const value = row[column];
+                    if (value) {
+                        const link = document.createElement('a');
+                        link.href = drugbank + value;
+                        link.target = "_blank";
+                        link.textContent = value;
+                        cell.appendChild(link);
+                    } else {
+                        cell.textContent = "No DrugBank ID available";
+                    }
+                } else if (column === 'KEGG DRUG ID') {
+                    const value = row[column];
+                    if (value) {
+                        const link = document.createElement('a');
+                        link.href = kegg + value;
+                        link.target = "_blank";
+                        link.textContent = value;
+                        cell.appendChild(link);
+                    } else {
+                        cell.textContent = "No KEGG ID available";
+                    }
+                } else {
+                    cell.textContent = row[column];
+                }
+                dataRow.appendChild(cell);
+            });
+            tableBody.appendChild(dataRow);
+        });
+    }
 </script>
