@@ -186,6 +186,7 @@ def search(request):
             for table in tables:
                 filtered_df = load_and_filter_data(table, specific_fields)
                 final_df = pd.concat([final_df, filtered_df], ignore_index=True)
+                
         else:
             table_mapping = {
                 'patient_studies': 'Browse_by_Patient_Studies',
@@ -197,7 +198,6 @@ def search(request):
                 final_df = load_and_filter_data(table_name, specific_fields)
 
         context = {'d': final_df.to_json(orient='records'), 'column_names': final_df.columns.tolist()}
-        print(context)
 
         # Render the results template with the context
         return render(request, 'database/masters.html', context)

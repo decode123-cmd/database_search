@@ -13,7 +13,6 @@
          
              <h1 style="margin-top: 75px;">Browse Result</h1>
             <table id="dynamicTable" border="1">
-            
                 <thead id="tableHead"></thead>
                 <tbody id="tableBody"></tbody>
             </table>
@@ -25,14 +24,6 @@
 </style>
 
 <script>
-    //console.log('string update');
-
-    
-
-    const columnNames = {{column_names|safe}};
-    
-    
-    console.log('data');
     let RDKitModule;
     var pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
     var kegg = 'https://www.genome.jp/entry/';
@@ -45,11 +36,7 @@
     
         // Simulated data passed from Django template to JavaScript
         const columnNames = {{ column_names|safe }};
-        console.log({{column_names|safe}});
-        console.log({{d|safe}});
-        const data = {{d|safe}};
-        console.log(data);
-        console.log('string update');
+        const data = {{ d|safe }};
     
         updateTableWithStructures(columnNames, data);
     }).catch(() => {
