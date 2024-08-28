@@ -237,8 +237,8 @@ def get_data(request, category, field, column):
         # Filter DataFrame to find rows where the specified field contains any of the search terms
         mask = df[column].apply(lambda x: any(term.strip().lower() in str(x).lower() for term in search_terms))
         filtered_df = df[mask]
-        columns_names = final_df.columns.tolist()
-        d = final_df.to_json(orient='records')
+        columns_names = filtered_df.columns.tolist()
+        d = filtered_df.to_json(orient='records')
 
         context = {'d': d, 'column_names': column_names}
 
