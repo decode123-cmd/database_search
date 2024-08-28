@@ -203,7 +203,6 @@ function fetchCategoryData(event) {
 }
 
 function fetchData(event) {
-    event.preventDefault();
     const dataCategory = event.currentTarget.getAttribute('data-category');
     let [category, field, column] = dataCategory.split(',');
 
