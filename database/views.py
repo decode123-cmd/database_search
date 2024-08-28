@@ -173,8 +173,10 @@ def search(request):
                 if fields:
                     mask = df[fields].apply(lambda row: row.astype(str).str.contains(query, case=False, na=False).any(), axis=1)
                     filtered_df = df[mask]
+                    print(filtered_df)
                 else:
                     filtered_df = df[df.apply(lambda row: row.astype(str).str.contains(query, case=False, na=False).any(), axis=1)]
+                    print(filtered_df)
                 
                 return filtered_df
 
@@ -184,6 +186,7 @@ def search(request):
             for table in tables:
                 filtered_df = load_and_filter_data(table, specific_fields)
                 final_df = pd.concat([final_df, filtered_df], ignore_index=True)
+                
         else:
             table_mapping = {
                 'patient_studies': 'Browse_by_Patient_Studies',
