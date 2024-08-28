@@ -240,7 +240,7 @@ def get_data(request, category, field, column):
         # Serialize the DataFrame and column names to JSON
         context = {
             'd': filtered_df.to_json(orient='records'),
-            'column_names': json.dumps(column_names)
+            'column_names': column_names.to_list
         }
 
         # Render the new template with the context
