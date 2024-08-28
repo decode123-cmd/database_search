@@ -241,6 +241,7 @@ def get_data(request, category, field, column):
         d = filtered_df.to_json(orient='records')
 
         context = {'d': d, 'column_names': column_names}
+        print(context)
 
         # Render the new template with the context
         return render(request, 'database/masters.html', context)
