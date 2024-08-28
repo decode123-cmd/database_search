@@ -25,8 +25,7 @@
 </style>
 
 <script>
- console.log({{ column_names|safe }});
-        const data = {{ d|safe }};
+ document.addEventListener('DOMContentLoaded', function() {
     let RDKitModule;
     var pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
     var kegg = 'https://www.genome.jp/entry/';
@@ -36,11 +35,14 @@
     window.initRDKitModule().then(function (instance) {
         RDKitModule = instance;
         console.log("RDKit version: " + RDKitModule.version());
-    
-        // Simulated data passed from Django template to JavaScript
-        const columnNames = {{ column_names|safe }};
-        const data = {{ d|safe }};
-    
+
+        // Parse the JSON strings passed from Django
+        const columnNames = JSON.parse('{{ column_names|escapejs }}');
+        const data = JSON.parse('{{ d|escapejs }}');
+
+        console.log('Column Names:', columnNames);
+        console.log('Data:', data);
+
         updateTableWithStructures(columnNames, data);
     }).catch(() => {
         console.error("Error initializing RDKitModule.");
@@ -51,7 +53,6 @@
         try {
             var mol = RDKitModule.get_mol(smiles);
             var svg = mol.get_svg();
-            console.log(svg);
             return svg;
         } catch (error) {
             console.error("Error generating structure:", error);
@@ -131,4 +132,6 @@
             tableBody.appendChild(dataRow);
         });
     }
+});
+
 </script>
