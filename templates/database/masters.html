@@ -24,6 +24,8 @@
 </style>
 
 <script>
+ console.log({{ column_names|safe }});
+        const data = {{ d|safe }};
     let RDKitModule;
     var pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
     var kegg = 'https://www.genome.jp/entry/';
