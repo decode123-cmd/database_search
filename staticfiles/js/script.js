@@ -423,7 +423,7 @@ document.getElementById('3D_search_form').addEventListener('submit', function(ev
     .then(data => {
         console.log('Response data:', data); // Debugging log
         if (data.success) {
-            display2DResults(data.results);
+            display3DResults(data.results);
         } else {
             // Handle error
             console.error('Error fetching results:', data);
@@ -487,7 +487,7 @@ document.getElementById('substructure_search_form').addEventListener('submit', f
     .then(data => {
         console.log('Response data:', data); // Debugging log
         if (data.success) {
-            display2DResults(data.results);
+            displayResults(data.results);
         } else {
             // Handle error
             console.error('Error fetching results:', data);
@@ -553,7 +553,7 @@ document.getElementById('maccs_search_form').addEventListener('submit', function
     .then(data => {
         console.log('Response data:', data); // Debugging log
         if (data.success) {
-            display2DResults(data.results);
+            displayMaccsResults(data.results);
         } else {
             // Handle error
             console.error('Error fetching results:', data);

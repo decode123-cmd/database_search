@@ -437,7 +437,7 @@ def tanimoto_search(request):
         print("Filtered Results:", results_2d.shape)
 
         # Create a results dictionary
-        results_dict = results_2d[['ID','STR_LINK (SMILES)', '2d_similarity','IMMUNE SYTEM FUNCTION UNAFFECTED','IMMUNE SYSTEM-Function enhanced/numbers increased','IMMUNE SYSTEM-Function inhibited/numbers decreased','NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr']].to_json(orient='records')
+        results_dict = results_2d[['ID','STR_LINK (SMILES)', '2d_similarity','IMMUNE SYTEM FUNCTION UNAFFECTED','IMMUNE SYSTEM-Function enhanced/numbers increased','IMMUNE SYSTEM-Function inhibited/numbers decreased','NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr']].to_dict(orient='records')
         
         return JsonResponse({'success': True, 'results': results_dict}, safe=False)
     
@@ -479,7 +479,7 @@ def third_search(request):
         results_3d = df[df['3d_similarity'] >= threshold].sort_values(by='3d_similarity', ascending=False)
         print(results_3d)
         # Create a results dictionary
-        results_dict = results_3d[['ID','STR_LINK (SMILES)', '3d_similarity','IMMUNE SYTEM FUNCTION UNAFFECTED','IMMUNE SYSTEM-Function enhanced/numbers increased','IMMUNE SYSTEM-Function inhibited/numbers decreased','NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr']].to_json(orient='records')
+        results_dict = results_3d[['ID','STR_LINK (SMILES)', '3d_similarity','IMMUNE SYTEM FUNCTION UNAFFECTED','IMMUNE SYSTEM-Function enhanced/numbers increased','IMMUNE SYSTEM-Function inhibited/numbers decreased','NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr']].to_dict(orient='records')
         
         return JsonResponse({'success': True, 'results': results_dict}, safe=False)
     
@@ -514,7 +514,7 @@ def substructure_search(request):
         results_substructure = df[df['substructure_match'] == True]
         
         # Create a results dictionary
-        results_dict = results_substructure[['ID','STR_LINK (SMILES)', 'substructure_match','IMMUNE SYTEM FUNCTION UNAFFECTED','IMMUNE SYSTEM-Function enhanced/numbers increased','IMMUNE SYSTEM-Function inhibited/numbers decreased','NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr']].to_json(orient='records')
+        results_dict = results_substructure[['ID','STR_LINK (SMILES)', 'substructure_match','IMMUNE SYTEM FUNCTION UNAFFECTED','IMMUNE SYSTEM-Function enhanced/numbers increased','IMMUNE SYSTEM-Function inhibited/numbers decreased','NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr']].to_dict(orient='records')
         
         return JsonResponse({'success': True, 'results': results_dict}, safe=False)
     
@@ -556,7 +556,7 @@ def maccs_search(request):
         results_maccs = df[df['maccs_similarity'] >= threshold].sort_values(by='maccs_similarity', ascending=False)
                
         # Create a results dictionary
-        results_dict = results_maccs[['ID','STR_LINK (SMILES)', 'maccs_similarity','IMMUNE SYTEM FUNCTION UNAFFECTED','IMMUNE SYSTEM-Function enhanced/numbers increased','IMMUNE SYSTEM-Function inhibited/numbers decreased','NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr']].to_json(orient='records')
+        results_dict = results_maccs[['ID','STR_LINK (SMILES)', 'maccs_similarity','IMMUNE SYTEM FUNCTION UNAFFECTED','IMMUNE SYSTEM-Function enhanced/numbers increased','IMMUNE SYSTEM-Function inhibited/numbers decreased','NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr']].to_dict(orient='records')
         
         return JsonResponse({'success': True, 'results': results_dict}, safe=False)
     
