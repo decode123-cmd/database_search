@@ -354,18 +354,17 @@ document.getElementById('2D_search_form').addEventListener('submit', function(ev
         },
         body: formData
     })
-   .then(response => response.json())
+    .then(response => response.json())
     .then(data => {
         console.log('Response data:', data); // Debugging log
         if (data.success) {
-            const results = JSON.parse(data.results); // Parse the JSON string
-            display2DResults(results);
+            display2DResults(data.results);
         } else {
             // Handle error
             console.error('Error fetching results:', data);
         }
-})
-.catch(error => console.error('Error:', error));
+    })
+    .catch(error => console.error('Error:', error));
 });
 
 function display2DResults(results) {
@@ -420,18 +419,17 @@ document.getElementById('3D_search_form').addEventListener('submit', function(ev
         },
         body: formData
     })
-   .then(response => response.json())
+  .then(response => response.json())
     .then(data => {
         console.log('Response data:', data); // Debugging log
         if (data.success) {
-            const results = JSON.parse(data.results); // Parse the JSON string
-            display2DResults(results);
+            display2DResults(data.results);
         } else {
             // Handle error
             console.error('Error fetching results:', data);
         }
-})
-.catch(error => console.error('Error:', error));
+    })
+    .catch(error => console.error('Error:', error));
 });
 
 function display3DResults(results) {
@@ -489,15 +487,14 @@ document.getElementById('substructure_search_form').addEventListener('submit', f
     .then(data => {
         console.log('Response data:', data); // Debugging log
         if (data.success) {
-            const results = JSON.parse(data.results); // Parse the JSON string
-            display2DResults(results);
+            display2DResults(data.results);
         } else {
             // Handle error
             console.error('Error fetching results:', data);
         }
-})
-.catch(error => console.error('Error:', error));
-  });
+    })
+    .catch(error => console.error('Error:', error));
+});
   
   function displayResults(results) {
     const searchResults = document.getElementById('resultsTablesubs');
@@ -553,18 +550,16 @@ document.getElementById('maccs_search_form').addEventListener('submit', function
         body: formData
     })
     .then(response => response.json())
-    .then(response => response.json())
     .then(data => {
         console.log('Response data:', data); // Debugging log
         if (data.success) {
-            const results = JSON.parse(data.results); // Parse the JSON string
-            display2DResults(results);
+            display2DResults(data.results);
         } else {
             // Handle error
             console.error('Error fetching results:', data);
         }
-})
-.catch(error => console.error('Error:', error));
+    })
+    .catch(error => console.error('Error:', error));
 });
 
 function displayMaccsResults(results) {
