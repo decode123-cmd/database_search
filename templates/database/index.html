@@ -360,9 +360,9 @@
             <fieldset style="margin-bottom: 20px;">
                 <legend class="data-submission-legend">Select the database</legend>
                 <div class="checkbox-group">
-                    <label><input type="radio" name="field" value="patient_studies" onchange="loadColumns1(this)"> Search In Patient Studies</label>
-                    <label><input type="radio" name="field" value="animal_studies" onchange="loadColumns1(this)"> Search In Animal Studies</label>
-                    <label><input type="radio" name="field" value="cell_line" onchange="loadColumns1(this)"> Search In Cell Line</label>
+                    <label><input type="radio" name="field" value="patient_studies" onchange="loadColumns1(this)"> Submit In Patient Studies</label>
+                    <label><input type="radio" name="field" value="animal_studies" onchange="loadColumns1(this)"> Submit In Animal Studies</label>
+                    <label><input type="radio" name="field" value="cell_line" onchange="loadColumns1(this)"> Submit In Cell Line</label>
                 </div>
             </fieldset>
             
@@ -554,8 +554,10 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                         <input type="text" id="smilesInput2D" name="smiles" placeholder="Example SMILES">
                         <label for="threshold2D">Threshold:</label>
                         <input type="text" id="threshold2D" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
+                        <button type="button" onclick="fillExample2DForm()">Example</button> <!-- Example Button -->
                     </fieldset>
                     <div class="form-buttons">
+                     
                         <button type="button" onclick="clear2DForm()">Clear All</button>
                         <button type="submit">Search</button>
                     </div>
@@ -602,8 +604,13 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                       <input type="text" id="smilesInput3D" name="smiles" placeholder="Example SMILES">
                       <label for="threshold3D">Threshold:</label>
                       <input type="text" id="threshold3D" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
+                      <button type="button" onclick="fillExample3DForm()">Example</button> <!-- Example Button -->
                   </fieldset>
+                  <div id="loadingMessage" style="display: none; color: red; margin-top: 10px;">
+                    It may take time.
+                </div>
                   <div class="form-buttons">
+                    <button type="button" onclick="fillExample3DForm()">Example</button> <!-- Example Button -->
                       <button type="button" onclick="clear3DForm()">Clear All</button>
                       <button type="submit">Search</button>
                   </div>
@@ -639,14 +646,17 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                         <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
                         <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
                         <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+
                     </div>
                 </fieldset>
                 <fieldset>
                     <legend>Please type or paste your SMILES sequence in the box below.</legend>
                     <label for="smilesInput">SMILES sequence:</label>
-                    <input type="text" id="smilesInput" name="smiles" placeholder="Example SMILES">
+                    <input type="text" id="smilesInputsubs" name="smiles" placeholder="Example SMILES">
+                    <button type="button" onclick="fillExamplesubsForm()">Example</button> <!-- Example Button -->
                 </fieldset>
                 <div class="form-buttons">
+         
                     <button type="button" onclick="clearSmilesForm()">Clear All</button>
                     <button type="submit">Search</button>
                 </div>
@@ -688,11 +698,13 @@ CanIMMDB is a manually curated resource which provides comprehensive information
         <fieldset>
           <legend>Please type or paste your SMILES sequence and Threshold in the box below.</legend>
           <label for="smilesInput">SMILES sequence:</label>
-          <input type="text" id="smilesInput" name="smiles" placeholder="Example SMILES">
+          <input type="text" id="smilesInputmacc" name="smiles" placeholder="Example SMILES">
           <label for="threshold">Threshold:</label>
-          <input type="text" id="threshold" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
+          <input type="text" id="thresholdmacc" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
+          <button type="button" onclick="fillExamplemaccForm()">Example</button> <!-- Example Button -->
         </fieldset>
         <div class="form-buttons">
+     
           <button type="button" onclick="clearMaccsForm()">Clear All</button>
           <button type="submit">Search</button>
         </div>
@@ -912,7 +924,24 @@ CanIMMDB is a manually curated resource which provides comprehensive information
   
 
 <script src="{% static 'js/script.js' %}"></script>
-
+<script>
+  function fillExample2DForm() {
+    document.getElementById('smilesInput2D').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
+    document.getElementById('threshold2D').value = '0.5';
+}
+function fillExample3DForm() {
+    document.getElementById('smilesInput3D').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
+    document.getElementById('threshold3D').value = '0.5';
+}
+function fillExamplemaccForm() {
+    document.getElementById('smilesInputmacc').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
+    document.getElementById('thresholdmacc').value = '0.5';
+}
+function fillExamplesubsForm() {
+    document.getElementById('smilesInputsubs').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
+    
+}
+</script>
 </body>
 </html>
 

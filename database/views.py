@@ -378,7 +378,7 @@ def smiles_search(request):
 
         context = {
             'd': filtered_df.to_json(orient='records'),
-            'column_names': filtered_df.columns.tolist()
+            'column_names': json.dumps(filtered_df.columns.tolist())
         }
 
         return render(request, 'database/masters.html', context)

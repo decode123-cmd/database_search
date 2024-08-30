@@ -360,7 +360,7 @@ document.getElementById('2D_search_form').addEventListener('submit', function(ev
             display2DResults(data.results);
         } else {
             // Handle error
-            console.error('Error fetching results:', data);
+            alert('Error fetching results:', data);
         }
     })
     .catch(error => console.error('Error:', error));
@@ -408,27 +408,47 @@ function clear2DForm() {
 
 // 3-D search
 document.getElementById('3D_search_form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault(); // Prevent the default form submission behavior
 
-    const formData = new FormData(this);
-    fetch(this.action, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Response data:', data); // Debugging log
-        if (data.success) {
-            display3DResults(data.results);
-        } else {
-            // Handle error
-            console.error('Error fetching results:', data);
-        }
-    })
-    .catch(error => console.error('Error:', error));
+    // Show a confirmation dialog to the user
+    const userConfirmed = confirm("This process may take some time. Do you want to proceed?");
+    
+    if (userConfirmed) {
+        // User clicked "OK", proceed with form submission
+        const formData = new FormData(this); // Create a FormData object from the form
+        const loadingMessage = document.getElementById('loadingMessage');
+
+        // Show the "It may take time" message
+        loadingMessage.style.display = 'block';
+
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Response data:', data); // Log response data for debugging
+            loadingMessage.style.display = 'none'; // Hide the loading message
+
+            if (data.success) {
+                display3DResults(data.results); // Display the results if successful
+            } else {
+                // Handle error by alerting the user
+                alert('Error fetching results: ' + JSON.stringify(data));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            loadingMessage.style.display = 'none'; // Hide the loading message in case of error
+            alert('An error occurred while fetching results.');
+        });
+    } else {
+        // User clicked "Cancel", do nothing
+        return;
+    }
 });
 
 function display3DResults(results) {
@@ -440,9 +460,10 @@ function display3DResults(results) {
     tableHeaders.innerHTML = '';
     tableBody.innerHTML = '';
 
-    // Populate table headers
     if (results.length > 0) {
-        console.log('Results:', results); // Debugging log
+        console.log('Results:', results); // Log results for debugging
+
+        // Populate table headers based on result keys
         const headers = Object.keys(results[0]);
         headers.forEach(header => {
             const th = document.createElement('th');
@@ -450,7 +471,7 @@ function display3DResults(results) {
             tableHeaders.appendChild(th);
         });
 
-        // Populate table rows
+        // Populate table rows with result data
         results.forEach(row => {
             const tr = document.createElement('tr');
             headers.forEach(header => {
@@ -460,14 +481,22 @@ function display3DResults(results) {
             });
             tableBody.appendChild(tr);
         });
+
+        // Show the results section
+        searchResults.style.display = 'block';
+    } else {
+        // No results to display, hide the results section
+        searchResults.style.display = 'none';
     }
-    // Show the results section
-    searchResults.style.display = 'block';
 }
 
 function clear3DForm() {
+    // Reset the form fields
     document.getElementById('3D_search_form').reset();
+
+    // Hide the search results and the loading message
     document.getElementById('searchResults3').style.display = 'none';
+    document.getElementById('loadingMessage').style.display = 'none';
 }
 
 //substructure 
@@ -489,7 +518,7 @@ document.getElementById('substructure_search_form').addEventListener('submit', f
             displayResults(data.results);
         } else {
             // Handle error
-            console.error('Error fetching results:', data);
+            alert('Error fetching results:', data);
         }
     })
     .catch(error => console.error('Error:', error));
@@ -555,7 +584,7 @@ document.getElementById('maccs_search_form').addEventListener('submit', function
             displayMaccsResults(data.results);
         } else {
             // Handle error
-            console.error('Error fetching results:', data);
+            alert('Error fetching results:', data);
         }
     })
     .catch(error => console.error('Error:', error));
@@ -599,7 +628,22 @@ function clearMaccsForm() {
     document.getElementById('maccs_search_form').reset();
     document.getElementById('searchResultsm').style.display = 'none';
 }
-
+function fillExample2DForm() {
+    document.getElementById('smilesInput2D').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
+    document.getElementById('threshold2D').value = '0.5';
+}
+function fillExample3DForm() {
+    document.getElementById('smilesInput3D').value = 'Cc1ccccc1';
+    document.getElementById('threshold3D').value = '0.5';
+}
+function fillExamplemaccForm() {
+    document.getElementById('smilesInputmacc').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
+    document.getElementById('thresholdmacc').value = '0.5';
+}
+function fillExamplesubsForm() {
+    document.getElementById('smilesInputsubs').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
+    
+}
 //********************************************************************************end of tools function *****************************************************/
  
 function openSection(sectionId) {
