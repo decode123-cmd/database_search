@@ -197,7 +197,7 @@ def search(request):
             if table_name:
                 final_df = load_and_filter_data(table_name, specific_fields)
 
-        context = {'d': final_df.to_json(orient='records'), 'column_names': final_df.columns.tolist()}
+        context = {'d': final_df.to_json(orient='records'), 'column_names':json.dumps(final_df.columns.to_list())}
 
         # Render the results template with the context
         return render(request, 'database/masters.html', context)
@@ -306,7 +306,7 @@ def conditional_search(request):
                     elif operators[i-1] == 'NOT':
                         final_df = final_df[~final_df.isin(filtered_df).all(axis=1)]
 
-        columns_names = final_df.columns.tolist()
+        columns_names = json.dumps(final_df.columns.tolist())
         d = final_df.to_json(orient='records')
 
         context = {'d': d, 'column_names': columns_names}
