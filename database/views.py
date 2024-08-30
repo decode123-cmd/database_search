@@ -438,10 +438,6 @@ def tanimoto_search(request):
 
         # Create a results dictionary
         results_dict = results_2d[['ID','STR_LINK (SMILES)', '2d_similarity','IMMUNE SYTEM FUNCTION UNAFFECTED','IMMUNE SYSTEM-Function enhanced/numbers increased','IMMUNE SYSTEM-Function inhibited/numbers decreased','NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr']].to_dict(orient='records')
-<<<<<<< HEAD
-        
-=======
->>>>>>> 7f85f0253aff3b2942f85cc3aed59c7ce5419005
         return JsonResponse({'success': True, 'results': results_dict}, safe=False)
     
     return JsonResponse({'error': 'Invalid request method'}, status=405)
