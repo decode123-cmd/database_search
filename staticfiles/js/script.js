@@ -499,7 +499,6 @@ function clear3DForm() {
     document.getElementById('loadingMessage').style.display = 'none';
 }
 
-
 //substructure 
 document.getElementById('substructure_search_form').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent form submission
@@ -634,7 +633,7 @@ function fillExample2DForm() {
     document.getElementById('threshold2D').value = '0.5';
 }
 function fillExample3DForm() {
-    document.getElementById('smilesInput3D').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
+    document.getElementById('smilesInput3D').value = 'Cc1ccccc1';
     document.getElementById('threshold3D').value = '0.5';
 }
 function fillExamplemaccForm() {
