@@ -74,9 +74,9 @@ def techniques():
 
             for category, terms in search_terms.items():
                 counts[category] = {
-                    'Cell_Count': int(dataframes['cell_line']['Technique'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum()),
-                    'Animal_Count': int(dataframes['animal_studies']['Technique'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum()),
-                    'Patient_Count': int(dataframes['patients']['Technique'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum())
+                    'Cell_Count': int(dataframes['cell_line']['Technique_1'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum()),
+                    'Animal_Count': int(dataframes['animal_studies']['Technique_1'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum()),
+                    'Patient_Count': int(dataframes['patients']['Technique_1'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum())
                 }
 
             return counts

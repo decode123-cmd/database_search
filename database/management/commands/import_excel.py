@@ -8,9 +8,18 @@ from psycopg2 import OperationalError
 
 # Define the connection URL
 connection_url = "postgresql://postgres:ybSxlyKKlCcskPYfuZJwBllGuEyTPmwp@monorail.proxy.rlwy.net:28748/railway"
-
 # Create the SQLAlchemy engine
 engine = create_engine(connection_url, echo=False)
+print(engine)
+def handle(self, *args, **options):
+    # Test connection
+    try:
+        connection = psycopg2.connect(connection_url)
+        connection.close()
+        self.stdout.write(self.style.SUCCESS('Database connection successful'))
+    except OperationalError as e:
+        self.stdout.write(self.style.ERROR(f'Error connecting to database: {str(e)}'))
+
 
 
 class Command(BaseCommand):
