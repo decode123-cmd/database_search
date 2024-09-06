@@ -24,33 +24,39 @@
 
     
 
-      <div class="navbar_content">
-        <i class="bi bi-house-door"></i>
-        <span>Home</span>
     
-        <i class='bx bx-info-circle'></i>
-        <span>Information</span>
-    
-        <i class='bx bx-upload'></i>
-        <span>Data Submission</span>
-    
-        <i class='bx bx-code'></i>
-    <span>Developers</span>
-    
-        <i class='bx bx-phone'></i>
-        <span>Contact</span>
-    
-        <i class='bx bx-help-circle'></i>
-        <span>Assistance</span>
-    
-       
-        <i class='bx bx-database'></i>
-        <span>Related Database</span>
+    <div class="navbar_content">
+        <a onclick="location.reload()">
+            <i class="bi bi-house-door"></i>
+            <span>Home</span>
+        </a>
+        <a onclick="openSection('information')">
+            <i class='bx bx-info-circle'></i>
+            <span>Information</span>
+        </a>
+        <a onclick="openSection('data-submission')">
+            <i class='bx bx-upload'></i>
+            <span>Data Submission</span>
+        </a>
+        <a onclick="openSection('developers')">
+            <i class='bx bx-code'></i>
+            <span>Developers</span>
+        </a>
+        <a onclick="openSection('contact')">
+            <i class='bx bx-phone'></i>
+            <span>Contact</span>
+        </a>
+        <a onclick="openSection('assistance')">
+            <i class='bx bx-help-circle'></i>
+            <span>Assistance</span>
+        </a>
+        
     </div>
     
     </nav>
-     <!-- sidebar -->
-     <nav class="sidebar">
+
+    <!-- sidebar -->
+    <nav class="sidebar">
       <div class="menu_content">
                
         <ul class="menu_items">
@@ -126,7 +132,7 @@
           <!-- duplicate these li tag if you want to add or remove navlink only -->
           <!-- Start -->
           <li class="item">
-            <a href="#" class="nav_link Tanimoto">
+              <a href="#" class="nav_link TwoD_search">
               <span class="navlink_icon">
                 <i class="bx bxs-magic-wand"></i>
               </span>
@@ -134,7 +140,7 @@
             </a>
           </li>
           <li class="item">
-            <a href="#" class="nav_link Tanimoto">
+            <a href="#" class="nav_link substructure">
               <span class="navlink_icon">
                 <i class="bx bxs-magic-wand"></i>
               </span>
@@ -142,7 +148,7 @@
             </a>
           </li>
           <li class="item">
-            <a href="#" class="nav_link Tanimoto">
+            <a href="#" class="nav_link ThreeDsearch">
               <span class="navlink_icon">
                 <i class="bx bxs-magic-wand"></i>
               </span>
@@ -152,21 +158,14 @@
           <!-- End -->
 
           <li class="item">
-            <a href="#" class="nav_link">
+            <a href="#" class="nav_link Maccs">
               <span class="navlink_icon">
                 <i class="bx bx-loader-circle"></i>
               </span>
-              <span class="navlink">MACCS Key-Based Similarity Search</span>
+              <span class="navlink">MACCS Key Search</span>
             </a>
           </li>
-          <li class="item">
-            <a href="#" class="nav_link">
-              <span class="navlink_icon">
-                <i class="bx bx-loader-circle"></i>
-              </span>
-              <span class="navlink"> Tanimoto Similarity </span>
-            </a>
-          </li>
+         
          
         </ul>
         <!-- Sidebar Open / Close -->
