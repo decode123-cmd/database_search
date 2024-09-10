@@ -119,7 +119,7 @@ function addConditionRow() {
             Object.entries(data.table).forEach(([category, counts]) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><a href="#" data-category="${category}" onclick="fetchCategoryData(event)">${category}</a></td>                     
+                    <td>${category}</td>                     
                     <td><a href="#" data-category="${category},cell_count,Drug category" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
                     <td><a href="#" data-category="${category},animal_count,Drug category" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
                     <td><a href="#" data-category="${category},patient_count,Drug category" onclick="fetchData(event)">${counts.Patient_Count}</a></td>
@@ -149,7 +149,7 @@ function fetchtechnique(event) {
             Object.entries(data.table).forEach(([category, counts]) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><a href="#" data-category="${category}" onclick="fetchCategoryData(event)">${category}</a></td>
+                    <td>${category}</td>
                     <td><a href="#" data-category="${category},cell_count,Technique" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
                     <td><a href="#" data-category="${category},animal_count,Technique" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
                     <td><a href="#" data-category="${category},patient_count,Technique" onclick="fetchData(event)">${counts.Patient_Count}</a></td>
@@ -177,7 +177,7 @@ function fetchcancer(event) {
             Object.entries(data.table).forEach(([category, counts]) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><a href="#" data-category="${category}" onclick="fetchCategoryData(event)">${category}</a></td>
+                    <td>${category}</td>
                     
                     <td><a href="#" data-category="${category},cell_count,Cancer_Type" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
                     <td><a href="#" data-category="${category},animal_count,Cancer_Type" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
