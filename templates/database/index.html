@@ -12,15 +12,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.2/css/boxicons.min.css">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <title>CancerImmuno</title>
+    <title>CancerImmunoDB</title>
   </head>
   <body>
     <!-- navbar -->
     <nav class="navbar">
       <div class="logo_item">
         <i class="bx bx-menu" id="sidebarOpen"></i>
-        </i>CancerImmuno
-      </div>
+        </i>CancerImmunoDB      </div>
 
     
 
@@ -739,9 +738,10 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                       <legend>Select Fields to be SEARCHED</legend>
                       <div class="checkbox-group">
                         <label><input type="radio" name="field" value="all_fields" onclick="loadColumns_search(this)"> All Fields</label>
-                          <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns_search(this)"> Search In Patient Studies</label>
+                        <label><input type="radio" name="field" value="cell_line" onclick="loadColumns_search(this)"> Search In Cell Line</label>                      
                           <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns_search(this)"> Search In Animal Studies</label>
-                          <label><input type="radio" name="field" value="cell_line" onclick="loadColumns_search(this)"> Search In Cell Line</label>
+                          <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns_search(this)"> Search In Patient Studies</label>
+                          
                       </div>
                   </fieldset>
                    
