@@ -6,48 +6,48 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
     <!-- Boxicons CSS -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.2/css/boxicons.min.css">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <title>CancerImmunoDB</title>
+    <script src="{% static 'js/script.js' %}"></script>
+    <title>CanImmDB</title>
   </head>
   <body>
     <!-- navbar -->
     <nav class="navbar">
       <div class="logo_item">
         <i class="bx bx-menu" id="sidebarOpen"></i>
-        </i>CancerImmunoDB      </div>
+        </i>CanImmDB      </div>
 
     
 
     
     <div class="navbar_content">
         <a onclick="location.reload()">
-            <i class="bi bi-house-door"></i>
-            <span>Home</span>
+         <i> Home </i>
         </a>
         <a onclick="openSection('information')">
-            <i class='bx bx-info-circle'></i>
-            <span>Information</span>
+            
+            <i>Information</i>
         </a>
         <a onclick="openSection('data-submission')">
-            <i class='bx bx-upload'></i>
-            <span>Data Submission</span>
+            
+            <i>Data Submission</i>
         </a>
         <a onclick="openSection('developers')">
-            <i class='bx bx-code'></i>
-            <span>Developers</span>
+            
+            <i>Developers</i>
         </a>
         <a onclick="openSection('contact')">
-            <i class='bx bx-phone'></i>
-            <span>Contact</span>
+            
+            <i>Contact</i>
         </a>
-        <a onclick="openSection('assistance')">
-            <i class='bx bx-help-circle'></i>
-            <span>Assistance</span>
+        <a onclick="openSection('assistance')">           
+            <i>Assistance</i>
         </a>
         
     </div>
@@ -185,7 +185,7 @@
       <section id="information" class="section" style = 'display:none;'>
         <div class='information-section'>
         <div class="information-heading-container">
-            <h2 class="information-heading">Information Page About CancerImmuno</h2>
+            <h2 class="information-heading">Information Page About CanImmDB</h2>
         </div>
         <div class="contents-container">
             <h3 class="contents-heading">Contents</h3>
@@ -197,14 +197,14 @@
             </ul>
         </div>
         <div id="architecture" class="information-subsection">
-            <h3 class="subsection-heading">Architecture of CancerImmuno</h3>
+            <h3 class="subsection-heading">Architecture of CanImmDB</h3>
             <div class="architecture-image">
-                <img src="{% static 'img/fig.png'%}" alt="Architecture of CancerImmuno">
+                <img src="{% static 'img/fig.png'%}" alt="Architecture of CanImmDB">
             </div>
         </div>
  
         <div id="field-description" class="information-subsection">
-          <h3 class="subsection-heading">Brief description of all the fields in CancerImmuno</h3>
+          <h3 class="subsection-heading">Brief Description of all the fields in CanImmDB</h3>
           <table class="field-description-table">
               <thead>
                   <tr>
@@ -321,7 +321,7 @@
         
     </div>
     <div id="statistics" class="information-subsection">
-        <h3 class="subsection-heading">Statistical information about CancerImmuno</h3>
+        <h3 class="subsection-heading">Statistical information about CanImmDB</h3>
         <div class="statistics-images">
             <div class="stat-image">
                 <img src="{% static 'img/piechart_category.png'%}" alt="Statistical Information 1">
@@ -331,6 +331,7 @@
         <div class="statistics-images">
           <div class="stat-image">
             <img src="{% static 'img/piechart_technique.png'%}" alt="Statistical Information 2">
+            
         </div>
          
       </div>
@@ -349,16 +350,17 @@
     <div class="data-submission-heading-container">
         <h2 class="data-submission-heading">Data Submission Page</h2>
     </div>
-    <p>This page allows users to submit their data. Users may submit information about an anticancer Drug to the database. All entries submitted by users will be evaluated by the team before adding to the database. For online submission, users need to provide the following information. <a href="#">HELP</a></p>
+    <p>This page allows users to submit their data, including information about an anticancer drug, to the database. All user-submitted entries will be evaluated by the team before being added to the database. For online submission, users need to provide the following information. For more details, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
     <div class="data-submission-container">
         <form id="data_submission_form" method="POST" action="">
             {% csrf_token %}
             <fieldset style="margin-bottom: 20px;">
                 <legend class="data-submission-legend">Select the database</legend>
                 <div class="checkbox-group">
-                    <label><input type="radio" name="field" value="patient_studies" onchange="loadColumns1(this)"> Submit In Patient Studies</label>
+                  <label><input type="radio" name="field" value="cell_line" onchange="loadColumns1(this)"> Submit In Cell Line</label>                   
                     <label><input type="radio" name="field" value="animal_studies" onchange="loadColumns1(this)"> Submit In Animal Studies</label>
-                    <label><input type="radio" name="field" value="cell_line" onchange="loadColumns1(this)"> Submit In Cell Line</label>
+                    <label><input type="radio" name="field" value="patient_studies" onchange="loadColumns1(this)"> Submit In Patient Studies</label>
+                    
                 </div>
             </fieldset>
             
@@ -383,7 +385,7 @@
             </fieldset>
             
             <div class="data-submission-form-buttons">
-                <button type="submit" class="data-submission-button">Submit Dataset</button>
+                <button type="submit"  onclick="submitData()"  class="data-submission-button">Submit Dataset</button>
                 <button type="reset" class="data-submission-button">Clear Data</button>
             </div>
         </form>
@@ -520,19 +522,29 @@ CanIMMDB is a manually curated resource which provides comprehensive information
   
       <!-- Detailed Mechanisms Section -->
       <section class="section" id='mechanismSection'>
-          <div class="container">
-              
-              <img src="/static/img/front_img.png" style="width: 95%;
-              margin-top: 20px;">
-            <p>Anticancer agents/drugs can alter  immune associated parameters- cell types, phenotypes and function of the host immune system.The Mechanisms (figure 1) by which anticancer  agents alter immune function include depleting immunosuppressive populations (both in circulation and tumor infiltrating) such as myeloid-derived suppressor cells (MDSCs) and Regulatory T cells. and downregulating PD-L2 mediated immunosuppression.These anticancer agents can trigger immunogenic cell death  and antibody-dependent cellular cytotoxicity (ADCC). Anticancer agents induce various effector cell populations including tumor specific IL-17–producing γδ T cells , IFN-γ producing CD8 T cells,  CD4+ T helper 17 (Th17), Natural killer cells, dendritic cells , macrophages and B cells. Anticancer agents suppress Protumor cytokines including IL-4, IL-10, and IL-13 and induce  anti tumor  immune response by releasing MCP-1, IFN-gamma, IL-17, Upregulating Class I and Class II MHC expression on tumor. In addition to these, many other mechanisms are cataloged in this database.</p>
+        <div class="container">
+          <div class="slider">
+            <div class="slides">
+              <img src="/static/img/front_img.png" style="width: 100%;" alt="Slide 1">
+              <img src="{% static 'img/piechart_technique.png'%}" style="width: 100%;" alt="Statistical Information 2">
+              <img src="{% static 'img/piechart_cancertype.png'%}"style="width: 100%;"  alt="Statistical Information 1">
+              <img src="{% static 'img/piechart_category.png'%}" style="width: 100%;"  alt="Statistical Information 1">
+              <!-- Add more images as needed -->
+            </div>
+            <!-- Navigation buttons -->
+            <button class="prev" onclick="prevSlide()">&#10094;</button>
+            <button class="next" onclick="nextSlide()">&#10095;</button>
           </div>
+          <p>Anticancer agents/drugs can alter  immune associated parameters- cell types, phenotypes and function of the host immune system.The Mechanisms (figure 1) by which anticancer  agents alter immune function include depleting immunosuppressive populations (both in circulation and tumor infiltrating) such as myeloid-derived suppressor cells (MDSCs) and Regulatory T cells. and downregulating PD-L2 mediated immunosuppression.These anticancer agents can trigger immunogenic cell death  and antibody-dependent cellular cytotoxicity (ADCC). Anticancer agents induce various effector cell populations including tumor specific IL-17–producing γδ T cells , IFN-γ producing CD8 T cells,  CD4+ T helper 17 (Th17), Natural killer cells, dendritic cells , macrophages and B cells. Anticancer agents suppress Protumor cytokines including IL-4, IL-10, and IL-13 and induce  anti tumor  immune response by releasing MCP-1, IFN-gamma, IL-17, Upregulating Class I and Class II MHC expression on tumor. In addition to these, many other mechanisms are cataloged in this database.</p>
+        </div>
       </section>
+      
       <!--############################################################################ Tools #########################################################################--> 
       <section class="section" id='2Dsearch' style='display:none;'>
         <div class="heading-container">
             <h2 class="heading">2D Similarity Search</h2>
         </div>
-        <p>2D-Search page assists the user to run a 2D similarity search against the Database. After submission of a job, it returns the list of compounds similar to the query structure. The server provides options to choose different parameters like similarity cutoff and search type. For more information see the HELP page.</p>
+        <p>The 2D Search page assists users in running a 2D similarity search against the database. After submitting a job, it returns a list of compounds similar to the query structure. The server provides options to select different parameters, such as similarity cutoff and search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
         <div class="container">
             <div class="search-container">
                 <form id="2D_search_form" method="POST" action="{% url 'tanimoto_search' %}">
@@ -582,7 +594,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
       <div class="heading-container">
           <h2 class="heading">3D Similarity Search</h2>
       </div>
-      <p>3D-Search page assists the user to run a 3D similarity search against the Database. After submission of a job, it returns the list of compounds similar to the query structure. The server provides options to choose different parameters like similarity cutoff and search type. For more information see the HELP page.</p>
+      <p>The 3D Search page assists users in running a 3D similarity search against the database. After submitting a job, it returns a list of compounds similar to the query structure. The server provides options to select different parameters, such as similarity cutoff and search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
       <div class="container">
           <div class="search-container">
               <form id="3D_search_form" method="POST" action="{% url 'third_search' %}">
@@ -632,7 +644,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
     <div class="heading-container">
         <h2 class="heading">Substructure Search</h2>
     </div>
-    <p>Substructure Search assists the user to find compounds in the Database that contain the query substructure. After submission of a job, it returns the list of compounds that match the query substructure. The server provides options to choose different parameters like search type. For more information see the HELP page.</p>
+    <p>The Substructure Search page helps users find compounds in the database that contain the query substructure. After submitting a job, it returns a list of compounds that match the query substructure. The server provides options to select different parameters, such as search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
     <div class="container">
         <div class="search-container">
             <form id="substructure_search_form" method="POST" action="{% url 'substructure_search' %}">
@@ -679,7 +691,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
   <div class="heading-container">
     <h2 class="heading">MACCS Key-Based Similarity Search</h2>
   </div>
-  <p>MACCS Key-Based Search assists the user to run a similarity search against the Database using MACCS keys. After submission of a job, it returns the list of compounds similar to the query structure based on MACCS key similarity. The server provides options to choose different parameters like similarity cutoff and search type. For more information, see the HELP page.</p>
+  <p>The MACCS Key-Based Search page helps users perform a similarity search against the database using MACCS keys. After submitting a job, it returns a list of compounds similar to the query structure based on MACCS key similarity. The server provides options to select different parameters, such as similarity cutoff and search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
   <div class="container">
     <div class="search-container">
       <form id="maccs_search_form" method="POST" action="{% url 'maccs_search' %}">
@@ -728,7 +740,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
         <div class="container">
             <div class="search-container">
                 <h1>Basic Search</h1>
-                <p>This module allows user to perform a simple search on any field of CancerImmuno.</p>
+                <p>This module allows users to perform a simple search on any field within the CanImmDB.For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.
                 <form id="searchForm" method="POST" action="{% url 'search' %}">
                     {% csrf_token %}
                     <fieldset>
@@ -737,7 +749,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                     </fieldset>
                       <legend>Select Fields to be SEARCHED</legend>
                       <div class="checkbox-group">
-                        <label><input type="radio" name="field" value="all_fields" onclick="loadColumns_search(this)"> All Fields</label>
+             
                         <label><input type="radio" name="field" value="cell_line" onclick="loadColumns_search(this)"> Search In Cell Line</label>                      
                           <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns_search(this)"> Search In Animal Studies</label>
                           <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns_search(this)"> Search In Patient Studies</label>
@@ -763,7 +775,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
     </section>
     <section id="Category_section" class="section" style = "display:none;" >
       <div class="container">
-  <h1>Master List</h1>
+ 
   <table id="peptides-table">
       <thead>
           <tr>
@@ -821,7 +833,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
       <div class="container">
           <div class="search-container">
               <h1>Conditional Search</h1>
-              <p>This module is designed to facilitate complex search using multiple queries joined by logical operators like AND/OR. For more information see <a href="#">HELP</a> page.</p>
+              <p>This module is designed to facilitate complex searches using multiple queries combined with logical operators such as AND/OR. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.
               <form id="conditionalSearchForm" method="POST" action="{% url 'conditional_search' %}">
                 {% csrf_token %}
                   <table>
@@ -841,7 +853,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                               <td>1</td>
                               <td>
                                   <select name="table[]" onchange="loadColumns(this, 1)">
-                                    <option value="all_fields">All Fields</option>
+                                   
                                       <option value="cell_line">Cell Line</option>
                                       <option value="animal_studies">Animal Studies</option>
                                       <option value="patient_studies">Patient Studies</option>
@@ -921,7 +933,67 @@ CanIMMDB is a manually curated resource which provides comprehensive information
   
 
 <script src="{% static 'js/script.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+
 <script>
+  function submitData() {
+    // Get the selected database (cell_line, animal_studies, patient_studies)
+    const selectedDatabase = document.querySelector('input[name="field"]:checked').value;
+
+    // Collect form data
+    const formData = {
+        submitters_name: document.getElementById('submitters_name').value,
+        email_address: document.getElementById('email_address').value,
+        mailing_address: document.getElementById('mailing_address').value,
+        comment: document.getElementById('comment').value,
+        selected_database: selectedDatabase // Add the selected database to the form data
+    };
+
+    // Add dynamic fields data (generated based on the selected database)
+    const dynamicFields = document.getElementById('dynamic-fields').querySelectorAll('input');
+    dynamicFields.forEach(field => {
+        formData[field.name] = field.value;
+    });
+
+    // Send form data to the backend via an AJAX request
+    fetch('/submit-data/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken') // Ensure CSRF protection for Django
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Data submitted successfully!');
+        } else {
+            alert('Error submitting data: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred during submission.');
+    });
+}
+
+// Helper function to get CSRF token (for Django)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
   function fillExample2DForm() {
     document.getElementById('smilesInput2D').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
     document.getElementById('threshold2D').value = '0.5';
@@ -938,6 +1010,57 @@ function fillExamplesubsForm() {
     document.getElementById('smilesInputsubs').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
     
 }
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.querySelector('.sidebar');
+  const expandButton = document.querySelector('.expand_sidebar');
+  const collapseButton = document.querySelector('.collapse_sidebar');
+
+  // Add event listener for expanding the sidebar
+  expandButton.addEventListener('click', function() {
+    sidebar.classList.remove('close');
+    expandButton.style.display = 'none';
+    collapseButton.style.display = 'flex';
+  });
+
+  // Add event listener for collapsing the sidebar
+  collapseButton.addEventListener('click', function() {
+    sidebar.classList.add('close');
+    collapseButton.style.display = 'none';
+    expandButton.style.display = 'flex';
+  });
+});
+let slideIndex = 0;
+const slides = document.querySelector('.slides');
+const totalSlides = slides.children.length;
+
+// Function to move to the next slide
+function nextSlide() {
+  if (slideIndex === totalSlides - 1) {
+    slideIndex = 0; // Loop back to the first slide
+  } else {
+    slideIndex++;
+  }
+  updateSlidePosition();
+}
+
+// Function to move to the previous slide
+function prevSlide() {
+  if (slideIndex === 0) {
+    slideIndex = totalSlides - 1; // Loop to the last slide
+  } else {
+    slideIndex--;
+  }
+  updateSlidePosition();
+}
+
+// Function to update slide position based on slideIndex
+function updateSlidePosition() {
+  const slideWidth = slides.children[0].clientWidth;
+  slides.style.transform = `translateX(-${slideIndex * slideWidth}px)`;
+}
+
+
+
 </script>
 </body>
 </html>
