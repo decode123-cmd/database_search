@@ -19,168 +19,37 @@
     <nav class="navbar">
       <div class="logo_item">
         <i class="bx bx-menu" id="sidebarOpen"></i>
-        </i>CanImmDB
-      </div>
+        </i>CanImmDB      </div>
 
     
 
     
     <div class="navbar_content">
-        <a onclick="location.reload()">
-            <i class="bi bi-house-door"></i>
-            <span>Home</span>
+        <a href="http://127.0.0.1:8000/" >
+         <i> Home </i>
         </a>
-        <a onclick="openSection('information')">
-            <i class='bx bx-info-circle'></i>
-            <span>Information</span>
+        <a href="http://127.0.0.1:8000#information" onclick="openSection('information')">
+            
+            <i>Information</i>
         </a>
-        <a onclick="openSection('data-submission')">
-            <i class='bx bx-upload'></i>
-            <span>Data Submission</span>
+        <a href="http://127.0.0.1:8000#data-submission" onclick="openSection('data-submission')">
+            
+            <i>Data Submission</i>
         </a>
-        <a onclick="openSection('developers')">
-            <i class='bx bx-code'></i>
-            <span>Developers</span>
+        <a href="http://127.0.0.1:8000#developers" onclick="openSection('developers')">
+            
+            <i>Developers</i>
         </a>
-        <a onclick="openSection('contact')">
-            <i class='bx bx-phone'></i>
-            <span>Contact</span>
+        <a href="http://127.0.0.1:8000#contact" onclick="openSection('contact')">
+            
+            <i>Contact</i>
         </a>
-        <a onclick="openSection('assistance')">
-            <i class='bx bx-help-circle'></i>
-            <span>Assistance</span>
+        <a href="http://127.0.0.1:8000#assistance" onclick="openSection('assistance')">           
+            <i>Assistance</i>
         </a>
         
     </div>
     
     </nav>
 
-    <!-- sidebar -->
-    <nav class="sidebar">
-      <div class="menu_content">
-               
-        <ul class="menu_items">
-          <div class="menu_title menu_search"> Search</div>
-          <!-- duplicate these li tag if you want to add or remove navlink only -->
-          <!-- Start -->
-          <li class="item">
-            <a href="#" class="nav_link basic">
-              <span class="navlink_icon">
-                <i class="bx bxs-magic-wand"></i>
-              </span>
-              <span class="navlink">Basic</span>
-            </a>
-            
-          </li>
-          <!-- End -->
-
-          <li class="item">
-            <a href="#" class="nav_link conditional">
-              <span class="navlink_icon">
-                <i class="bx bx-loader-circle"></i>
-              </span>
-              <span class="navlink">Conditional</span>
-            </a>
-          </li>
-          
-        </ul>
-        
-        
-        <ul class="menu_items">
-          <div class="menu_title menu_browse"> Browse</div>
-          <!-- duplicate these li tag if you want to add or remove navlink only -->
-          <!-- Start -->
-          <li class="item">
-            <a href="#" class="nav_link Drug_Category" onclick="fetchDrugCategoryData(event)">
-              <span class="navlink_icon">
-                <i class="bx bx-loader-circle"></i>
-              </span>
-              <span class="navlink">Drug Category</span>
-            </a>
-          </li>
-          <li class="item">
-            <a href="#" class="nav_link Technique" onclick="fetchtechnique(event)">
-              <span class="navlink_icon">
-                <i class="bx bxs-magic-wand"></i>
-              </span>
-              <span class="navlink">Technique</span>
-            </a>
-          </li>
-          <li class="item">
-            <a href="#" class="nav_link Cancer" onclick = 'fetchcancer(event)' >
-              <span class="navlink_icon">
-                <i class="bx bx-loader-circle"></i>
-              </span>
-              <span class="navlink">Cancer Type</span>
-            </a>
-          </li>
-          <!-- End -->
-
-          
-          <li class="item">
-            <a href="#" class="nav_link Smiles">
-              <span class="navlink_icon">
-                <i class="bx bx-filter"></i>
-              </span>
-              <span class="navlink">SMILES</span>
-            </a>
-          </li>
-          
-        </ul>
-        <ul class="menu_items">
-          <div class="menu_title menu_browse">Tools </div>
-          <!-- duplicate these li tag if you want to add or remove navlink only -->
-          <!-- Start -->
-          <li class="item">
-              <a href="#" class="nav_link TwoD_search">
-              <span class="navlink_icon">
-                <i class="bx bxs-magic-wand"></i>
-              </span>
-              <span class="navlink">2D Similarity Search</span>
-            </a>
-          </li>
-          <li class="item">
-            <a href="#" class="nav_link substructure">
-              <span class="navlink_icon">
-                <i class="bx bxs-magic-wand"></i>
-              </span>
-              <span class="navlink">Substructure Search</span>
-            </a>
-          </li>
-          <li class="item">
-            <a href="#" class="nav_link ThreeDsearch">
-              <span class="navlink_icon">
-                <i class="bx bxs-magic-wand"></i>
-              </span>
-              <span class="navlink">3D Smilarity Search</span>
-            </a>
-          </li>
-          <!-- End -->
-
-          <li class="item">
-            <a href="#" class="nav_link Maccs">
-              <span class="navlink_icon">
-                <i class="bx bx-loader-circle"></i>
-              </span>
-              <span class="navlink">MACCS Key Search</span>
-            </a>
-          </li>
-         
-         
-        </ul>
-        <!-- Sidebar Open / Close -->
-        <div class="bottom_content">
-          <div class="bottom expand_sidebar">
-            <span> Expand</span>
-            <i class='bx bx-log-in' ></i>
-          </div>
-          <div class="bottom collapse_sidebar">
-            <span> Collapse</span>
-            <i class='bx bx-log-out'></i>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <main class="content_area">
-    </main>
-    
+   

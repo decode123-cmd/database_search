@@ -1,4 +1,6 @@
 {% load static %}
+{%include 'database/base.html'%}
+
 <!DOCTYPE html>
 <!-- Coding by CodingNepal || www.codingnepalweb.com -->
 <html lang="en">
@@ -18,7 +20,7 @@
   </head>
   <body>
     <!-- navbar -->
-    <nav class="navbar">
+    {% comment %} <nav class="navbar">
       <div class="logo_item">
         <i class="bx bx-menu" id="sidebarOpen"></i>
         </i>CanImmDB      </div>
@@ -52,7 +54,7 @@
         
     </div>
     
-    </nav>
+    </nav>{% endcomment %}
 
     <!-- sidebar -->
     <nav class="sidebar">
@@ -179,7 +181,7 @@
           </div>
         </div>
       </div>
-    </nav>
+    </nav> 
     <main class="content_area">
      
       <section id="information" class="section" style = 'display:none;'>
@@ -551,9 +553,11 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                     {% csrf_token %}
                     <fieldset>
                         <div class="checkbox-group">
+                          <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                          <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
                             <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
-                            <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
-                            <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                            
+                            
                         </div>
                     </fieldset>
                     <fieldset>
@@ -601,9 +605,11 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                   {% csrf_token %}
                   <fieldset>
                       <div class="checkbox-group">
+                        <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                        <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
                           <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
-                          <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
-                          <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                        
+                          
                       </div>
                   </fieldset>
                   <fieldset>
@@ -651,9 +657,11 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                 {% csrf_token %}
                 <fieldset>
                     <div class="checkbox-group">
+                      <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                      <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
                         <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
-                        <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
-                        <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                        
+                        
 
                     </div>
                 </fieldset>
@@ -698,9 +706,11 @@ CanIMMDB is a manually curated resource which provides comprehensive information
         {% csrf_token %}
         <fieldset>
           <div class="checkbox-group">
-            <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
-            <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
             <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+            <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
+            <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
+          
+            
           </div>
         </fieldset>
         <fieldset>
@@ -1060,7 +1070,35 @@ function updateSlidePosition() {
 }
 
 
+ // Function to display the specified section
+ function openSection(sectionId) {
+  const sections = document.querySelectorAll('.section');
+  sections.forEach(section => {
+      section.style.display = 'none'; // Hide all sections
+  });
+  
+  // Show only the target section
+  const targetSection = document.getElementById(sectionId);
+  if (targetSection) {
+      targetSection.style.display = 'block';
+  }
+}
 
+// Check for URL fragment or query parameter on page load
+window.onload = function() {
+  const fragment = window.location.hash.substring(1); // Extracts `sectionID` from `#sectionID`
+  if (fragment) {
+      openSection(fragment); // Open the section matching the fragment
+  }
+};
+
+// Listen for changes to the fragment and open the corresponding section
+window.addEventListener("hashchange", () => {
+  const fragment = window.location.hash.substring(1);
+  if (fragment) {
+      openSection(fragment);
+  }
+});
 </script>
 </body>
 </html>
