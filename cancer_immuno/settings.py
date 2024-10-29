@@ -21,11 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-=1jre%2gpy8$d!-yz#(=x2213q2+k2hgoti-gr4$p2yarq-)i1'
-CSRF_TRUSTED_ORIGINS = [ 'https://cancerimmuno-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = [ 'https://canimmdb.com','databasesearch-production.up.railway.app']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','cancerimmuno-production.up.railway.app','*']
+ALLOWED_HOSTS = ['https://canimmdb.com','databasesearch-production.up.railway.app']
 
 
 # Application definition
@@ -78,7 +78,7 @@ import dj_database_url
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://postgres:ybSxlyKKlCcskPYfuZJwBllGuEyTPmwp@monorail.proxy.rlwy.net:28748/railway'
+        default='postgresql://postgres:OvRIsbhSnGIHWFDawjJaEBTiESwdXZKY@autorack.proxy.rlwy.net:24342/railway'
     )
 }
 
