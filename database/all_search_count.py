@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, text  # Import text from sqlalchemy
 import psycopg2
 
 # Database connection parameters
-connection_url = "postgresql://postgres:ybSxlyKKlCcskPYfuZJwBllGuEyTPmwp@monorail.proxy.rlwy.net:28748/railway"
+connection_url = "postgresql://postgres:OvRIsbhSnGIHWFDawjJaEBTiESwdXZKY@autorack.proxy.rlwy.net:24342/railway"
 
 # Create the SQLAlchemy engine
 engine = create_engine(connection_url, echo=False)

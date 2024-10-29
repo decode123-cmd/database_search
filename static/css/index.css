@@ -32,7 +32,7 @@ body {
   margin-bottom: 0px;
   border-radius: 46px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  width: 81%;
+  width: 76%;
   margin-top: 5%;
   margin-left: 19%;
 }
@@ -889,4 +889,95 @@ form {
   height: auto;
   border: 1px solid #ddd;
   border-radius: 8px;
+}
+/* Sidebar default expanded width */
+.sidebar {
+  background-color: var(--white-color);
+  width: 274px; /* Expanded width */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 80px 20px;
+  z-index: 100;
+  overflow-y: scroll;
+  box-shadow: 0 0 1px var(--grey-color-light);
+  transition: all 0.5s ease;
+}
+
+/* Sidebar collapsed */
+.sidebar.close {
+  width: 80px; /* Collapsed width */
+  padding: 60px 0;
+}
+
+/* Adjust the bottom content when the sidebar is collapsed */
+.sidebar.close .bottom_content {
+  width: 50px;
+  left: 15px;
+}
+
+.sidebar.close .bottom span {
+  display: none;
+}
+
+/* Hide navlink text when sidebar is collapsed */
+.sidebar.close .nav_link .navlink {
+  display: none;
+}
+
+/* Button visibility control */
+.expand_sidebar {
+  display: none; /* Initially hidden */
+}
+
+.sidebar.close .expand_sidebar {
+  display: flex; /* Show expand button when sidebar is collapsed */
+}
+
+.sidebar.close .collapse_sidebar {
+  display: none; /* Hide collapse button when sidebar is collapsed */
+}
+.slider {
+  position: relative;
+  max-width: 100%; /* Full width */
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+.slides {
+  display: flex;
+  width: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slides img {
+  width: 100%; /* Ensures all images take full width */
+  flex-shrink: 0;
+}
+
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+/* Optional styling for smoother transitions */
+.slider img {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

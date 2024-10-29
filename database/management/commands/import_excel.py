@@ -7,7 +7,7 @@ import psycopg2
 from psycopg2 import OperationalError
 
 # Define the connection URL
-connection_url = "postgresql://postgres:ybSxlyKKlCcskPYfuZJwBllGuEyTPmwp@monorail.proxy.rlwy.net:28748/railway"
+connection_url = "postgresql://postgres:OvRIsbhSnGIHWFDawjJaEBTiESwdXZKY@autorack.proxy.rlwy.net:24342/railway"
 # Create the SQLAlchemy engine
 engine = create_engine(connection_url, echo=False)
 print(engine)
@@ -29,7 +29,7 @@ class Command(BaseCommand):
         # Test the database connection
 
         # Path to the Excel file
-        file_path = os.path.join(settings.BASE_DIR, 'master.xlsx')
+        file_path = os.path.join(settings.BASE_DIR, 'Akshat.xlsx')
         
         # Load the Excel file using pandas
         excel_file = pd.ExcelFile(file_path, engine='openpyxl')

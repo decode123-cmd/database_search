@@ -890,3 +890,51 @@ form {
   border: 1px solid #ddd;
   border-radius: 8px;
 }
+/* Sidebar default expanded width */
+.sidebar {
+  background-color: var(--white-color);
+  width: 274px; /* Expanded width */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 80px 20px;
+  z-index: 100;
+  overflow-y: scroll;
+  box-shadow: 0 0 1px var(--grey-color-light);
+  transition: all 0.5s ease;
+}
+
+/* Sidebar collapsed */
+.sidebar.close {
+  width: 80px; /* Collapsed width */
+  padding: 60px 0;
+}
+
+/* Adjust the bottom content when the sidebar is collapsed */
+.sidebar.close .bottom_content {
+  width: 50px;
+  left: 15px;
+}
+
+.sidebar.close .bottom span {
+  display: none;
+}
+
+/* Hide navlink text when sidebar is collapsed */
+.sidebar.close .nav_link .navlink {
+  display: none;
+}
+
+/* Button visibility control */
+.expand_sidebar {
+  display: none; /* Initially hidden */
+}
+
+.sidebar.close .expand_sidebar {
+  display: flex; /* Show expand button when sidebar is collapsed */
+}
+
+.sidebar.close .collapse_sidebar {
+  display: none; /* Hide collapse button when sidebar is collapsed */
+}

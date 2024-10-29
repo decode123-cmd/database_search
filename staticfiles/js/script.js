@@ -693,3 +693,66 @@ function createDynamicFields(columns) {
 }
 
 
+function submitData() {
+    // Get the selected database (cell_line, animal_studies, patient_studies)
+    const selectedDatabase = document.querySelector('input[name="field"]:checked').value;
+
+    // Collect form data
+    const formData = {
+        submitters_name: document.getElementById('submitters_name').value,
+        email_address: document.getElementById('email_address').value,
+        mailing_address: document.getElementById('mailing_address').value,
+        comment: document.getElementById('comment').value,
+    };
+
+    // Add dynamic fields data (generated based on the selected database)
+    const dynamicFields = document.getElementById('dynamic-fields').querySelectorAll('input');
+    dynamicFields.forEach(field => {
+        formData[field.name] = field.value;
+    });
+
+    // Create a new Excel workbook
+    const workbook = XLSX.utils.book_new();
+
+    // Create a sheet based on the selected database
+    const worksheetData = [
+        Object.keys(formData), // Header row (column names)
+        Object.values(formData) // Data row (user input)
+    ];
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Append the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, selectedDatabase);
+
+    // Export the Excel file
+    XLSX.writeFile(workbook, 'submitted_data.xlsx');
+}
+// Function to display the specified section
+function openSection(sectionId) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+        section.style.display = 'none'; // Hide all sections
+    });
+    
+    // Show only the target section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.style.display = 'block';
+    }
+  }
+  
+  // Check for URL fragment or query parameter on page load
+  window.onload = function() {
+    const fragment = window.location.hash.substring(1); // Extracts `sectionID` from `#sectionID`
+    if (fragment) {
+        openSection(fragment); // Open the section matching the fragment
+    }
+  };
+  
+  // Listen for changes to the fragment and open the corresponding section
+  window.addEventListener("hashchange", () => {
+    const fragment = window.location.hash.substring(1);
+    if (fragment) {
+        openSection(fragment);
+    }
+  });
