@@ -25,7 +25,7 @@ CSRF_TRUSTED_ORIGINS = [ 'https://canimmdb.com','https://databasesearch-producti
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://canimmdb.com','databasesearch-production.up.railway.app']
+ALLOWED_HOSTS = ['https://canimmdb.com','databasesearch-production.up.railway.app','*']
 
 
 # Application definition

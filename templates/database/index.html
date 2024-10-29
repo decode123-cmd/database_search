@@ -1069,6 +1069,8 @@ function updateSlidePosition() {
   slides.style.transform = `translateX(-${slideIndex * slideWidth}px)`;
 }
 
+// Automatically move to the next slide every 2 seconds
+setInterval(nextSlide, 2000);
 
  // Function to display the specified section
  function openSection(sectionId) {
