@@ -1142,18 +1142,21 @@ function toggleInformationSection() {
 }
 
 function showSubsection(subsectionId) {
-  // Ensure main information section is visible
-  toggleInformationSection();
+  // Show the main information section directly
+  const infoSection = document.getElementById('information');
+  infoSection.style.display = 'block';
 
   // Hide all subsections
   const subsections = document.querySelectorAll('.information-subsection');
   subsections.forEach(section => section.style.display = 'none');
+
   // Display the selected subsection
   const subsection = document.getElementById(subsectionId);
   if (subsection) {
       subsection.style.display = 'block';
   }
 }
+
 </script>
 </body>
 </html>
