@@ -727,32 +727,3 @@ function submitData() {
     // Export the Excel file
     XLSX.writeFile(workbook, 'submitted_data.xlsx');
 }
-// Function to display the specified section
-function openSection(sectionId) {
-    const sections = document.querySelectorAll('.section');
-    sections.forEach(section => {
-        section.style.display = 'none'; // Hide all sections
-    });
-    
-    // Show only the target section
-    const targetSection = document.getElementById(sectionId);
-    if (targetSection) {
-        targetSection.style.display = 'block';
-    }
-  }
-  
-  // Check for URL fragment or query parameter on page load
-  window.onload = function() {
-    const fragment = window.location.hash.substring(1); // Extracts `sectionID` from `#sectionID`
-    if (fragment) {
-        openSection(fragment); // Open the section matching the fragment
-    }
-  };
-  
-  // Listen for changes to the fragment and open the corresponding section
-  window.addEventListener("hashchange", () => {
-    const fragment = window.location.hash.substring(1);
-    if (fragment) {
-        openSection(fragment);
-    }
-  });

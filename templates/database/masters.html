@@ -1,42 +1,80 @@
-{%include 'database/base.html'%}
+{% include 'database/base.html' %}
 {% load static %}
 
 <script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
 <script src="https://unpkg.com/smiles-drawer/dist/smiles-drawer.min.js"></script>
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
 
-     <script src="{% static 'js/script.js' %}"></script>
-  
-<main class="content_area">
-    <section class="mechanism_section" id='mechanismSection' >
+<script src="{% static 'js/script.js' %}"></script>
+
+
+    <section class="mechanism_section" id='mechanismSection'>
         <div class="container">
-         
-             <h1 style="margin-top: 75px;">Browse Result</h1>
-            <table id="dynamicTable" border="1">
-              
+            <h1 style="margin-top: 75px;">Browse Result</h1>
+            <table id="dynamicTable">
                 <thead id="tableHead"></thead>
                 <tbody id="tableBody"></tbody>
             </table>
-</div>
-</section>
-</main>
+        </div>
+    </section>
+
+<!-- CSS for enhanced table styling -->
 <style>
- 
+    /* Table Styling */
+    #dynamicTable {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    /* Header Styling */
+    #dynamicTable th {
+        background-color: #28a745; /* Green color for the header */
+        color: white;
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    /* Data Cell Styling */
+    #dynamicTable td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        vertical-align: top;
+    }
+
+    /* Alternating Row Colors */
+    #dynamicTable tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    #dynamicTable tr:nth-child(odd) {
+        background-color: #e6f7e6; /* Light green color for alternate rows */
+    }
+
+    /* Hover Effect */
+    #dynamicTable tr:hover {
+        background-color: #d4edda;
+    }
+
+    /* Consistent Column Width for Better Alignment */
+    #dynamicTable th, #dynamicTable td {
+        min-width: 120px;
+    }
 </style>
 
+<!-- JavaScript to populate and style the table with structures and links -->
 <script>
- document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     let RDKitModule;
-    var pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
-    var kegg = 'https://www.genome.jp/entry/';
-    var drugbank = 'https://go.drugbank.com/drugs/';
+    const pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
+    const kegg = 'https://www.genome.jp/entry/';
+    const drugbank = 'https://go.drugbank.com/drugs/';
     
-    // Initialize RDKitModule and handle data
     window.initRDKitModule().then(function (instance) {
         RDKitModule = instance;
         console.log("RDKit version: " + RDKitModule.version());
 
-        // Parse the JSON strings passed from Django
         const columnNames = JSON.parse('{{ column_names|escapejs }}');
         const data = JSON.parse('{{ d|escapejs }}');
 
@@ -48,11 +86,11 @@
         console.error("Error initializing RDKitModule.");
     });
     
-    // Function to generate the structure from SMILES and return SVG
     function generateStructure(smiles) {
         try {
-            var mol = RDKitModule.get_mol(smiles);
-            var svg = mol.get_svg();
+            const mol = RDKitModule.get_mol(smiles);
+            const svg = mol.get_svg();
+            mol.delete();
             return svg;
         } catch (error) {
             console.error("Error generating structure:", error);
@@ -60,72 +98,40 @@
         }
     }
     
-    // Function to update the table with data and generate structures
     function updateTableWithStructures(columnNames, data) {
         const tableHead = document.getElementById('tableHead');
         const tableBody = document.getElementById('tableBody');
     
-        // Clear any existing content in table head and body
         tableHead.innerHTML = '';
         tableBody.innerHTML = '';
     
-        // Create the table header
         const headerRow = document.createElement('tr');
-        columnNames.push("Structure"); // Add Structure column
+        columnNames.push("Structure");
         columnNames.forEach(column => {
             const headerCell = document.createElement('th');
-            headerCell.textContent = column;
+            headerCell.textContent = column.replace(/_/g, " ");
             headerRow.appendChild(headerCell);
         });
         tableHead.appendChild(headerRow);
     
-        // Fill the table body with data and structure
         data.forEach(row => {
             const dataRow = document.createElement('tr');
             columnNames.forEach(column => {
                 const cell = document.createElement('td');
                 if (column === "Structure") {
                     const smiles = row["STR_LINK (SMILES)"];
-                    if (smiles) {
-                        cell.innerHTML = generateStructure(smiles);
-                    } else {
-                        cell.textContent = "No SMILES available";
-                    }
+                    cell.innerHTML = smiles ? generateStructure(smiles) : "No SMILES available";
                 } else if (column === 'DRUG_PUBCHEM') {
                     const value = row[column];
-                    if (value) {
-                        const link = document.createElement('a');
-                        link.href = pubchem + value;
-                        link.target = "_blank";
-                        link.textContent = value;
-                        cell.appendChild(link);
-                    } else {
-                        cell.textContent = "No PubChem ID available";
-                    }
+                    cell.innerHTML = value ? `<a href="${pubchem}${value}" target="_blank">${value}</a>` : "No PubChem ID";
                 } else if (column === 'Drugbank_ID') {
                     const value = row[column];
-                    if (value) {
-                        const link = document.createElement('a');
-                        link.href = drugbank + value;
-                        link.target = "_blank";
-                        link.textContent = value;
-                        cell.appendChild(link);
-                    } else {
-                        cell.textContent = "No DrugBank ID available";
-                    }
+                    cell.innerHTML = value ? `<a href="${drugbank}${value}" target="_blank">${value}</a>` : "No DrugBank ID";
                 } else if (column === 'KEGG DRUG ID') {
                     const value = row[column];
-                    if (value) {
-                        const link = document.createElement('a');
-                        link.href = kegg + value;
-                        link.target = "_blank";
-                        link.textContent = value;
-                        cell.appendChild(link);
-                    } else {
-                        cell.textContent = "No KEGG ID available";
-                    }
+                    cell.innerHTML = value ? `<a href="${kegg}${value}" target="_blank">${value}</a>` : "No KEGG ID";
                 } else {
-                    cell.textContent = row[column];
+                    cell.textContent = row[column] || "";
                 }
                 dataRow.appendChild(cell);
             });
@@ -133,5 +139,4 @@
         });
     }
 });
-
 </script>
