@@ -63,12 +63,14 @@ def techniques():
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
 
             # Process technique data
-            drug_categories = dataframes['index']['TECHNIQUE'].dropna().unique()  # Drop None values before finding unique
+            drug_categories = dataframes['index']['TECHNIQUE'].dropna().unique() 
+            print(drug_categories)# Drop None values before finding unique
             search_terms = {}
 
             for category in drug_categories:
                 terms = [term.strip() for term in category.split('/')]
                 search_terms[category] = terms
+            print(search_terms)
 
             counts = {}
 
@@ -78,6 +80,7 @@ def techniques():
                     'Animal_Count': int(dataframes['animal_studies']['TECHNIQUE'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum()),
                     'Patient_Count': int(dataframes['patients']['TECHNIQUE'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum())
                 }
+            print(counts)
 
             return counts
 
