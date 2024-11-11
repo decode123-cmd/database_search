@@ -148,7 +148,6 @@ def get_category_data(request, category):
     # Render the new template with the context
     return render(request, 'database/masters.html', context)
 
-
 def search(request):
     if request.method == "POST":
         query = request.POST.get('query')
