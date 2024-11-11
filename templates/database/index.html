@@ -188,14 +188,14 @@
         <div class='information-section'>
         
         
-        <div id="architecture" class="information-subsection">
+        <div id="architecture" class="information-subsection" style = 'display:none;'>
             <h3 class="subsection-heading">Architecture of CanImmDB</h3>
             <div class="architecture-image">
                 <img src="{% static 'img/fig.png'%}" alt="Architecture of CanImmDB">
             </div>
         </div>
  
-        <div id="field-description" class="information-subsection">
+        <div id="field-description" class="information-subsection" style = 'display:none;'>
           <h3 class="subsection-heading">Brief Description of all the fields in CanImmDB</h3>
           <table class="field-description-table">
               <thead>
@@ -276,7 +276,49 @@
               </tbody>
           </table>
       </div>
-      <div id="faqs" class="information-subsection">
+      <div id="acknowldgement" class="information-subsection" style = 'display:none;'>
+        <h3 class="subsection-heading">We appreciate the direct and indirect assistance that researchers provided in the creation of CanImmDB. We express our gratitude to the creators of the resources listed below. </h3>
+        <table class="field-description-table">
+            <thead>
+                <tr>
+                    <th>Resources</th>
+                    <th>Description</th>
+                </tr> 
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Drugbank</td>
+                    <td>A vast, publicly available online database with information on drugs and drug targets.</td>
+                </tr>
+                <tr>
+                    <td>KEGG </td>
+                    <td>A Databases with informations on genomes, biological pathways, diseases and Drugs.</td>
+                </tr>
+                <tr>
+                    <td>Pubchem</td>
+                    <td>Pubchem database is a chemical information database.</td>
+                </tr>
+                <tr>
+                    <td>Pubmed</td>
+                    <td>Pubmed is a resource which stores biomedical literature from MEDLINE, life science journals, and online books</td>
+                </tr>
+                <tr>
+                    <td> PostgresSQL</td>
+                    <td>PostgresSQL is employed as the database management system to handle all the back end data operations that includes storing, managing and retrieving data facilitating seamless data manipulation and querying in CanImmDB.</td>
+                </tr> 	
+                 <tr>
+                    <td>Python</td>
+                    <td>Python programming language is employed for the backend processing and Python framework known as Django was used to connect the web interface with the database. All common Gateway interface and database interface scripts were written in Python.</td>
+                </tr>
+                <tr>
+                    <td>HTML, CSS and Java </td>
+                    <td>Front end of the web interface was developed using a combination of HTML, CSS and Java script.</td>
+                </tr>
+               
+            </tbody>
+        </table>
+    </div>
+      <div id="faqs" class="information-subsection" style = 'display:none;'>
         <h3 class="subsection-heading">FAQs (Frequently asked questions)</h3>
         <div class="faq">
             <p><strong>Q1.What is CanIMMDB ?</strong></p>
@@ -312,7 +354,7 @@
         </div>
         
     </div>
-    <div id="statistics" class="information-subsection">
+    <div id="statistics" class="information-subsection" style = 'display:none;'>
         <h3 class="subsection-heading">Statistical information about CanImmDB</h3>
         <div class="statistics-images">
             <div class="stat-image">
@@ -1106,7 +1148,6 @@ function showSubsection(subsectionId) {
   // Hide all subsections
   const subsections = document.querySelectorAll('.information-subsection');
   subsections.forEach(section => section.style.display = 'none');
-
   // Display the selected subsection
   const subsection = document.getElementById(subsectionId);
   if (subsection) {
