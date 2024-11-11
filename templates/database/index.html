@@ -186,18 +186,8 @@
      
       <section id="information" class="section" style = 'display:none;'>
         <div class='information-section'>
-        <div class="information-heading-container">
-            <h2 class="information-heading">Information Page About CanImmDB</h2>
-        </div>
-        <div class="contents-container">
-            <h3 class="contents-heading">Contents</h3>
-            <ul class="contents-list">
-                <li><a href="#architecture">Architecture</a></li>
-                <li><a href="#field-description">Field Description</a></li>
-                <li><a href="#faqs">FAQs</a></li>
-                <li><a href="#statistics">Statistics</a></li>
-            </ul>
-        </div>
+        
+        
         <div id="architecture" class="information-subsection">
             <h3 class="subsection-heading">Architecture of CanImmDB</h3>
             <div class="architecture-image">
@@ -1101,6 +1091,28 @@ window.addEventListener("hashchange", () => {
       openSection(fragment);
   }
 });
+function toggleInformationSection() {
+  // Show the main information section if it's hidden
+  const infoSection = document.getElementById('information');
+  if (infoSection.style.display === 'none') {
+      infoSection.style.display = 'block';
+  }
+}
+
+function showSubsection(subsectionId) {
+  // Ensure main information section is visible
+  toggleInformationSection();
+
+  // Hide all subsections
+  const subsections = document.querySelectorAll('.information-subsection');
+  subsections.forEach(section => section.style.display = 'none');
+
+  // Display the selected subsection
+  const subsection = document.getElementById(subsectionId);
+  if (subsection) {
+      subsection.style.display = 'block';
+  }
+}
 </script>
 </body>
 </html>

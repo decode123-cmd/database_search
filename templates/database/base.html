@@ -28,10 +28,17 @@
         <a href="/" >
          <i> Home </i>
         </a>
-        <a href="https://databasesearch-production.up.railway.app/#information" onclick="openSection('information')">
-            
-            <i>Information</i>
-        </a>
+        <div class="dropdown">
+            <a href="https://databasesearch-production.up.railway.app/#information" onclick="toggleInformationSection()" class="dropbtn">
+                <i>Information</i>
+            </a>
+            <div class="dropdown-content">
+                <a href="#architecture" onclick="showSubsection('architecture')">Architecture</a>
+                <a href="#field-description" onclick="showSubsection('field-description')">Field Description</a>
+                <a href="#faqs" onclick="showSubsection('faqs')">FAQs</a>
+                <a href="#statistics" onclick="showSubsection('statistics')">Statistics</a>
+            </div>
+        </div>
         <a href="https://databasesearch-production.up.railway.app/#data-submission" onclick="openSection('data-submission')">
             
             <i>Data Submission</i>
