@@ -778,43 +778,44 @@ CanIMMDB is a manually curated resource which provides comprehensive information
 
 
 <!--########################################## END Of Tools#####################################################################################################-->
-      <section id="searchFormSection" class="section" style = "display:none;">
-        <div class="container">
-            <div class="search-container">
-                <h1>Basic Search</h1>
-                <p>This module allows users to perform a simple search on any field within the CanImmDB.For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.
-                <form id="searchForm" method="POST" action="{% url 'search' %}">
-                    {% csrf_token %}
-                    <fieldset>
-                      <legend>Please paste/insert/type your query to be searched:</legend>
-                        <input type="text" placeholder="Enter Keyword ..." name="query">
-                    </fieldset>
-                      <legend>Select Fields to be SEARCHED</legend>
-                      <div class="checkbox-group">
-             
-                        <label><input type="radio" name="field" value="cell_line" onclick="loadColumns_search(this)"> Search In Cell Line</label>                      
-                          <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns_search(this)"> Search In Animal Studies</label>
-                          <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns_search(this)"> Search In Patient Studies</label>
-                          
-                      </div>
-                  </fieldset>
-                   
-                  <fieldset class="fields-to-search" id="fields-to-search">
-                    <legend>Select Specific Columns to Search In</legend>
-                    <div id="column-checkboxes" class="checkboxes-container">
-                        <!-- Checkboxes will be added here dynamically -->
-                    </div>
-                </fieldset>
-                     
-                    
-                    <div class="form-buttons">
-                        <button type="button" onclick="clearForm()">Clear</button>
-                        <button type="submit">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
+<section id="searchFormSection" class="section">
+  <div class="container">
+      <div class="search-container">
+          <h1>Basic Search</h1>
+          <p>This module allows users to perform a simple search on any field within the CanImmDB. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
+          <form id="searchForm" method="POST" action="{% url 'search' %}">
+              {% csrf_token %}
+              
+              <fieldset>
+                  <legend>Please paste/insert/type your query to be searched:</legend>
+                  <input type="text" id="search-box" placeholder="Enter Keyword ..." name="query">
+              </fieldset>
+              
+              <fieldset>
+                  <legend>Select Fields to be SEARCHED</legend>
+                  <div class="checkbox-group">
+                      <label><input type="radio" name="field" value="cell_line" onclick="loadColumns_search(this)"> Search In Cell Line</label>
+                      <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns_search(this)"> Search In Animal Studies</label>
+                      <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns_search(this)"> Search In Patient Studies</label>
+                  </div>
+              </fieldset>
+
+              <fieldset class="fields-to-search" id="fields-to-search" style="display: none;">
+                  <legend>Select Specific Columns to Search In</legend>
+                  <div id="column-checkboxes" class="checkboxes-container">
+                      <!-- Dynamic checkboxes will be added here -->
+                  </div>
+              </fieldset>
+
+              <div class="form-buttons">
+                  <button type="button" onclick="clearForm()">Clear</button>
+                  <button type="submit">Submit</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</section>
+
     <section id="Category_section" class="section" style = "display:none;" >
       <div class="container">
  
@@ -1156,8 +1157,141 @@ function showSubsection(subsectionId) {
       subsection.style.display = 'block';
   }
 }
+document.addEventListener("DOMContentLoaded", function() {
+  // Example data for each field
+  const exampleData = {
+      "ID": "CANIMM/2016",
+      "DRUG": "Cyclophosphamide",
+      "Drug category": "Alkylating agents",
+      "Drugbank_ID": "DB00531",
+      "TARGET/s OR MECHANISM OF ACTION": "Inhibition of protein synthesis",
+      "KEGG DRUG ID": "D07760",
+      "DRUG_PUBCHEM": "2907",
+      "STR_LINK (SMILES)": "ClCCN(CCCl)P1(=O)NCCCO1",
+      "Single/Combination": "Single Drug",
+      "PMID": "26156960",
+      "Cancer_Type": "Lung Cancer",
+      "Cancer_Type Description": "Lung/Breast",
+      "SYSTEM": "A375",
+      "DOSE": "1 μM",
+      "TECHNIQUE": "Flow cytometry",
+      "IMMUNE SYSTEM-Function enhanced/numbers increased": "T cell",
+      "IMMUNE SYSTEM-Function inhibited/numbers decreased": "CD4",
+      "IMMUNE SYTEM FUNCTION UNAFFECTED": "CD4",
+      "NEGATIVE IMMUNE SYTEM REGULATION-Function enhanced/numbers incr": "CD4",
+      "ANIMAL STRAIN USED": "BALB/c",
+      "CELL LINE USED TO INDUCE TUMOR IN MICE": "CT26 cells",
+      "PATIENT_SAMPLE": "14"
+  };
 
+  // Load columns and add checkboxes with examples
+  window.loadColumns_search = function(checkbox) {
+    const field = checkbox.value;
+    if (checkbox.checked) {
+        fetch(`/get_columns/?field=${field}`)
+            .then(response => response.json())
+            .then(data => {
+                const columnCheckboxes = document.getElementById('column-checkboxes');
+                columnCheckboxes.innerHTML = '';
+
+                data.column_names.forEach(column => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'checkbox-wrapper';
+
+                    const label = document.createElement('label');
+                    label.className = 'checkbox-label';
+
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.name = 'field_query';
+                    input.value = column;
+
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(` ${column}`));
+
+                    if (exampleData[column]) {
+                        const exampleSpan = document.createElement('span');
+                        exampleSpan.className = 'example-tag';
+                        exampleSpan.textContent = ` [ ${exampleData[column]} ]`;
+
+                        exampleSpan.addEventListener('click', function() {
+                            document.getElementById('search-box').value = exampleData[column];
+                        });
+
+                        label.appendChild(exampleSpan);
+                    }
+
+                    wrapper.appendChild(label);
+                    columnCheckboxes.appendChild(wrapper);
+                });
+
+                document.getElementById('fields-to-search').style.display = 'flex';
+            })
+            .catch(error => console.error('Error loading columns:', error));
+    } else {
+        document.getElementById('column-checkboxes').innerHTML = '';
+        document.getElementById('fields-to-search').style.display = 'none';
+    }
+};
+
+  // Clear form function
+  window.clearForm = function() {
+      document.getElementById("searchForm").reset();
+      document.getElementById("search-box").value = '';
+      document.getElementById("column-checkboxes").innerHTML = '';
+      document.getElementById("fields-to-search").style.display = 'none';
+  }
+});
 </script>
+<style>
+  #search-box {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    color: black;
+}
+
+.fields-to-search {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.checkboxes-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two items per row */
+    gap: 10px;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.example-tag {
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 6px;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+}
+
+.example-tag:hover {
+    background-color: #ccc;
+}
+</style>
 </body>
 </html>
 

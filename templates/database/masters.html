@@ -3,22 +3,32 @@
 
 <script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
 <script src="https://unpkg.com/smiles-drawer/dist/smiles-drawer.min.js"></script>
-
 <script src="{% static 'js/script.js' %}"></script>
 
-
-    <section class="mechanism_section" id='mechanismSection'>
-        <div class="container">
-            <h1 style="margin-top: 75px;">Browse Result</h1>
+<section class="mechanism_section" id='mechanismSection'>
+    <div class="container">
+        <h1 style="margin-top: 75px;">Browse Result</h1>
+        
+        <!-- Scrollable table container -->
+        <div class="table-container">
             <table id="dynamicTable">
                 <thead id="tableHead"></thead>
                 <tbody id="tableBody"></tbody>
             </table>
         </div>
-    </section>
+    </div>
+</section>
 
-<!-- CSS for enhanced table styling -->
+<!-- CSS for fixed header and scrollable table body -->
 <style>
+    /* Container for scrollable table */
+    .table-container {
+        max-height: 864px; /* Set desired height */
+        overflow-y: auto; /* Enable vertical scrolling */
+        border: 1px solid #ddd;
+        margin-top: 20px;
+    }
+
     /* Table Styling */
     #dynamicTable {
         width: 100%;
@@ -27,13 +37,16 @@
         font-size: 14px;
     }
 
-    /* Header Styling */
-    #dynamicTable th {
-        background-color: #28a745; /* Green color for the header */
+    /* Fixed Header Styling */
+    #dynamicTable thead th {
+        position: sticky;
+        top: 0; /* Stick to the top of the container */
+        background-color: #26a69a; /* Green color for header */
         color: white;
         padding: 12px;
         border: 1px solid #ddd;
         text-align: left;
+        text-transform: capitalize;
     }
 
     /* Data Cell Styling */
@@ -44,26 +57,26 @@
     }
 
     /* Alternating Row Colors */
-    #dynamicTable tr:nth-child(even) {
+    #dynamicTable tbody tr:nth-child(even) {
         background-color: #f9f9f9;
     }
 
-    #dynamicTable tr:nth-child(odd) {
-        background-color: #e6f7e6; /* Light green color for alternate rows */
+    #dynamicTable tbody tr:nth-child(odd) {
+        background-color: #ddf2f0;
     }
 
     /* Hover Effect */
-    #dynamicTable tr:hover {
+    #dynamicTable tbody tr:hover {
         background-color: #d4edda;
     }
 
-    /* Consistent Column Width for Better Alignment */
+    /* Consistent Column Width */
     #dynamicTable th, #dynamicTable td {
         min-width: 120px;
     }
 </style>
 
-<!-- JavaScript to populate and style the table with structures and links -->
+<!-- JavaScript to populate the table with structures and links -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let RDKitModule;
