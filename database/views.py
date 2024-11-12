@@ -269,51 +269,76 @@ def conditional_search(request):
         queries = request.POST.getlist('query[]')
         operators = request.POST.getlist('operator[]')
 
-        final_df = pd.DataFrame()
+        # Initialize where clauses and parameters
+        where_clauses = []
+        params = []
 
-        def load_and_filter_data(table_name, field, query, operator=None):
-            with connection.cursor() as cursor:
-                cursor.execute(f'SELECT * FROM "{table_name}"')
-                rows = cursor.fetchall()
-                column_names = [col[0] for col in cursor.description]
-                df = pd.DataFrame(rows, columns=column_names)
+        # Mapping to correct table names in the database
+        table_mapping = {
+            'patient_studies': 'Browse_by_patient_studies',
+            'animal_studies': 'Browse_by_animal_studies',
+            'cell_line': 'Browse_by_cell_line'
+        }
 
-                if operator == 'NOT':
-                    mask = ~df[field].astype(str).str.contains(query, case=False, na=False)
-                else:
-                    mask = df[field].astype(str).str.contains(query, case=False, na=False)
+        # Determine the primary table from the first entry
+        primary_table = table_mapping.get(tables[0], None)
+        if not primary_table:
+            return JsonResponse({'error': 'Invalid table selection'}, status=400)
 
-                filtered_df = df[mask]
-                return filtered_df
-
+        # Construct WHERE conditions
         for i in range(len(tables)):
-            table_mapping = {
-                'patient_studies': 'Browse_by_patient_studies',
-                'animal_studies': 'Browse_by_animal_studies',
-                'cell_line': 'Browse_by_cell_line'
-            }
             table_name = table_mapping.get(tables[i])
-            if table_name:
-                filtered_df = load_and_filter_data(table_name, fields[i], queries[i], operators[i])
-                if final_df.empty:
-                    final_df = filtered_df
-                else:
-                    if operators[i-1] == 'AND':
-                        final_df = final_df.merge(filtered_df, how='inner')
-                    elif operators[i-1] == 'OR':
-                        final_df = pd.concat([final_df, filtered_df]).drop_duplicates().reset_index(drop=True)
-                    elif operators[i-1] == 'NOT':
-                        final_df = final_df[~final_df.isin(filtered_df).all(axis=1)]
+            if table_name != primary_table:
+                continue  # Only filtering on the primary table for simplicity
 
-        columns_names = json.dumps(final_df.columns.tolist())
-        d = final_df.to_json(orient='records')
+            # Build condition
+            if operators[i] == 'NOT':
+                condition = f"\"{fields[i]}\" NOT LIKE %s"
+            else:
+                condition = f"\"{fields[i]}\" LIKE %s"
 
-        context = {'d': d, 'column_names': columns_names}
+            where_clauses.append(condition)
+            params.append(f"%{queries[i]}%")
+
+            # Insert the operator between conditions (except for the first)
+            if i > 0:
+                where_clauses[i] = f"{operators[i-1]} " + where_clauses[i]
+
+        # Combine all conditions with the selected operators
+        where_clause = " ".join(where_clauses)
+
+        # Construct the final SQL query
+        final_query = f"SELECT * FROM \"{primary_table}\" WHERE {where_clause}"
+
+        # Print the final query and params for debugging
+        print("Final SQL Query:", final_query)
+        print("Query Parameters:", params)
+
+        # Run the query
+        with connection.cursor() as cursor:
+            cursor.execute(final_query, params)  # Pass the params list to execute to avoid SQL injection
+            rows = cursor.fetchall()
+
+            # Fetch the column names
+            column_names = [col[0] for col in cursor.description]
+
+            # Convert the results into a list of dictionaries
+            result_data = []
+            for row in rows:
+                result_data.append(dict(zip(column_names, row)))
+
+        # Return results as JSON (or in a template if needed)
+        context = {
+            'd': json.dumps(result_data),
+            'column_names': json.dumps(column_names)
+        }
 
         return render(request, 'database/masters.html', context)
+
     else:
+        # Handle the GET request (initial load)
         with connection.cursor() as cursor:
-            cursor.execute('SELECT * FROM "Master"')
+            cursor.execute('SELECT * FROM "Master"')  # Adjust table name as needed
             rows = cursor.fetchall()
             column_names = [col[0] for col in cursor.description]
 
