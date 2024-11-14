@@ -611,6 +611,5 @@ def get_columns1(request):
     else:
         return JsonResponse({'success': False, 'error': 'Invalid field selection'})
 
-    
-
     return JsonResponse({'success': True, 'columns': column_names})
+
