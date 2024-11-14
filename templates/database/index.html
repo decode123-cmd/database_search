@@ -939,10 +939,11 @@ CanIMMDB is a manually curated resource which provides comprehensive information
             {% csrf_token %}
               <fieldset>
               <div class="checkbox-group">
-               
+                <label><input type="radio" name="field" value="cell_line" onclick="loadColumns(this)"> Search In Cell Line</label>
+                <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns(this)"> Search In Animal Studies</label>
                   <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns(this)"> Search In Patient Studies</label>
-                  <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns(this)"> Search In Animal Studies</label>
-                  <label><input type="radio" name="field" value="cell_line" onclick="loadColumns(this)"> Search In Cell Line</label>
+                  
+                  
               </div>
             </fieldset>
                 <fieldset>
