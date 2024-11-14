@@ -21,11 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-=1jre%2gpy8$d!-yz#(=x2213q2+k2hgoti-gr4$p2yarq-)i1'
-CSRF_TRUSTED_ORIGINS = [ 'https://canimmdb.com','https://databasesearch-production.up.railway.app']
+# In settings.py
+ALLOWED_HOSTS = ['canimmdb.online', 'www.canimmdb.online']
+
+CSRF_TRUSTED_ORIGINS = ['https://canimmdb.online', 'https://www.canimmdb.online']
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://canimmdb.com','databasesearch-production.up.railway.app','*']
+
 
 
 # Application definition
