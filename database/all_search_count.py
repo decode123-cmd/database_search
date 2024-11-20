@@ -33,9 +33,9 @@ def category():
             drug_categories = dataframes['index']['Drug category'].unique()
             counts = {
                 category: {
-                    'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Drug category'] == category]),
-                    'Animal_Count': len(dataframes['animal_studies'][dataframes['animal_studies']['Drug category'] == category]),
-                    'Patient_Count': len(dataframes['patients'][dataframes['patients']['Drug category'] == category])
+                    'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Drug_category'] == category]),
+                    'Animal_Count': len(dataframes['animal_studies'][dataframes['animal_studies']['Drug_category'] == category]),
+                    'Patient_Count': len(dataframes['patients'][dataframes['patients']['Drug_category'] == category])
                 } for category in drug_categories
             }
             
@@ -63,7 +63,7 @@ def techniques():
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
 
             # Process technique data
-            drug_categories = dataframes['index']['TECHNIQUE'].dropna().unique() 
+            drug_categories = dataframes['index']['Technique'].dropna().unique() 
             print(drug_categories)# Drop None values before finding unique
             search_terms = {}
 
@@ -76,9 +76,9 @@ def techniques():
 
             for category, terms in search_terms.items():
                 counts[category] = {
-                    'Cell_Count': int(dataframes['cell_line']['TECHNIQUE'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum()),
-                    'Animal_Count': int(dataframes['animal_studies']['TECHNIQUE'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum()),
-                    'Patient_Count': int(dataframes['patients']['TECHNIQUE'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum())
+                    'Cell_Count': int(dataframes['cell_line']['Technique'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum()),
+                    'Animal_Count': int(dataframes['animal_studies']['Technique'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum()),
+                    'Patient_Count': int(dataframes['patients']['Technique'].apply(lambda x: any(term.lower() in str(x).lower() for term in terms) if x is not None else False).sum())
                 }
             print(counts)
 
