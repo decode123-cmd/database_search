@@ -30,7 +30,7 @@ def category():
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
 
             # Extract and process data
-            drug_categories = dataframes['index']['Drug category'].unique()
+            drug_categories = dataframes['index']['Drug_category'].unique()
             counts = {
                 category: {
                     'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Drug_category'] == category]),
