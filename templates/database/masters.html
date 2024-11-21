@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
             columnNames.forEach(column => {
                 const cell = document.createElement('td');
                 if (column === "Structure") {
-                    const smiles = row["STR_LINK (SMILES)"];
+                    const smiles = row["STR_LINK_(SMILES)"];
                     cell.innerHTML = smiles ? generateStructure(smiles) : "No SMILES available";
                 } else if (column === 'DRUG_PUBCHEM') {
                     const value = row[column];

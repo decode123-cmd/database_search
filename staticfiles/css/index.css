@@ -26,15 +26,15 @@ body {
   padding: 20px;
 }
 
-.section{
- padding: 40px 20px;
+.section {
+  padding: 2% 0%;
   background: var(--white-color);
   margin-bottom: 0px;
   border-radius: 46px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  width: 76%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 83%;
   margin-top: 5%;
-  margin-left: 19%;
+  margin-left: 16%;
 }
 
 .features_section dl dt {

@@ -120,9 +120,9 @@ function addConditionRow() {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${category}</td>                     
-                    <td><a href="#" data-category="${category},cell_count,Drug category" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
-                    <td><a href="#" data-category="${category},animal_count,Drug category" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
-                    <td><a href="#" data-category="${category},patient_count,Drug category" onclick="fetchData(event)">${counts.Patient_Count}</a></td>
+                    <td><a href="#" data-category="${category},cell_count,Drug_category" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
+                    <td><a href="#" data-category="${category},animal_count,Drug_category" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
+                    <td><a href="#" data-category="${category},patient_count,Drug_category" onclick="fetchData(event)">${counts.Patient_Count}</a></td>
                 `;
                 tbody.appendChild(row);
             });
@@ -150,9 +150,9 @@ function fetchtechnique(event) {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${category}</td>
-                    <td><a href="#" data-category="${category},cell_count,TECHNIQUE" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
-                    <td><a href="#" data-category="${category},animal_count,TECHNIQUE" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
-                    <td><a href="#" data-category="${category},patient_count,TECHNIQUE" onclick="fetchData(event)">${counts.Patient_Count}</a></td>
+                    <td><a href="#" data-category="${category},cell_count,Technique" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
+                    <td><a href="#" data-category="${category},animal_count,Technique" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
+                    <td><a href="#" data-category="${category},patient_count,Technique" onclick="fetchData(event)">${counts.Patient_Count}</a></td>
                 `;
                 tbody.appendChild(row);
             });
