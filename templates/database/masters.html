@@ -22,57 +22,51 @@
 <!-- CSS for fixed header and scrollable table body -->
 <style>
     /* Container for scrollable table */
-    .table-container {
-        max-height: 864px; /* Set desired height */
-        overflow-y: auto; /* Enable vertical scrolling */
-        border: 1px solid #ddd;
-        margin-top: 20px;
-    }
-
-    /* Table Styling */
+          
+    /* Ensure column widths are determined by content, with specific adjustments */
     #dynamicTable {
-        width: 100%;
-        border-collapse: collapse;
+        table-layout: auto; /* Automatically adjust column width based on content */
+        width: 100%; /* Ensure table spans the container width */
+        border-collapse: collapse; /* Remove extra space between cells */
         font-family: Arial, sans-serif;
         font-size: 14px;
     }
-
-    /* Fixed Header Styling */
+    
+    /* Styling for table cells */
+    #dynamicTable td, #dynamicTable th {
+        word-wrap: break-word; /* Break long words if necessary */
+        overflow-wrap: break-word; /* Ensure proper wrapping for long content */
+        padding: 10px; /* Add padding for readability */
+        border: 1px solid #ddd; /* Add border for clarity */
+        vertical-align: top; /* Align text to the top of the cell */
+        line-height: 1.5; /* Set line height for better readability */
+    }
+    
+    /* Specific column width adjustments */
+    #dynamicTable td:nth-child(5), #dynamicTable th:nth-child(5) {
+        width: 300px; /* Set wider width for "Target/s or Mechanism of Action" */
+    }
+    
+    #dynamicTable td:nth-child(7), #dynamicTable th:nth-child(7) {
+        width: 150px; /* Set smaller width for "STR LINK (SMILES)" */
+    }
+    
+    /* Table headers */
     #dynamicTable thead th {
-        position: sticky;
+        position: sticky; /* Sticky header */
         top: 0; /* Stick to the top of the container */
-        background-color: #26a69a; /* Green color for header */
-        color: white;
-        padding: 12px;
-        border: 1px solid #ddd;
-        text-align: left;
-        text-transform: capitalize;
+        text-align: left; /* Align header text to the left */
+        font-weight: bold; /* Make header text bold */
+        background-color: #26a69a; /* Add header background color */
+        color: white; /* Header text color */
+        text-transform: capitalize; /* Capitalize column headers */
     }
-
-    /* Data Cell Styling */
-    #dynamicTable td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        vertical-align: top;
-    }
-
-    /* Alternating Row Colors */
-    #dynamicTable tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-
-    #dynamicTable tbody tr:nth-child(odd) {
-        background-color: #ddf2f0;
-    }
-
-    /* Hover Effect */
-    #dynamicTable tbody tr:hover {
-        background-color: #d4edda;
-    }
-
-    /* Consistent Column Width */
-    #dynamicTable th, #dynamicTable td {
-        min-width: 120px;
+    
+    /* Responsive container */
+    .table-container {
+        overflow-x: auto; /* Enable horizontal scrolling for small screens */
+        border: 1px solid #ddd; /* Add border around table */
+        margin-top: 20px;
     }
 </style>
 
