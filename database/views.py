@@ -613,3 +613,4 @@ def get_columns1(request):
 
     return JsonResponse({'success': True, 'columns': column_names})
 
+
