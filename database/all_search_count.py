@@ -33,9 +33,10 @@ def category():
             drug_categories = dataframes['index']['Drug_category'].unique()
             counts = {
                 category: {
-                    'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Drug_category'] == category]),
-                    'Animal_Count': len(dataframes['animal_studies'][dataframes['animal_studies']['Drug_category'] == category]),
-                    'Patient_Count': len(dataframes['patients'][dataframes['patients']['Drug_category'] == category])
+                    'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Drug_category'].str.contains(category, case=False, na=False)]),
+    'Animal_Count': len(dataframes['animal_studies'][dataframes['animal_studies']['Drug_category'].str.contains(category, case=False, na=False)]),
+    'Patient_Count': len(dataframes['patients'][dataframes['patients']['Drug_category'].str.contains(category, case=False, na=False)])
+
                 } for category in drug_categories
             }
             
@@ -106,12 +107,12 @@ def cancer():
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
 
             # Extract cancer type data
-            drug_categories = dataframes['index']['Cancer_Type'].unique()
+            drug_categories = dataframes['index']['Cancer_Type'].dropna().unique()
             counts = {
                 category: {
-                    'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Cancer_Type'] == category]),
-                    'Animal_Count': len(dataframes['animal_studies'][dataframes['animal_studies']['Cancer_Type'] == category]),
-                    'Patient_Count': len(dataframes['patients'][dataframes['patients']['Cancer_Type'] == category])
+                                'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Cancer_Type'].str.contains(category, case=False, na=False)]),
+    'Animal_Count': len(dataframes['animal_studies'][dataframes['animal_studies']['Cancer_Type'].str.contains(category, case=False, na=False)]),
+    'Patient_Count': len(dataframes['patients'][dataframes['patients']['Cancer_Type'].str.contains(category, case=False, na=False)])
                 } for category in drug_categories
             }
             

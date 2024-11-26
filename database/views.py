@@ -9,7 +9,8 @@ from .tools import *
 from rdkit import Chem
 from rdkit.Chem import AllChem, DataStructs, MACCSkeys
 from rdkit.Chem import rdMolAlign
-
+from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer
+from sqlalchemy.exc import ProgrammingError
 
 # Function to load data from a specified table
 # Function to load data from a specified table
@@ -613,4 +614,61 @@ def get_columns1(request):
 
     return JsonResponse({'success': True, 'columns': column_names})
 
+import traceback
 
+def submit_data(request):
+    connection_url = "postgresql://postgres:OvRIsbhSnGIHWFDawjJaEBTiESwdXZKY@autorack.proxy.rlwy.net:24342/railway"
+    engine = create_engine(connection_url, echo=False)
+    
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            print("Data received:", data)
+
+            selected_database = data.pop('selected_database', None)
+            if not selected_database:
+                return JsonResponse({'success': False, 'error': 'Missing selected_database field'})
+
+            table_mapping = {
+                'cell_line': 'user_cell_line',
+                'animal_studies': 'user_animal_studies',
+                'patient_studies': 'user_patient_studies'
+            }
+            table_name = table_mapping.get(selected_database)
+            if not table_name:
+                return JsonResponse({'success': False, 'error': 'Invalid database selected'})
+
+            metadata = MetaData(bind=engine)
+            metadata.reflect()
+
+            if table_name not in metadata.tables:
+                print(f"Creating new table: {table_name}")
+                new_table = Table(
+                    table_name, metadata,
+                    Column('id', Integer, primary_key=True),
+                    Column('submitters_name', String),
+                    Column('email_address', String),
+                    Column('mailing_address', String),
+                    Column('comment', String),
+                    # Add other columns dynamically if necessary
+                )
+                new_table.create(engine)
+
+            table = metadata.tables[table_name]
+            print("Inserting data into table:", table_name)
+            with engine.connect() as conn:
+                conn.execute(table.insert().values(**data))
+
+            return JsonResponse({'success': True})
+
+        except json.JSONDecodeError as e:
+            print("JSON Decode Error:", e)
+            return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
+        except ProgrammingError as e:
+            print("Programming Error:", e)
+            return JsonResponse({'success': False, 'error': str(e)})
+        except Exception as e:
+            print("Unexpected Error:", traceback.format_exc())
+            return JsonResponse({'success': False, 'error': 'An unexpected error occurred'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})

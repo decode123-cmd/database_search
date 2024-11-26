@@ -1020,7 +1020,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
     });
 
     // Send form data to the backend via an AJAX request
-    fetch('/submit-data/', {
+    fetch('/submit_data/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -1038,7 +1038,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred during submission.');
+       
     });
 }
 
