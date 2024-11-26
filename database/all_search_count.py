@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 import pandas as pd
 from sqlalchemy import create_engine, text  # Import text from sqlalchemy
 import psycopg2
-
+import re
 # Database connection parameters
 connection_url = "postgresql://postgres:OvRIsbhSnGIHWFDawjJaEBTiESwdXZKY@autorack.proxy.rlwy.net:24342/railway"
 
@@ -12,6 +12,7 @@ engine = create_engine(connection_url, echo=False)
 
 def category():
     try:
+        # Define SQL queries
         queries = {
             'index': 'SELECT * FROM "Browse_by_index"',
             'cell_line': 'SELECT * FROM "Browse_by_cell_line"',
@@ -19,32 +20,40 @@ def category():
             'patients': 'SELECT * FROM "Browse_by_Patient_Studies"'
         }
         
-        # Use SQLAlchemy's engine to connect and execute queries
+        # Connect to the database
         with engine.connect() as connection:
             dataframes = {}
             for key, query in queries.items():
-                # Use text() to execute raw SQL queries
                 result_proxy = connection.execute(text(query))
                 rows = result_proxy.fetchall()
                 column_names = result_proxy.keys()
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
-
-            # Extract and process data
-            drug_categories = dataframes['index']['Drug_category'].unique()
-            counts = {
-                category: {
-                    'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Drug_category'].str.contains(category, case=False, na=False)]),
-    'Animal_Count': len(dataframes['animal_studies'][dataframes['animal_studies']['Drug_category'].str.contains(category, case=False, na=False)]),
-    'Patient_Count': len(dataframes['patients'][dataframes['patients']['Drug_category'].str.contains(category, case=False, na=False)])
-
-                } for category in drug_categories
-            }
             
-        return counts
+            # Normalize 'Drug_category' columns: fill NaN, convert to lowercase, and strip spaces
+            for key in ['index', 'cell_line', 'animal_studies', 'patients']:
+                dataframes[key]['Drug_category'] = (
+                    dataframes[key]['Drug_category'].fillna('').str.lower().str.strip()
+                )
+
+            # Extract unique drug categories from the 'index' table
+            drug_categories = dataframes['index']['Drug_category'].unique()
+
+            # Prepare counts for each category
+            counts = {}
+            for category in drug_categories:
+                escaped_category = re.escape(category)  # Escape regex special characters
+                counts[category] = {
+                    'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Drug_category'].str.contains(escaped_category, case=False, na=False)]),
+                    'Animal_Count': len(dataframes['animal_studies'][dataframes['animal_studies']['Drug_category'].str.contains(escaped_category, case=False, na=False)]),
+                    'Patient_Count': len(dataframes['patients'][dataframes['patients']['Drug_category'].str.contains(escaped_category, case=False, na=False)])
+                }
+
+            return counts
 
     except Exception as e:
-        print(f"Error processing request: {e}")  # Log to your server logs
+        print(f"Error processing request: {e}")
         return {}
+
 
 def techniques():
     try:

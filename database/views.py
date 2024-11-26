@@ -292,11 +292,11 @@ def conditional_search(request):
             if table_name != primary_table:
                 continue  # Only filtering on the primary table for simplicity
 
-            # Build condition
+            # Build condition using ILIKE for case-insensitive search
             if operators[i] == 'NOT':
-                condition = f"\"{fields[i]}\" NOT LIKE %s"
+                condition = f"\"{fields[i]}\" NOT ILIKE %s"
             else:
-                condition = f"\"{fields[i]}\" LIKE %s"
+                condition = f"\"{fields[i]}\" ILIKE %s"
 
             where_clauses.append(condition)
             params.append(f"%{queries[i]}%")

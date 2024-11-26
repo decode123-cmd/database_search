@@ -134,13 +134,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (column === "Structure") {
                     const smiles = row["STR_LINK_(SMILES)"];
                     cell.innerHTML = smiles ? generateStructure(smiles) : "No SMILES available";
-                } else if (column === 'DRUG_PUBCHEM') {
+                } else if (column === 'Pubchem_ID') {
                     const value = row[column];
                     cell.innerHTML = value ? `<a href="${pubchem}${value}" target="_blank">${value}</a>` : "No PubChem ID";
                 } else if (column === 'Drugbank_ID') {
                     const value = row[column];
                     cell.innerHTML = value ? `<a href="${drugbank}${value}" target="_blank">${value}</a>` : "No DrugBank ID";
-                } else if (column === 'KEGG DRUG ID') {
+                } else if (column === 'KEGG_Drug__ID') {
                     const value = row[column];
                     cell.innerHTML = value ? `<a href="${kegg}${value}" target="_blank">${value}</a>` : "No KEGG ID";
                 } else {
