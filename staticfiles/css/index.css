@@ -21,7 +21,7 @@ body {
 }
 
 .content_area .container {
-  max-width: 1200px;
+  max-width: 1384px;
   margin: auto;
   padding: 20px;
 }
@@ -1017,4 +1017,117 @@ form {
 
 .dropdown:hover .dropdown-content {
   display: block;
+}
+/* Mobile Phones (Small Screens, 540px and below) */
+@media screen and (max-width: 540px) {
+  body {
+    font-size: 14px;
+  }
+
+  .section {
+    width: 100%;
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+  }
+
+  .sidebar {
+    width: 100%;
+    position: relative;
+    height: auto;
+  }
+
+  .content_area .container {
+    padding: 10px;
+  }
+}
+
+/* Tablets (Medium Screens, 768px and below) */
+@media screen and (max-width: 768px) {
+  .section {
+    width: 90%;
+    margin-left: 5%;
+    padding: 15px;
+  }
+
+  .navbar {
+    padding: 10px 20px;
+  }
+
+  .sidebar {
+    padding: 20px;
+  }
+
+  .navbar img {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Small Desktop Screens (992px and below) */
+@media screen and (max-width: 992px) {
+  .section {
+    width: 85%;
+    margin-left: 7.5%;
+  }
+
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  .sidebar {
+    width: 200px;
+  }
+
+  .content_area .container {
+    padding: 15px;
+  }
+}
+
+/* Large Screens (1200px and above) */
+@media screen and (min-width: 1200px) {
+  .section {
+    width: 83%;
+    margin-left: 16%;
+  }
+
+  .content_area .container {
+    max-width: 1400px;
+  }
+}
+
+/* Universal Adjustments */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #e9e9e9;
 }

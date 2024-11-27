@@ -30,10 +30,22 @@ def category():
                 dataframes[key] = pd.DataFrame(rows, columns=column_names)
             
             # Normalize 'Drug_category' columns: fill NaN, convert to lowercase, and strip spaces
+            normalized_to_original = {}
             for key in ['index', 'cell_line', 'animal_studies', 'patients']:
-                dataframes[key]['Drug_category'] = (
-                    dataframes[key]['Drug_category'].fillna('').str.lower().str.strip()
-                )
+                if 'Drug_category' in dataframes[key].columns:
+                    dataframes[key]['Drug_category_original'] = dataframes[key]['Drug_category']  # Preserve original
+                    dataframes[key]['Drug_category'] = (
+                        dataframes[key]['Drug_category']
+                        .fillna('')
+                        .str.lower()
+                        .str.strip()
+                    )
+                    # Map normalized to original for the 'index' table
+                    if key == 'index':
+                        normalized_to_original = dict(zip(
+                            dataframes[key]['Drug_category'],
+                            dataframes[key]['Drug_category_original']
+                        ))
 
             # Extract unique drug categories from the 'index' table
             drug_categories = dataframes['index']['Drug_category'].unique()
@@ -42,7 +54,7 @@ def category():
             counts = {}
             for category in drug_categories:
                 escaped_category = re.escape(category)  # Escape regex special characters
-                counts[category] = {
+                counts[normalized_to_original.get(category, category)] = {
                     'Cell_Count': len(dataframes['cell_line'][dataframes['cell_line']['Drug_category'].str.contains(escaped_category, case=False, na=False)]),
                     'Animal_Count': len(dataframes['animal_studies'][dataframes['animal_studies']['Drug_category'].str.contains(escaped_category, case=False, na=False)]),
                     'Patient_Count': len(dataframes['patients'][dataframes['patients']['Drug_category'].str.contains(escaped_category, case=False, na=False)])
@@ -53,7 +65,6 @@ def category():
     except Exception as e:
         print(f"Error processing request: {e}")
         return {}
-
 
 def techniques():
     try:
