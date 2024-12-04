@@ -614,59 +614,75 @@ def get_columns1(request):
 
     return JsonResponse({'success': True, 'columns': column_names})
 
+
+import re
+import json
+import pandas as pd
+from django.http import JsonResponse
 import traceback
 
+def sanitize_column_name(name):
+    """Sanitize column names by replacing invalid characters with underscores."""
+    return re.sub(r'\W+', '_', name).lower()
+
 def submit_data(request):
-    connection_url = "postgresql://postgres:OvRIsbhSnGIHWFDawjJaEBTiESwdXZKY@autorack.proxy.rlwy.net:24342/railway"
-    engine = create_engine(connection_url, echo=False)
-    
+    # Define the file path for your Excel file
+    excel_file = "local_database.xlsx"
+
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
+            # Parse JSON request body
+            data = json.loads(request.body.decode('utf-8'))
             print("Data received:", data)
 
+            # Extract selected database
             selected_database = data.pop('selected_database', None)
             if not selected_database:
                 return JsonResponse({'success': False, 'error': 'Missing selected_database field'})
 
-            table_mapping = {
-                'cell_line': 'user_cell_line',
-                'animal_studies': 'user_animal_studies',
-                'patient_studies': 'user_patient_studies'
+            # Map selected database to sheet names in the Excel file
+            sheet_mapping = {
+                'cell_line': 'database_cellstudy',
+                'animal_studies': 'database_animalstudy',
+                'patient_studies': 'database_patientstudy'
             }
-            table_name = table_mapping.get(selected_database)
-            if not table_name:
+            sheet_name = sheet_mapping.get(selected_database)
+            if not sheet_name:
                 return JsonResponse({'success': False, 'error': 'Invalid database selected'})
 
-            metadata = MetaData(bind=engine)
-            metadata.reflect()
+            # Sanitize the keys in the JSON data
+            sanitized_data = {sanitize_column_name(key): value for key, value in data.items()}
 
-            if table_name not in metadata.tables:
-                print(f"Creating new table: {table_name}")
-                new_table = Table(
-                    table_name, metadata,
-                    Column('id', Integer, primary_key=True),
-                    Column('submitters_name', String),
-                    Column('email_address', String),
-                    Column('mailing_address', String),
-                    Column('comment', String),
-                    # Add other columns dynamically if necessary
-                )
-                new_table.create(engine)
+            # Load or create the Excel file
+            try:
+                # Try to load existing Excel file
+                with pd.ExcelWriter(excel_file, mode="a", if_sheet_exists="overlay", engine="openpyxl") as writer:
+                    # Check if the sheet already exists
+                    try:
+                        existing_data = pd.read_excel(excel_file, sheet_name=sheet_name)
+                    except ValueError:
+                        existing_data = pd.DataFrame()  # If sheet doesn't exist, create an empty DataFrame
 
-            table = metadata.tables[table_name]
-            print("Inserting data into table:", table_name)
-            with engine.connect() as conn:
-                conn.execute(table.insert().values(**data))
+                    # Convert new data to a DataFrame
+                    new_data = pd.DataFrame([sanitized_data])
+
+                    # Combine existing data with new data
+                    combined_data = pd.concat([existing_data, new_data], ignore_index=True)
+
+                    # Write the updated data to the appropriate sheet
+                    combined_data.to_excel(writer, sheet_name=sheet_name, index=False)
+
+            except FileNotFoundError:
+                # Create a new Excel file if it doesn't exist
+                with pd.ExcelWriter(excel_file, mode="w", engine="openpyxl") as writer:
+                    new_data = pd.DataFrame([sanitized_data])
+                    new_data.to_excel(writer, sheet_name=sheet_name, index=False)
 
             return JsonResponse({'success': True})
 
         except json.JSONDecodeError as e:
             print("JSON Decode Error:", e)
             return JsonResponse({'success': False, 'error': 'Invalid JSON data'})
-        except ProgrammingError as e:
-            print("Programming Error:", e)
-            return JsonResponse({'success': False, 'error': str(e)})
         except Exception as e:
             print("Unexpected Error:", traceback.format_exc())
             return JsonResponse({'success': False, 'error': 'An unexpected error occurred'})
