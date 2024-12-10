@@ -407,116 +407,95 @@ function clear2DForm() {
 
 
 // 3-D search
-ddocument.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('3D_search_form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent the default form submission behavior
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('3D_search_form');
+    if (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
 
-    // Show a confirmation dialog to the user
-    const userConfirmed = confirm("This process may take some time. Do you want to proceed?");
-    
-    if (userConfirmed) {
-        // User clicked "OK", proceed with form submission
-        const formData = new FormData(this); // Create a FormData object from the form
-        const loadingMessage = document.getElementById('loadingMessage');
+            // Show a confirmation dialog to the user
+            const userConfirmed = confirm("This process may take some time. Do you want to proceed?");
 
-        // Show the "It may take time" message
-        loadingMessage.style.display = 'block';
+            if (userConfirmed) {
+                const formData = new FormData(this); // FormData object
+                const loadingMessage = document.getElementById('loadingMessage');
 
-        fetch(this.action, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Response data:', data); // Log response data for debugging
-            loadingMessage.style.display = 'none'; // Hide the loading message
+                if (loadingMessage) {
+                    // Show the "It may take time" message
+                    loadingMessage.style.display = 'block';
+                }
 
-            if (data.success) {
-                display3DResults(data.results); // Display the results if successful
-            } else {
-                // Handle error by alerting the user
-                alert('Error fetching results: ' + JSON.stringify(data));
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    },
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Response data:', data); // Debugging
+                        if (loadingMessage) {
+                            loadingMessage.style.display = 'none'; // Hide loading message
+                        }
+
+                        if (data.success) {
+                            display3DResults(data.results, data.columns); // Pass both results and columns
+                        } else {
+                            alert('Error fetching results: ' + JSON.stringify(data));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        if (loadingMessage) {
+                            loadingMessage.style.display = 'none'; // Hide loading message
+                        }
+                        alert('An error occurred while fetching results.');
+                    });
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            loadingMessage.style.display = 'none'; // Hide the loading message in case of error
-            alert('An error occurred while fetching results.');
         });
     } else {
-        // User clicked "Cancel", do nothing
-        return;
+        console.error('Form with id "3D_search_form" not found in the DOM.');
     }
-    
-});
 });
 
 function display3DResults(results, columns) {
-    const searchResults = document.getElementById('searchResults3');
     const tableHeaders = document.getElementById('tableHeaders3');
     const tableBody = document.getElementById('tableBody3');
 
+    if (!columns || !results) {
+        console.error('Columns or results are undefined.');
+        return;
+    }
+
     // Clear previous results
-    tableHeaders.innerHTML = '';
-    tableBody.innerHTML = '';
+    if (tableHeaders) tableHeaders.innerHTML = '';
+    if (tableBody) tableBody.innerHTML = '';
 
-    if (results.length > 0) {
-        console.log('Results:', results); // Log results for debugging
+    // Populate table headers
+    columns.forEach(column => {
+        const th = document.createElement('th');
+        th.textContent = column;
+        tableHeaders.appendChild(th);
+    });
 
-        // Populate table headers using column names from backend
+    // Populate table rows
+    results.forEach(row => {
+        const tr = document.createElement('tr');
         columns.forEach(column => {
-            const th = document.createElement('th');
-            th.textContent = column;
-            tableHeaders.appendChild(th);
+            const td = document.createElement('td');
+            td.textContent = row[column] || 'N/A'; // Handle missing values
+            tr.appendChild(td);
         });
+        tableBody.appendChild(tr);
+    });
 
-        // Populate table rows with result data
-        results.forEach(row => {
-            const tr = document.createElement('tr');
-            columns.forEach(column => {
-                const td = document.createElement('td');
-                td.textContent = row[column] || 'N/A'; // Handle missing values
-                tr.appendChild(td);
-            });
-            tableBody.appendChild(tr);
-        });
-
-        // Show the results section
+    // Show the results section
+    const searchResults = document.getElementById('searchResults3');
+    if (searchResults) {
         searchResults.style.display = 'block';
-    } else {
-        // No results to display, hide the results section
-        searchResults.style.display = 'none';
     }
 }
-
-// Fetch the results and update the function call
-fetch(this.action, {
-    method: 'POST',
-    headers: {
-        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-    },
-    body: formData
-})
-.then(response => response.json())
-.then(data => {
-    console.log('Response data:', data); // Log response data for debugging
-    loadingMessage.style.display = 'none'; // Hide the loading message
-
-    if (data.success) {
-        // Pass results and column names to the display function
-        display3DResults(data.results, data.columns);
-    } else {
-        alert('Error fetching results: ' + JSON.stringify(data));
-    }
-})
-.catch(error => {
-    console.error('Error:', error);
-    loadingMessage.style.display = 'none'; // Hide the loading message in case of error
-    alert('An error occurred while fetching results.');
-});
 
 function clear3DForm() {
     // Reset the form fields

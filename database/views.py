@@ -516,76 +516,65 @@ def third_search(request):
     if request.method == "POST":
         query_smiles = request.POST.get('smiles', None)
         field = request.POST.get('field', None)
+
+        if not query_smiles:
+            return JsonResponse({'error': 'SMILES input is required'}, status=400)
+
         try:
             # Convert threshold to float
             threshold = float(request.POST.get('threshold', 0.5))
         except ValueError:
             return JsonResponse({'error': 'Threshold must be a numeric value'}, status=400)
-        
-        target_smiles = query_smiles
-        # Convert the target SMILES string to a molecule and compute its 3D fingerprint
-        target_molecule = Chem.MolFromSmiles(target_smiles)
-        if target_molecule:
-            target_fp = AllChem.GetMorganFingerprintAsBitVect(target_molecule, radius=2, nBits=2048)
-        else:
-            target_fp = None
 
-        # Load data based on the selected field
-        if field == 'patient_studies':
-            df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='patient_studies')
-        elif field == 'animal_studies':
-            df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='animal_studies')
-        elif field == 'cell_line':
-            df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='cell_line')
-        else:
-            return JsonResponse({'error': 'Invalid field selection'}, status=400)
+        # Convert SMILES to molecule
+        target_molecule = Chem.MolFromSmiles(query_smiles)
+        if not target_molecule:
+            return JsonResponse({'error': 'Invalid SMILES input'}, status=400)
 
+        target_fp = AllChem.GetMorganFingerprintAsBitVect(target_molecule, radius=2, nBits=2048)
+
+        # Load dataset based on selected field
+        try:
+            if field == 'patient_studies':
+                df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='patient_studies')
+            elif field == 'animal_studies':
+                df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='animal_studies')
+            elif field == 'cell_line':
+                df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='cell_line')
+            else:
+                return JsonResponse({'error': 'Invalid field selection'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'Error loading dataset: {str(e)}'}, status=500)
+
+        # Process and compute similarity
         similarity_results = []
-
-        for index, row in df.iterrows():
-            smiles = row['STR_LINK (SMILES)']
-            mol_3d = row['MOL_3D']
-
-            if isinstance(smiles, str):  # Ensure valid SMILES string
+        for _, row in df.iterrows():
+            smiles = row.get('STR_LINK (SMILES)')
+            if isinstance(smiles, str):
                 molecule = Chem.MolFromSmiles(smiles)
-                if molecule and target_fp:
-                    # Compute 3D fingerprint for the dataset molecule
+                if molecule:
                     dataset_fp = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=2048)
-                    
-                    # Compute Tanimoto similarity
                     similarity = DataStructs.TanimotoSimilarity(target_fp, dataset_fp)
-                    similarity_results.append({
-                        'ID': row['ID'],
-                        'STR_LINK_(SMILES)': smiles,
-                        '3d_similarity': similarity,
-                        'Immune_System_function_unaffected': row.get('Immune System function unaffected', None),
-                        'Immune_System-Function_enhanced/numbers_increased': row.get('Immune System-Function enhanced/numbers increased', None),
-                        'Immune_System-Function_inhibited/numbers_decreased': row.get('Immune System-Function inhibited/numbers decreased', None),
-                        'Negative_Immune_System_regulation_-Function_enhanced/numbers_in': row.get('Negative Immune System regulation -Function enhanced/numbers increased', None),
-                    })
+                    if similarity >= threshold:
+                        similarity_results.append({
+                            'ID': row.get('ID', 'Unknown'),
+                            'STR_LINK_(SMILES)': smiles,
+                            '3d_similarity': similarity,
+                            'Immune_System_function_unaffected': row.get('Immune System function unaffected', 'N/A'),
+                            'Immune_System-Function_enhanced/numbers_increased': row.get('Immune System-Function enhanced/numbers increased', 'N/A'),
+                            'Immune_System-Function_inhibited/numbers_decreased': row.get('Immune System-Function inhibited/numbers decreased', 'N/A'),
+                            'Negative_Immune_System_regulation_-Function_enhanced/numbers_in': row.get('Negative Immune System regulation -Function enhanced/numbers increased', 'N/A'),
+                        })
 
+        # Convert results to DataFrame and prepare response
         similarity_df = pd.DataFrame(similarity_results)
         similarity_df.fillna('N/A', inplace=True)
-
-        # Filter results based on threshold
-        results_3d = similarity_df[similarity_df['3d_similarity'] >= threshold].sort_values(by='3d_similarity', ascending=False)
-
-        # Create a results dictionary with the required columns
-        results_dict = results_3d.to_dict(orient='records')
-        
-# Add this line to include column names
         column_names = list(similarity_df.columns)
-        print(results_dict)
+        results_dict = similarity_df.to_dict(orient='records')
 
         return JsonResponse({'success': True, 'columns': column_names, 'results': results_dict}, safe=False)
 
-        
-
-       
-
     return JsonResponse({'error': 'Invalid request method'}, status=405)
-
-
 
 # View for substructure search
 def substructure_search(request):
