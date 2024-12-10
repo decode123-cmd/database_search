@@ -469,46 +469,124 @@ def tanimoto_search(request):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
+import pandas as pd
+from rdkit import Chem
+from rdkit.Chem import AllChem, rdMolAlign
+from django.http import JsonResponse
+
+# Function to load a molecule from a MolBlock string
+def mol_from_molblock(molblock):
+    try:
+        mol = Chem.MolFromMolBlock(molblock)
+        return mol
+    except Exception as e:
+        print(f"Error loading molecule from MolBlock: {e}")
+        return None
+
+# Function to convert SMILES to an RDKit molecule
+def smiles3d_to_mol(smiles):
+    try:
+        mol = Chem.MolFromSmiles(smiles)
+        if mol:
+            mol = Chem.AddHs(mol)  # Add hydrogens
+            AllChem.EmbedMolecule(mol, randomSeed=42)  # Generate 3D coordinates
+            AllChem.UFFOptimizeMolecule(mol)  # Optimize the molecule
+            return mol
+        else:
+            return None
+    except Exception as e:
+        print(f"Error converting SMILES to molecule: {e}")
+        return None
+
+# Function to calculate 3D similarity between two molecules
+def calculate_3d_similarity(mol1, mol2):
+    if mol1 is None or mol2 is None:
+        return -1  # Return -1 similarity if either molecule is invalid
+    
+    try:
+        # Align molecules and calculate similarity score
+        o3a = rdMolAlign.GetO3A(mol1, mol2)
+        return o3a.Score()
+    except Exception as e:
+        print(f"Error in 3D similarity calculation: {e}")
+        return -1  # Return -1 to indicate an error in similarity calculation
+
+# Function to perform 3D similarity search
 def third_search(request):
     if request.method == "POST":
         query_smiles = request.POST.get('smiles', None)
         field = request.POST.get('field', None)
-        threshold = request.POST.get('threshold', 0.5)
-        
-        if not query_smiles or not field:
-            return JsonResponse({'error': 'Invalid SMILES or field'}, status=400)
-        
         try:
-            threshold = float(threshold)
+            # Convert threshold to float
+            threshold = float(request.POST.get('threshold', 0.5))
         except ValueError:
-            return JsonResponse({'error': 'Invalid threshold value'}, status=400)
-
-        query_mol = smiles_to_mol(query_smiles)
-        if query_mol is None:
-            return JsonResponse({'error': 'Invalid SMILES'}, status=400)
+            return JsonResponse({'error': 'Threshold must be a numeric value'}, status=400)
+        
+        target_smiles = query_smiles
+        # Convert the target SMILES string to a molecule and compute its 3D fingerprint
+        target_molecule = Chem.MolFromSmiles(target_smiles)
+        if target_molecule:
+            target_fp = AllChem.GetMorganFingerprintAsBitVect(target_molecule, radius=2, nBits=2048)
+        else:
+            target_fp = None
 
         # Load data based on the selected field
         if field == 'patient_studies':
-            df = load_data('Browse_by_Patient_Studies')
+            df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='patient_studies')
         elif field == 'animal_studies':
-            df = load_data('Browse_by_animal_studies')
+            df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='animal_studies')
         elif field == 'cell_line':
-            df = load_data('Browse_by_cell_line')
+            df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='cell_line')
         else:
             return JsonResponse({'error': 'Invalid field selection'}, status=400)
 
-        # Perform 3D similarity search
-        df['3d_similarity'] = df['mol'].apply(lambda mol: calculate_3d_similarity(query_mol, mol) if mol is not None else -1)
+        similarity_results = []
+
+        for index, row in df.iterrows():
+            smiles = row['STR_LINK (SMILES)']
+            mol_3d = row['MOL_3D']
+
+            if isinstance(smiles, str):  # Ensure valid SMILES string
+                molecule = Chem.MolFromSmiles(smiles)
+                if molecule and target_fp:
+                    # Compute 3D fingerprint for the dataset molecule
+                    dataset_fp = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=2048)
+                    
+                    # Compute Tanimoto similarity
+                    similarity = DataStructs.TanimotoSimilarity(target_fp, dataset_fp)
+                    similarity_results.append({
+                        'ID': row['ID'],
+                        'STR_LINK_(SMILES)': smiles,
+                        '3d_similarity': similarity,
+                        'Immune_System_function_unaffected': row.get('Immune System function unaffected', None),
+                        'Immune_System-Function_enhanced/numbers_increased': row.get('Immune System-Function enhanced/numbers increased', None),
+                        'Immune_System-Function_inhibited/numbers_decreased': row.get('Immune System-Function inhibited/numbers decreased', None),
+                        'Negative_Immune_System_regulation_-Function_enhanced/numbers_in': row.get('Negative Immune System regulation -Function enhanced/numbers increased', None),
+                    })
+
+        similarity_df = pd.DataFrame(similarity_results)
+        similarity_df.fillna('N/A', inplace=True)
+
+        # Filter results based on threshold
+        results_3d = similarity_df[similarity_df['3d_similarity'] >= threshold].sort_values(by='3d_similarity', ascending=False)
+
+        # Create a results dictionary with the required columns
+        results_dict = results_3d.to_dict(orient='records')
         
-        # Filter and sort results
-        results_3d = df[df['3d_similarity'] >= threshold].sort_values(by='3d_similarity', ascending=False)
-        print(results_3d)
-        # Create a results dictionary
-        results_dict = results_3d[['ID','STR_LINK_(SMILES)', '3d_similarity','Immune_System_function_unaffected','Immune_System-Function_enhanced/numbers_increased','Immune_System-Function_inhibited/numbers_decreased','Negative_Immune_System_regulation_-Function_enhanced/numbers_in']].to_dict(orient='records')
+# Add this line to include column names
+        column_names = list(similarity_df.columns)
+        print(results_dict)
+
+        return JsonResponse({'success': True, 'columns': column_names, 'results': results_dict}, safe=False)
+
         
-        return JsonResponse({'success': True, 'results': results_dict}, safe=False)
-    
+
+       
+
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+
 # View for substructure search
 def substructure_search(request):
     if request.method == "POST":
@@ -688,3 +766,4 @@ def submit_data(request):
             return JsonResponse({'success': False, 'error': 'An unexpected error occurred'})
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+

@@ -6,10 +6,7 @@ from django.shortcuts import render
 from django.shortcuts import render,redirect,HttpResponseRedirect
 from django.http import JsonResponse, HttpResponseBadRequest
 import pandas as pd
-import psycopg2
 from psycopg2 import sql
-
-
 def smiles_to_mol(smiles):
     try:
         mol = Chem.MolFromSmiles(smiles)
@@ -35,26 +32,22 @@ def is_substructure(mol1, mol2):
         return False
     return mol1.HasSubstructMatch(mol2)
 
-def calculate_3d_similarity(mol1, mol2):
-    if mol1 is None or mol2 is None:
-        return -1  # Return -1 similarity if either molecule is invalid
+
+
+# # Function to calculate 3D similarity between two molecules
+# def calculate_3d_similarity(mol1, mol2):
+#     if mol1 is None or mol2 is None:
+#         return -1  # Return -1 similarity if either molecule is invalid
     
-    mol1 = Chem.AddHs(mol1)
-    mol2 = Chem.AddHs(mol2)
-    
-    # Generate 3D coordinates
-    try:
-        AllChem.EmbedMolecule(mol1, AllChem.ETKDG())
-        AllChem.UFFOptimizeMolecule(mol1)
-        AllChem.EmbedMolecule(mol2, AllChem.ETKDG())
-        AllChem.UFFOptimizeMolecule(mol2)
-        
-        # Align molecules and calculate similarity
-        o3a = rdMolAlign.GetO3A(mol1, mol2)
-        return o3a.Score()
-    except Exception as e:
-        print(f"Error in 3D similarity calculation: {e}")
-        return -1  # Return -1 to indicate an error in similarity calculationn
+#     try:
+#         # Align molecules and calculate similarity score
+#         o3a = rdMolAlign.GetO3A(mol1, mol2)
+#         return o3a.Score()
+#     except Exception as e:
+#         print(f"Error in 3D similarity calculation: {e}")
+#         return -1  # Return -1 to indicate an error in similarity calculation
+
+
 
 
 # Function to calculate MACCS key-based similarity

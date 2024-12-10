@@ -407,7 +407,8 @@ function clear2DForm() {
 
 
 // 3-D search
-document.getElementById('3D_search_form').addEventListener('submit', function(event) {
+ddocument.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('3D_search_form').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission behavior
 
     // Show a confirmation dialog to the user
@@ -449,9 +450,11 @@ document.getElementById('3D_search_form').addEventListener('submit', function(ev
         // User clicked "Cancel", do nothing
         return;
     }
+    
+});
 });
 
-function display3DResults(results) {
+function display3DResults(results, columns) {
     const searchResults = document.getElementById('searchResults3');
     const tableHeaders = document.getElementById('tableHeaders3');
     const tableBody = document.getElementById('tableBody3');
@@ -463,20 +466,19 @@ function display3DResults(results) {
     if (results.length > 0) {
         console.log('Results:', results); // Log results for debugging
 
-        // Populate table headers based on result keys
-        const headers = Object.keys(results[0]);
-        headers.forEach(header => {
+        // Populate table headers using column names from backend
+        columns.forEach(column => {
             const th = document.createElement('th');
-            th.textContent = header;
+            th.textContent = column;
             tableHeaders.appendChild(th);
         });
 
         // Populate table rows with result data
         results.forEach(row => {
             const tr = document.createElement('tr');
-            headers.forEach(header => {
+            columns.forEach(column => {
                 const td = document.createElement('td');
-                td.textContent = row[header];
+                td.textContent = row[column] || 'N/A'; // Handle missing values
                 tr.appendChild(td);
             });
             tableBody.appendChild(tr);
@@ -489,6 +491,32 @@ function display3DResults(results) {
         searchResults.style.display = 'none';
     }
 }
+
+// Fetch the results and update the function call
+fetch(this.action, {
+    method: 'POST',
+    headers: {
+        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+    },
+    body: formData
+})
+.then(response => response.json())
+.then(data => {
+    console.log('Response data:', data); // Log response data for debugging
+    loadingMessage.style.display = 'none'; // Hide the loading message
+
+    if (data.success) {
+        // Pass results and column names to the display function
+        display3DResults(data.results, data.columns);
+    } else {
+        alert('Error fetching results: ' + JSON.stringify(data));
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+    loadingMessage.style.display = 'none'; // Hide the loading message in case of error
+    alert('An error occurred while fetching results.');
+});
 
 function clear3DForm() {
     // Reset the form fields
