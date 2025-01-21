@@ -143,6 +143,10 @@ body.dark {
   box-shadow: 0 0 1px var(--grey-color-light);
   transition: all 0.5s ease;
 }
+.search_result{
+  display: none;
+  overflow-y: auto;
+}
 .sidebar.close {
   padding: 60px 0;
   width: 80px;
@@ -290,22 +294,7 @@ body.dark {
 #sidebarOpen {
   display: none;
 }
-@media screen and (max-width: 768px) {
-  #sidebarOpen {
-    font-size: 25px;
-    display: block;
-    margin-right: 10px;
-    cursor: pointer;
-    color: var(--grey-color);
-  }
-  .sidebar.close {
-    left: -100%;
-  }
- 
-  .sidebar.close .bottom_content {
-    left: -100%;
-  }
-}
+
 .search-container {
   max-width: 100%;
   margin: -25px auto;

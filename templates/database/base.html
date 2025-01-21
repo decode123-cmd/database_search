@@ -17,48 +17,38 @@
   <body>
     <!-- navbar -->
     <nav class="navbar">
-      <div class="logo_item">
-        <i class="bx bx-menu" id="sidebarOpen"></i>
-        </i>CanImmDB      </div>
-
-    
-
-    
-    <div class="navbar_content">
-        <a href="/" >
-         <i> Home </i>
-        </a>
-        <div class="dropdown">
-            <a   class="dropbtn">
-                <i>Information</i>
-            </a>
-            <div class="dropdown-content">
-                <a href="https://www.canimmdb.online/#architecture" onclick="showSubsection('architecture')">Architecture</a>
-                <a href="https://www.canimmdb.online/#acknowldgement" onclick="showSubsection('acknowldgement')">Acknowledgment</a>
-                
-                <a href="https://www.canimmdb.online/#field-description" onclick="showSubsection('field-description')">Field Description</a>
-                <a href="https://www.canimmdb.online/#faqs" onclick="showSubsection('faqs')">FAQs</a>
-                <a href="https://www.canimmdb.online/#statistics" onclick="showSubsection('statistics')">Statistics</a>
-            </div>
+        <div class="logo_item">
+            <i class="bx bx-menu" id="menuToggle"></i> CanImmDB
         </div>
-        <a href="/#data-submission" onclick="openSection('data-submission')">
-            
-            <i>Data Submission</i>
-        </a>
-        <a href="/#developers" onclick="openSection('developers')">
-            
-            <i>Developers</i>
-        </a>
-        <a href="/#contact" onclick="openSection('contact')">
-            
-            <i>Contact</i>
-        </a>
-        <a href="/#assistance" onclick="openSection('assistance')">           
-            <i>Assistance</i>
-        </a>
-        
-    </div>
-    
+        <div class="navbar_content" id="menuContent">
+            <a href="/">
+                <i> Home </i>
+            </a>
+            <div class="dropdown">
+                <a class="dropbtn">
+                    <i>Information</i>
+                </a>
+                <div class="dropdown-content">
+                    <a href="https://www.canimmdb.online/#architecture" onclick="showSubsection('architecture')">Architecture</a>
+                    <a href="https://www.canimmdb.online/#acknowldgement" onclick="showSubsection('acknowldgement')">Acknowledgment</a>
+                    <a href="https://www.canimmdb.online/#field-description" onclick="showSubsection('field-description')">Field Description</a>
+                    <a href="https://www.canimmdb.online/#faqs" onclick="showSubsection('faqs')">FAQs</a>
+                    <a href="https://www.canimmdb.online/#statistics" onclick="showSubsection('statistics')">Statistics</a>
+                </div>
+            </div>
+            <a href="/#data-submission" onclick="openSection('data-submission')">
+                <i>Data Submission</i>
+            </a>
+            <a href="/#developers" onclick="openSection('developers')">
+                <i>Developers</i>
+            </a>
+            <a href="/#contact" onclick="openSection('contact')">
+                <i>Contact</i>
+            </a>
+            <a href="/#assistance" onclick="openSection('assistance')">
+                <i>Assistance</i>
+            </a>
+        </div>
     </nav>
-
+    
    
