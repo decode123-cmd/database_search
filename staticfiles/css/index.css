@@ -1266,7 +1266,7 @@ body {
 }
 
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background-color: var(--grey-color-light);
+  background-color: var(--grey-color);
 }
 .sidebar.close {
   width: 80px;
@@ -1319,6 +1319,18 @@ body {
     left: -100%;
     transition: left 0.3s ease;
   }
+  .sidebar::-webkit-scrollbar {
+    width: 2px;
+  }
+  
+  .sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--grey-color);
+    border-radius: 5px;
+  }
+  
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--grey-color);
+  }
 
 }
 
@@ -1344,7 +1356,7 @@ body {
 }
 
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background-color: var(--grey-color-light);
+  background-color: var(--grey-color);
 }
 .section{
 width: 75%;
