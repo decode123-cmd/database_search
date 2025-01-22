@@ -97,6 +97,7 @@ body.dark {
   font-size: 22px;
   font-weight: 500;
   color: cadetblue;
+ 
 }
 .navbar img {
   width: 35px;
@@ -1027,6 +1028,15 @@ form {
   body {
     font-size: 14px;
   }
+  .logo_item {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: cadetblue;
+    margin-left:22px;
+  }
   .feedback-form-container {
     max-width: 800px;
     margin: 20px auto;
@@ -1070,6 +1080,15 @@ form {
     padding: 15px;
     margin-top: 72%;
   }
+  .logo_item {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: cadetblue;
+    margin-left:22px;
+  }
 
   .navbar {
     padding: 10px 20px;
@@ -1092,7 +1111,15 @@ form {
     margin-left: 7.5%;
     margin-top: 72%;
   }
-
+  .logo_item {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: cadetblue;
+    margin-left:22px;
+  }
   .navbar {
     padding: 15px 20px;
   }
@@ -1111,6 +1138,15 @@ form {
   .section {
     width: 83%;
     margin-left: 16%;
+  }
+  .logo_item {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: cadetblue;
+    margin-left:22px;
   }
 
   .content_area .container {
@@ -1207,7 +1243,15 @@ body {
     flex-direction: column;
     align-items: flex-start;
   }
-
+  .logo_item {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: cadetblue;
+    margin-left:22px;
+  }
   .navbar_content {
     width: 100%;
     justify-content: space-between;
@@ -1217,6 +1261,15 @@ body {
 @media screen and (max-width: 480px) {
   .navbar {
     padding: 10px;
+  }
+  .logo_item {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: cadetblue;
+    margin-left:22px;
   }
   .feedback-form-container {
     max-width: 800px;
@@ -1286,6 +1339,15 @@ body {
     width: 200px;
     padding: 60px 10px;
   }
+  .logo_item {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: cadetblue;
+    margin-left:22px;
+  }
 
   .sidebar.close {
     width: 60px;
@@ -1303,6 +1365,15 @@ body {
     transition: left 0.3s ease;
     margin-top: 69%;
     width: fit-content;
+  }
+  .logo_item {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: cadetblue;
+    margin-left:22px;
   }
 
   .sidebar.close {
