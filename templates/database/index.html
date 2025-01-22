@@ -57,7 +57,7 @@
     </nav>{% endcomment %}
 
     <!-- sidebar -->
-    <nav class="sidebar">
+    <nav class="sidebar" id="sidebar">
       <div class="menu_content">
                
         <ul class="menu_items">
@@ -826,7 +826,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
 
     <section id="Category_section" class="section" style = "display:none;" >
       <div class="container">
-        <div>
+        <div class="browse">
           <h1>Welcome to Browse by Drug Category Page of CanImmDB</h1>
           <p>
             This page provides the information regarding the immunomodulatory properties 
@@ -1281,7 +1281,15 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 </script>
+<script>
+  const sidebar = document.getElementById("sidebar");
+  const toggleButton = document.getElementById("toggleButton");
 
+  // Toggle sidebar on button click
+  toggleButton.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+  });
+</script>
 <style>
   #search-box {
     width: 100%;
