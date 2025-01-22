@@ -1062,9 +1062,9 @@ form {
   }
 
   .sidebar {
-    width: 100%;
     position: relative;
-    height: auto;
+    width: fit-content;
+    height: -webkit-fill-available;
   }
 
   .content_area .container {
@@ -1072,37 +1072,7 @@ form {
   }
 }
 
-/* Tablets (Medium Screens, 768px and below) */
-@media screen and (max-width: 768px) {
-  .section {
-    width: 90%;
-    margin-left: 5%;
-    padding: 15px;
-    margin-top: 72%;
-  }
-  .logo_item {
-    display: flex;
-    align-items: center;
-    column-gap: 10px;
-    font-size: 22px;
-    font-weight: 500;
-    color: cadetblue;
-    margin-left:22px;
-  }
 
-  .navbar {
-    padding: 10px 20px;
-  }
-
-  .sidebar {
-    padding: 20px;
-  }
-
-  .navbar img {
-    width: 30px;
-    height: 30px;
-  }
-}
 
 /* Small Desktop Screens (992px and below) */
 @media screen and (max-width: 992px) {
@@ -1125,8 +1095,9 @@ form {
   }
 
   .sidebar {
-    width: 200px;
-  }
+    width: fit-content;
+    height: -webkit-fill-available;
+    }
 
   .content_area .container {
     padding: 15px;
@@ -1147,6 +1118,18 @@ form {
     font-weight: 500;
     color: cadetblue;
     margin-left:22px;
+  }
+  .sidebar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--grey-color);
+    border-radius: 10px;
+  }
+  
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--grey-color);
   }
 
   .content_area .container {
@@ -1253,8 +1236,8 @@ body {
     margin-left:22px;
   }
   .navbar_content {
-    width: 100%;
     justify-content: space-between;
+    width: 65%;
   }
 }
 
@@ -1308,6 +1291,8 @@ body {
   overflow-y: scroll;
   box-shadow: 0 0 1px var(--grey-color-light);
   transition: all 0.5s ease;
+  height: -webkit-fill-available;
+  
 }
 .sidebar::-webkit-scrollbar {
   width: 8px;
@@ -1336,8 +1321,9 @@ body {
 
 @media screen and (max-width: 768px) {
   .sidebar {
-    width: 200px;
     padding: 60px 10px;
+    width: fit-content;
+    height: -webkit-fill-available;
   }
   .logo_item {
     display: flex;
@@ -1363,8 +1349,11 @@ body {
     position: relative;
     left: -100%;
     transition: left 0.3s ease;
-    margin-top: 69%;
+    margin-top: 33%;
     width: fit-content;
+    height: -webkit-fill-available;
+
+
   }
   .logo_item {
     display: flex;
@@ -1412,8 +1401,9 @@ body {
   }
 
   .sidebar {
-    width: fit-content;
     padding: 80px 20px;
+    width: fit-content;
+    height: -webkit-fill-available;
     
 
   }
