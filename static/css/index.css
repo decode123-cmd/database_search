@@ -1399,28 +1399,29 @@ body {
   .navbar {
     padding: 15px 30px;
   }
-
+ 
   .sidebar {
     padding: 80px 20px;
     width: fit-content;
-    height: -webkit-fill-available;
-    
-
+    height: 100vh; /* Explicit height for visibility */
+    overflow: auto;
   }
-.sidebar::-webkit-scrollbar {
-  width: 8px;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background-color: var(--grey-color);
-  border-radius: 10px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background-color: var(--grey-color);
-}
-.section{
-width: 75%;
-        margin-left: 23%;
-    }
+ 
+  .sidebar::-webkit-scrollbar {
+    width: 8px;
+  }
+ 
+  .sidebar::-webkit-scrollbar-thumb {
+    background-color: var(--grey-color);
+    border-radius: 10px;
+  }
+ 
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--grey-color);
+  }
+ 
+  .section {
+    width: 75%;
+    margin-left: 23%;
+  }
 }
