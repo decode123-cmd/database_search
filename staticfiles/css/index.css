@@ -1065,6 +1065,7 @@ form {
     position: relative;
     width: fit-content;
     height: -webkit-fill-available;
+    margin-top: 80%;
   }
 
   .content_area .container {
@@ -1097,6 +1098,8 @@ form {
   .sidebar {
     width: fit-content;
     height: -webkit-fill-available;
+    margin-top: 80%;
+
     }
 
   .content_area .container {
@@ -1292,6 +1295,7 @@ body {
   box-shadow: 0 0 1px var(--grey-color-light);
   transition: all 0.5s ease;
   height: -webkit-fill-available;
+
   
 }
 .sidebar::-webkit-scrollbar {
@@ -1336,7 +1340,7 @@ body {
   }
 
   .sidebar.close {
-    width: 60px;
+    width: 0px;
   }
 
   .sidebar.close .menu_title {
@@ -1346,10 +1350,10 @@ body {
 
 @media screen and (max-width: 480px) {
   .sidebar {
-    position: relative;
+    position: absolute;
     left: -100%;
     transition: left 0.3s ease;
-    margin-top: 33%;
+    margin-top: 80%;
     width: fit-content;
     height: -webkit-fill-available;
 
@@ -1374,11 +1378,7 @@ body {
     padding: 10px;
   }
 
-  .sidebar {
-    position: fixed;
-    left: -100%;
-    transition: left 0.3s ease;
-  }
+  
   .sidebar::-webkit-scrollbar {
     width: 2px;
   }
