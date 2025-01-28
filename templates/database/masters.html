@@ -1,10 +1,11 @@
 {% include 'database/base.html' %}
 {% load static %}
-
+<head>
 <script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
 <script src="https://unpkg.com/smiles-drawer/dist/smiles-drawer.min.js"></script>
 <script src="{% static 'js/script.js' %}"></script>
 
+</head>
 <section class="mechanism_section" id='mechanismSection'>
     <div class="container">
         <h1 style="margin-top: 75px;">Browse Result</h1>
@@ -22,11 +23,14 @@
 <!-- CSS for fixed header and scrollable table body -->
 <style>
     /* Container for scrollable table */
+    .mechanism_section{
+        margin-top:var(--navbar-height)
+    }
     .table-container {
         max-height: 864px; /* Set desired height */
         overflow-y: auto; /* Enable vertical scrolling */
         border: 1px solid #ddd;
-        margin-top: 20px;
+       
     }
 
     /* Table Styling */

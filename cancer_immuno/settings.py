@@ -27,7 +27,7 @@ ALLOWED_HOSTS = ['*','canimmdb.online', 'www.canimmdb.online']
 CSRF_TRUSTED_ORIGINS = ['https://canimmdb.online', 'https://www.canimmdb.online']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 
