@@ -14,6 +14,8 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.2/css/boxicons.min.css">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mediaquaries.css' %}">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="{% static 'js/script.js' %}"></script>
     <title>CanImmDB</title>
@@ -552,7 +554,7 @@
     </section>
      
       <!-- Introduction Section -->
-      <section class="section" >
+      <section class="section" style='margin-top:var(--navbar-height)'>
           <div class="container">
               <h1>Welcome to CanIMMDB</h1>
               <p>
@@ -562,7 +564,8 @@ CanIMMDB is a manually curated resource which provides comprehensive information
       </section>
   
       <!-- Detailed Mechanisms Section -->
-      <section class="section" id='mechanismSection'>
+      <section class="section" id='mechanismSection'style="
+    margin-top: var(--navbar-height)" >
         <div class="container">
           <div class="slider">
             <div class="slides">
@@ -915,7 +918,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
               <p>This module is designed to facilitate complex searches using multiple queries combined with logical operators such as AND/OR. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.
               <form id="conditionalSearchForm" method="POST" action="{% url 'conditional_search' %}">
                 {% csrf_token %}
-                  <table>
+                  <table class='condition-table'>
                       <thead>
                           <tr>
                               <th>No.</th>
