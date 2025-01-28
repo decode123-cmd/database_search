@@ -17,8 +17,10 @@ function getCookie(name) {
 document.addEventListener('DOMContentLoaded', function() {
     function hideAllSections() {
         const sections = document.querySelectorAll('.section');
+   
         sections.forEach(section => {
             section.style.display = 'none';
+            
         });
     }
   
