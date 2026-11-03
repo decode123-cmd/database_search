@@ -12,8 +12,7 @@ from rdkit.Chem import rdMolAlign
 from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer
 from sqlalchemy.exc import ProgrammingError
 
-# Function to load data from a specified table
-# Function to load data from a specified table
+
 
 def load_data(table_name):
     with connection.cursor() as cursor:
