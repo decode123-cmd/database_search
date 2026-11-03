@@ -18,14 +18,14 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="{% static 'js/script.js' %}"></script>
-    <title>CanImmDB</title>
+    <title>{{ site_name }}</title>
   </head>
   <body>
     <!-- navbar -->
     {% comment %} <nav class="navbar">
       <div class="logo_item">
         <i class="bx bx-menu" id="sidebarOpen"></i>
-        </i>CanImmDB      </div>
+        </i>{{ site_name }}      </div>
 
     
 
@@ -117,6 +117,14 @@
               <span class="navlink">Cancer Type</span>
             </a>
           </li>
+          <li class="item">
+            <a href="#" class="nav_link Immune" onclick="fetchImmune(event)">
+              <span class="navlink_icon">
+                <i class="bx bxs-magic-wand"></i>
+              </span>
+              <span class="navlink">Immune Term</span>
+            </a>
+          </li>
           <!-- End -->
 
           
@@ -191,14 +199,14 @@
         
         
         <div id="architecture" class="information-subsection" style = 'display:none;'>
-            <h3 class="subsection-heading">Architecture of CanImmDB</h3>
+            <h3 class="subsection-heading">Architecture of {{ site_name }}</h3>
             <div class="architecture-image">
-                <img src="{% static 'img/fig.png'%}" alt="Architecture of CanImmDB">
+                <img src="{% static 'img/fig_v2.png'%}" alt="Architecture of {{ site_name }}: data sources, data, modules and the software stack">
             </div>
         </div>
  
         <div id="field-description" class="information-subsection" style = 'display:none;'>
-          <h3 class="subsection-heading">Brief Description of all the fields in CanImmDB</h3>
+          <h3 class="subsection-heading">Brief Description of all the fields in {{ site_name }}</h3>
           <table class="field-description-table">
               <thead>
                   <tr>
@@ -257,7 +265,7 @@
                   </tr>
                   <tr>
                       <td>Immune Sytem Function Unaffected</td>
-                      <td>This field gives the information about the incubation period.</td>
+                      <td>This field provides information on immune components whose number or function was not changed by the drug treatment.</td>
                   </tr>
                   <tr>
                       <td>Negative Immune Sytem Regulation-Function Enhanced/Numbers Increased</td>
@@ -279,7 +287,7 @@
           </table>
       </div>
       <div id="acknowldgement" class="information-subsection" style = 'display:none;'>
-        <h3 class="subsection-heading">We appreciate the direct and indirect assistance that researchers provided in the creation of CanImmDB. We express our gratitude to the creators of the resources listed below. </h3>
+        <h3 class="subsection-heading">We appreciate the direct and indirect assistance that researchers provided in the creation of {{ site_name }}. We express our gratitude to the creators of the resources listed below. </h3>
         <table class="field-description-table">
             <thead>
                 <tr>
@@ -306,7 +314,7 @@
                 </tr>
                 <tr>
                     <td> PostgresSQL</td>
-                    <td>PostgresSQL is employed as the database management system to handle all the back end data operations that includes storing, managing and retrieving data facilitating seamless data manipulation and querying in CanImmDB.</td>
+                    <td>PostgresSQL is employed as the database management system to handle all the back end data operations that includes storing, managing and retrieving data facilitating seamless data manipulation and querying in {{ site_name }}.</td>
                 </tr> 	
                  <tr>
                     <td>Python</td>
@@ -323,8 +331,8 @@
       <div id="faqs" class="information-subsection" style = 'display:none;'>
         <h3 class="subsection-heading">FAQs (Frequently asked questions)</h3>
         <div class="faq">
-            <p><strong>Q1.What is CanIMMDB ?</strong></p>
-            <p>Ans.CanIMMDB is a manually curated resource for studying the tumor specific anti tumor
+            <p><strong>Q1.What is {{ site_name }} ?</strong></p>
+            <p>Ans.{{ site_name }} is a manually curated resource for studying the tumor specific anti tumor
                response of anticancer agents/Drugs. This Database  provides information on Immune components 
                whose number or function changed  as a result of drug treatment..</p>
         </div>
@@ -335,11 +343,11 @@
                </p>
         </div>
         <div class="faq">
-            <p><strong>Q3.Why CanIMMDB database  is created ?</strong></p>
+            <p><strong>Q3.Why {{ site_name }} database  is created ?</strong></p>
             <p>Ans. Response of a patient to any anti-cancer therapy depends upon interaction of tumor microenvironment with drugs and subsequent immune-modulation-(both positive and negative). This immune-modulation may alter the immune associated parameters- cell types, phenotypes and function of host immune system (Coffelt et al, 2015). These immune associated parameters have prognostic value and can be an important predictive factor in the disease outcome and survival (Zitvogel et al, 2015). For example-CD16+ myeloid cell infiltration in colorectal cancer is associated with better overall survival even after adjusting for other prognostic factors (Sconocchia et al, 2011).Also, cytotoxic cell infiltration in Hodgkin’s lymphoma as a prognostic factor correlates with decreased overall survival (Alvaro-Naranjo et al, 2005). These immune associated parameters can be identified and clinically exploited for the therapeutic intervention in the form of personalized medicine. This is a effort for cataloguing the available information from research articles  for studying immune system interaction with cancer drugs and identifying immune componets whose function/ number changed in response to drugs.</p>
         </div>
         <div class="faq">
-            <p><strong>Q4. What is unique about this CanIMMDB resource ?</strong></p>
+            <p><strong>Q4. What is unique about this {{ site_name }} resource ?</strong></p>
             <p>Ans. To the best of our knowledge, this is first dedicated web based computational resource for studying immune system interaction with cancer drugs & cataloguing the immunomodulation (by anticancer drugs) information in a structured way in different systems : Cell line, Animal and Patients. The resource's structured data can assist in creating more effective combinatorial treatment plans by examining the immunomodulatory properties of individual drugs. This resource has a tool by which a user having the SMILES information of a query compound, can perform various types of similarity searches against the SMILE information of drugs listed in this database. Drug listed in this  resource is linked with Drug bank, KEGG and PubChem database which will provide comprehensive information on the available drugs listed in this database.This database also provides the available  3D structure of all the listed drugs.</p>
         </div>
         <div class="faq">
@@ -357,26 +365,84 @@
         
     </div>
     <div id="statistics" class="information-subsection" style = 'display:none;'>
-        <h3 class="subsection-heading">Statistical information about CanImmDB</h3>
+        <h3 class="subsection-heading">Statistical information about {{ site_name }}</h3>
         <div class="statistics-images">
             <div class="stat-image">
-                <img src="{% static 'img/piechart_category.png'%}" alt="Statistical Information 1">
+                <img src="{% static 'img/stats_drug_category.png'%}" alt="Number of studies by drug category">
             </div>
             
         </div>
         <div class="statistics-images">
           <div class="stat-image">
-            <img src="{% static 'img/piechart_technique.png'%}" alt="Statistical Information 2">
+            <img src="{% static 'img/stats_technique.png'%}" alt="Number of studies by assay or technique">
             
         </div>
          
       </div>
         <div class="statistics-images">
           <div class="stat-image">
-              <img src="{% static 'img/piechart_cancertype.png'%}" alt="Statistical Information 1">
+              <img src="{% static 'img/stats_cancer_type.png'%}" alt="Number of studies by cancer type">
           </div>
           
       </div>
+      <div class="statistics-images">
+          <div class="stat-image">
+              <img src="{% static 'img/stats_immune_terms.png'%}" alt="The 25 immune terms reported by the most studies">
+          </div>
+      </div>
+    </div>
+    <div id="api" class="information-subsection" style = 'display:none;'>
+        <h3 class="subsection-heading">Download &amp; API</h3>
+        <p class="api-intro">Every entry can be downloaded in a single file, and every search is available as a REST API that returns JSON or CSV. No registration or key is needed, and results match the website.</p>
+
+        <h4>Download the whole dataset</h4>
+        <table class="field-description-table">
+            <thead>
+                <tr><th>Study type</th><th>Entries</th><th>CSV</th><th>JSON</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Cell line studies</td><td class="api-count" data-study="cell_line">&ndash;</td><td><a href="/api/v1/download/cell_line.csv">cell_line.csv</a></td><td><a href="/api/v1/download/cell_line.json">cell_line.json</a></td></tr>
+                <tr><td>Animal studies</td><td class="api-count" data-study="animal_studies">&ndash;</td><td><a href="/api/v1/download/animal_studies.csv">animal_studies.csv</a></td><td><a href="/api/v1/download/animal_studies.json">animal_studies.json</a></td></tr>
+                <tr><td>Patient studies</td><td class="api-count" data-study="patient_studies">&ndash;</td><td><a href="/api/v1/download/patient_studies.csv">patient_studies.csv</a></td><td><a href="/api/v1/download/patient_studies.json">patient_studies.json</a></td></tr>
+                <tr><td>All studies (adds a <code>study_type</code> column)</td><td class="api-count" data-study="all">&ndash;</td><td><a href="/api/v1/download/all.csv">all.csv</a></td><td><a href="/api/v1/download/all.json">all.json</a></td></tr>
+            </tbody>
+        </table>
+        <p>Each file has one row per study with every field exactly as stored, including the curation notes. For the full dataset, download a file rather than paging through the API.</p>
+
+        <h4>Use it from the command line</h4>
+<pre class="api-example"># the first 5 patient studies that mention gemcitabine, as JSON
+curl "{{ request.scheme }}://{{ request.get_host }}/api/v1/studies/patient_studies/?Drug=gemcitabine&amp;limit=5"
+
+# the whole cell-line table as CSV
+wget -O cell_line.csv "{{ request.scheme }}://{{ request.get_host }}/api/v1/download/cell_line.csv"
+
+# structures similar to gemcitabine (Morgan fingerprint, Tanimoto 0.7 or higher)
+curl -G "{{ request.scheme }}://{{ request.get_host }}/api/v1/similarity/" \
+     --data-urlencode "smiles=NC1=NC(=O)N(C=C1)[C@@H]1O[C@H](CO)[C@@H](O)C1(F)F" \
+     -d method=2d -d threshold=0.7</pre>
+
+        <h4>Use it from Python or R</h4>
+<pre class="api-example"># Python
+import pandas as pd
+df = pd.read_csv("{{ request.scheme }}://{{ request.get_host }}/api/v1/download/all.csv")
+
+# R
+df &lt;- read.csv("{{ request.scheme }}://{{ request.get_host }}/api/v1/download/all.csv")</pre>
+
+        <h4>Endpoints</h4>
+        <table class="field-description-table">
+            <thead>
+                <tr><th>Endpoint (GET)</th><th>What it returns</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>/api/v1/studies/{study_type}/</code></td><td>Studies as JSON, or CSV with <code>format=csv</code>. <code>study_type</code> is <code>cell_line</code>, <code>animal_studies</code> or <code>patient_studies</code>. Filter on any field with <code>?Field=value</code> (field names are not case-sensitive) (a partial, case-insensitive match; add <code>exact=true</code> for whole values), search every field with <code>q=text</code>, and page with <code>limit</code> (up to 1000) and <code>offset</code>.</td></tr>
+                <tr><td><code>/api/v1/download/{study_type}.{csv|json}</code></td><td>The complete table in one file. Use <code>all</code> instead of a study type for the three tables together.</td></tr>
+                <tr><td><code>/api/v1/similarity/</code></td><td>Structure search. <code>smiles</code> is required; <code>method</code> is <code>2d</code> (default), <code>maccs</code>, <code>substructure</code> or <code>3d</code>; <code>study_type</code> defaults to <code>cell_line</code>; <code>threshold</code> is 0 to 1 (default 0.5); <code>limit</code> caps the rows returned. The response has the full records, the score, and a summary of how many entries were searched. 3D searches take several seconds.</td></tr>
+                <tr><td><code>/api/v1/fields/</code></td><td>The field names of each table.</td></tr>
+                <tr><td><code>/api/v1/status/</code></td><td>A health check with the number of entries in each table.</td></tr>
+            </tbody>
+        </table>
+        <p>Errors come back as JSON with an <code>error</code> message and, where it helps, the list of valid values. The API is read-only and answers GET requests only; it can be called from any website.</p>
     </div>
         <!-- Additional sections can be added here -->
       </div>
@@ -391,7 +457,7 @@
         <form id="data_submission_form" method="POST" action="">
             {% csrf_token %}
             <fieldset style="margin-bottom: 20px;">
-                <legend class="data-submission-legend">Select the database</legend>
+                <legend class="data-submission-legend">Select the database <span class="help-tip" tabindex="0" role="img" aria-label="The set of studies your entry belongs to; the form then shows that table&#x27;s fields. Example: Cell line." data-tip="The set of studies your entry belongs to; the form then shows that table&#x27;s fields. Example: Cell line.">?</span></legend>
                 <div class="checkbox-group">
                   <label><input type="radio" name="field" value="cell_line" onchange="loadColumns1(this)"> Submit In Cell Line</label>                   
                     <label><input type="radio" name="field" value="animal_studies" onchange="loadColumns1(this)"> Submit In Animal Studies</label>
@@ -407,17 +473,17 @@
             
             <fieldset class="data-submission-fieldset">
                 <legend class="data-submission-legend">Additional Information</legend>
-                <label for="submitters_name" class="data-submission-label">Submitter's Name:</label>
-                <input type="text" id="submitters_name" name="submitters_name" class="data-submission-input">
+                <label for="submitters_name" class="data-submission-label">Submitter's Name:<span class="help-tip" tabindex="0" role="img" aria-label="Your name, so the curators can contact you. Example: Jane Doe." data-tip="Your name, so the curators can contact you. Example: Jane Doe.">?</span></label>
+                <input type="text" id="submitters_name" name="submitters_name" class="data-submission-input" placeholder="e.g. Jane Doe">
                 
-                <label for="email_address" class="data-submission-label">Email Address:</label>
-                <input type="email" id="email_address" name="email_address" class="data-submission-input">
+                <label for="email_address" class="data-submission-label">Email Address:<span class="help-tip" tabindex="0" role="img" aria-label="Where the curators can reach you with questions. Example: jane.doe@university.edu." data-tip="Where the curators can reach you with questions. Example: jane.doe@university.edu.">?</span></label>
+                <input type="email" id="email_address" name="email_address" class="data-submission-input" placeholder="e.g. jane.doe@university.edu">
                 
-                <label for="mailing_address" class="data-submission-label">Mailing Address (Optional):</label>
-                <input type="text" id="mailing_address" name="mailing_address" class="data-submission-input">
+                <label for="mailing_address" class="data-submission-label">Mailing Address (Optional):<span class="help-tip" tabindex="0" role="img" aria-label="Postal address; you can leave this empty. Example: Department of Biotechnology, University, City." data-tip="Postal address; you can leave this empty. Example: Department of Biotechnology, University, City.">?</span></label>
+                <input type="text" id="mailing_address" name="mailing_address" class="data-submission-input" placeholder="e.g. Department of Biotechnology, University, City">
                 
-                <label for="comment" class="data-submission-label">Comment or Suggestion:</label>
-                <textarea id="comment" name="comment" class="data-submission-textarea"></textarea>
+                <label for="comment" class="data-submission-label">Comment or Suggestion:<span class="help-tip" tabindex="0" role="img" aria-label="Anything the curators should know, such as where the data come from. Example: Data from PMID 27687804, Table 2." data-tip="Anything the curators should know, such as where the data come from. Example: Data from PMID 27687804, Table 2.">?</span></label>
+                <textarea id="comment" name="comment" class="data-submission-textarea" placeholder="e.g. Data from PMID 27687804, Table 2"></textarea>
             </fieldset>
             
             <div class="data-submission-form-buttons">
@@ -528,35 +594,97 @@
     
     <section id="assistance" class="section" style='display:none;'>
       <div class="container">
-        <h2> Basic Search</h2>
-        <img src="/static/img/figures/onlyfig/basic_search.png" style="width: 95%;
-              margin-top: 20px;">
-           </div>
-           <div class="container">
-            <h2> Conditional Search</h2>
-            <img src="/static/img/figures/onlyfig/conditional search.png" style="width: 95%;
-                  margin-top: 20px;">
-               </div>
-               <div class="container">
-                <h2> 2D Similarity Search </h2>
-                <img src="/static/img/figures/onlyfig/2d_similarity.png" style="width: 95%;
-                      margin-top: 20px;">
-                   </div>
-                   <div class="container">
-                    <h2> 3D Similarity Search </h2>
-                    <img src="/static/img/figures/onlyfig/3D_similarity.png" style="width: 95%;
-                          margin-top: 20px;">
-                       </div>
-                       <div class="container">
-                        <h2> substructure similarity </h2>
-                        <img src="/static/img/figures/onlyfig/substructure_similarity.png" style="width: 95%;
-                              margin-top: 20px;">
-                           </div>
-                           <div class="container">
-                            <h2> MACCS_keys </h2>
-                            <img src="/static/img/figures/onlyfig/MACCS_keys.png" style="width: 95%;
-                                  margin-top: 20px;">
-                               </div>
+        <h2>Help</h2>
+        <p class="gallery-note">Pick a search on the left. Its screenshot appears on the right, and the numbered steps match the numbers on the screenshot.</p>
+        <div class="gallery" data-gallery>
+          <ul class="gallery-list" aria-label="Searches">
+            <li>
+              <button type="button" class="gallery-item active" aria-pressed="true" data-src="{% static 'img/figures/help/basic.png' %}" data-alt="Basic Search with numbered steps">
+                <span class="gallery-title">Basic Search</span>
+                <span class="gallery-text">Look for a word or phrase in one set of studies.</span>
+                <ol class="gallery-steps">
+                  <li>Type a word or phrase, for example <em>gemcitabine</em>.</li>
+                  <li>Choose Cell line, Animal studies or Patient studies.</li>
+                  <li>Optionally tick the fields to search in; leave them all unticked to search every field. Hover <strong>?</strong> to see what a field holds, or click the example beside it to fill the search box.</li>
+                  <li>Click <strong>Submit</strong> to see the matching entries, or <strong>Clear</strong> to start again.</li>
+                </ol>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/figures/help/conditional.png' %}" data-alt="Conditional Search with numbered steps">
+                <span class="gallery-title">Conditional Search</span>
+                <span class="gallery-text">Combine several conditions on different fields.</span>
+                <ol class="gallery-steps">
+                  <li>Pick the database. The first row decides for the whole search.</li>
+                  <li>Choose the field. Hover <strong>?</strong> to see what it holds.</li>
+                  <li>Type the text the field must contain, for example <em>gemcitabine</em>.</li>
+                  <li>Choose how this row joins the next one: AND, OR, or NOT (the next row must not match).</li>
+                  <li>Use <strong>+</strong> to add a condition and <strong>-</strong> to remove one.</li>
+                  <li>Click <strong>Submit</strong>.</li>
+                </ol>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/figures/help/2d_similarity.png' %}" data-alt="2D Similarity Search with numbered steps">
+                <span class="gallery-title">2D Similarity Search</span>
+                <span class="gallery-text">Find drugs with a similar structure, compared as fingerprints.</span>
+                <ol class="gallery-steps">
+                  <li>Choose the study type.</li>
+                  <li>Type or paste a SMILES, or click one of the suggested drugs.</li>
+                  <li>Set the threshold, from 0 to 1 (0.5 is the default). Higher values return closer matches.</li>
+                  <li>Click <strong>Example</strong> to fill in a sample query.</li>
+                  <li>Click <strong>Search</strong>. <strong>Clear All</strong> resets the form.</li>
+                  <li>Results are sorted from most to least similar. The line above them says how many entries were searched.</li>
+                </ol>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/figures/help/3d_similarity.png' %}" data-alt="3D Similarity Search with numbered steps">
+                <span class="gallery-title">3D Similarity Search</span>
+                <span class="gallery-text">Find drugs with a similar 3D shape. This takes several seconds.</span>
+                <ol class="gallery-steps">
+                  <li>Choose the study type.</li>
+                  <li>Type or paste a SMILES, or click one of the suggested drugs.</li>
+                  <li>Set the threshold, from 0 to 1 (0.5 is the default). Lower it for looser matches.</li>
+                  <li>Click <strong>Example</strong> to fill in a sample query.</li>
+                  <li>Click <strong>Search</strong> and confirm. The search can take up to about 15 seconds.</li>
+                  <li>Results are sorted from most to least similar shape. The line above them says how many entries were searched.</li>
+                </ol>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/figures/help/substructure.png' %}" data-alt="Substructure Search with numbered steps">
+                <span class="gallery-title">Substructure Search</span>
+                <span class="gallery-text">Find drugs that contain a given structural fragment.</span>
+                <ol class="gallery-steps">
+                  <li>Choose the study type.</li>
+                  <li>Type or paste the fragment as a SMILES, or click a suggestion such as a benzene ring.</li>
+                  <li>Click <strong>Example</strong> to fill in a sample fragment.</li>
+                  <li>Click <strong>Search</strong>. <strong>Clear All</strong> resets the form.</li>
+                  <li>Every entry whose drug contains the fragment is listed.</li>
+                </ol>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/figures/help/maccs_keys.png' %}" data-alt="MACCS Key Search with numbered steps">
+                <span class="gallery-title">MACCS Key Search</span>
+                <span class="gallery-text">Find drugs with similar structural features, compared with MACCS keys.</span>
+                <ol class="gallery-steps">
+                  <li>Choose the study type.</li>
+                  <li>Type or paste a SMILES, or click one of the suggested drugs.</li>
+                  <li>Set the threshold, from 0 to 1 (0.5 is the default). Higher values return closer matches.</li>
+                  <li>Click <strong>Example</strong> to fill in a sample query.</li>
+                  <li>Click <strong>Search</strong>. <strong>Clear All</strong> resets the form.</li>
+                  <li>Results are sorted from most to least similar. The line above them says how many entries were searched.</li>
+                </ol>
+              </button>
+            </li>
+          </ul>
+          <figure class="gallery-view">
+            <img src="{% static 'img/figures/help/basic.png' %}" alt="Basic Search with numbered steps">
+          </figure>
+        </div>
+      </div>
     </section>
 
     <section id="related-database" class="section" style='display:none;'>
@@ -566,10 +694,10 @@
       <!-- Introduction Section -->
       <section class="section" style='margin-top:var(--navbar-height)'>
           <div class="container">
-              <h1>Welcome to CanIMMDB</h1>
+              <h1>Welcome to {{ site_name }}</h1>
               <p>
 
-CanIMMDB is a manually curated resource which provides comprehensive information on immunomodulatory effects of anticancer drugs and antineoplastic agents. This database has compiled experimental verified information like antitumor and pro-tumor immunomodulation by anticancer drugs. This information of change  in immune associated parameters has prognostic value and  a thorough understanding of them  can help  create novel combinatorial regimens with enhanced clinical efficacy .The database's entries are connected to Pubchem, KEGG, Drugbank, and Pubmed. With several databases integrated into a single resource, users can browse vast information on a single platform.</p>
+{{ site_name }} is a manually curated resource which provides comprehensive information on immunomodulatory effects of anticancer drugs and antineoplastic agents. This database has compiled experimental verified information like antitumor and pro-tumor immunomodulation by anticancer drugs. This information of change  in immune associated parameters has prognostic value and  a thorough understanding of them  can help  create novel combinatorial regimens with enhanced clinical efficacy .The database's entries are connected to Pubchem, KEGG, Drugbank, and Pubmed. With several databases integrated into a single resource, users can browse vast information on a single platform. All data can also be downloaded in full and queried through a REST API: see <a href="/#api" onclick="showSubsection('api')">Download &amp; API</a>.</p>
           </div>
       </section>
   
@@ -577,18 +705,44 @@ CanIMMDB is a manually curated resource which provides comprehensive information
       <section class="section" id='mechanismSection'style="
     margin-top: var(--navbar-height)" >
         <div class="container">
-          <div class="slider">
-            <div class="slides">
-              <img src="/static/img/front_img.png" style="width: 100%;" alt="Slide 1">
-              <img src="{% static 'img/piechart_technique.png'%}" style="width: 100%;" alt="Statistical Information 2">
-              <img src="{% static 'img/piechart_cancertype.png'%}"style="width: 100%;"  alt="Statistical Information 1">
-              <img src="{% static 'img/piechart_category.png'%}" style="width: 100%;"  alt="Statistical Information 1">
-              <!-- Add more images as needed -->
-            </div>
-            <!-- Navigation buttons -->
-            <button class="prev" onclick="prevSlide()">&#10094;</button>
-            <button class="next" onclick="nextSlide()">&#10095;</button>
-          </div>
+          <div class="gallery" data-gallery>
+          <ul class="gallery-list" aria-label="Figures">
+            <li>
+              <button type="button" class="gallery-item active" aria-pressed="true" data-src="{% static 'img/front_img.png' %}" data-alt="Anticancer agents inhibit immunosuppressive cells and activate immune cells (figure 1)">
+                <span class="gallery-title">Immunomodulation by anticancer drugs (figure 1)</span>
+                <span class="gallery-text">Anticancer drugs can inhibit immunosuppressive cells such as MDSCs and regulatory T cells, and activate effector cells such as CD4 and CD8 T cells, &gamma;&delta; T cells and dendritic cells.</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_technique.png' %}" data-alt="Stacked bar chart of the number of studies for each standardised assay name">
+                <span class="gallery-title">Studies by assay</span>
+                <span class="gallery-text">Cell line, animal and patient studies for each standardised assay name, the most used first.</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_cancer_type.png' %}" data-alt="Stacked bar chart of the number of studies for each cancer type">
+                <span class="gallery-title">Studies by cancer type</span>
+                <span class="gallery-text">Cell line, animal and patient studies for each cancer type, the most studied first.</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_drug_category.png' %}" data-alt="Stacked bar chart of the number of studies for each drug category">
+                <span class="gallery-title">Studies by drug category</span>
+                <span class="gallery-text">Cell line, animal and patient studies for each drug category, the largest first.</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_immune_terms.png' %}" data-alt="Stacked bar chart of the 25 immune terms reported by the most studies">
+                <span class="gallery-title">Most reported immune terms</span>
+                <span class="gallery-text">The 25 standardised immune terms that the most studies report, in any outcome.</span>
+              </button>
+            </li>
+          </ul>
+          <figure class="gallery-view">
+            <img src="{% static 'img/front_img.png' %}" alt="Anticancer agents inhibit immunosuppressive cells and activate immune cells (figure 1)">
+          </figure>
+        </div>
+        <p class="gallery-note">Click a title to show its figure. A study can be counted under more than one assay or cancer type, so the bars do not add up to the total number of studies.</p>
           <h1>Immunomodulation by anticancer drugs/agents (figure 1) </h1>
           <p>Anticancer agents/drugs can alter  immune associated parameters- cell types, phenotypes and function of the host immune system.The Mechanisms (figure 1) by which anticancer  agents alter immune function include depleting immunosuppressive populations (both in circulation and tumor infiltrating) such as myeloid-derived suppressor cells (MDSCs) and Regulatory T cells. and downregulating PD-L2 mediated immunosuppression.These anticancer agents can trigger immunogenic cell death  and antibody-dependent cellular cytotoxicity (ADCC). Anticancer agents induce various effector cell populations including tumor specific IL-17–producing γδ T cells , IFN-γ producing CD8 T cells,  CD4+ T helper 17 (Th17), Natural killer cells, dendritic cells , macrophages and B cells. Anticancer agents suppress Protumor cytokines including IL-4, IL-10, and IL-13 and induce  anti tumor  immune response by releasing MCP-1, IFN-gamma, IL-17, Upregulating Class I and Class II MHC expression on tumor. In addition to these, many other mechanisms are cataloged in this database.</p>
         </div>
@@ -600,29 +754,37 @@ CanIMMDB is a manually curated resource which provides comprehensive information
             <h2 class="heading">2D Similarity Search</h2>
         </div>
         <p>The 2D Search page assists users in running a 2D similarity search against the database. After submitting a job, it returns a list of compounds similar to the query structure. The server provides options to select different parameters, such as similarity cutoff and search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
+        <details class="tool-method">
+          <summary>How this search works</summary>
+          <dl>
+          <dt>Fingerprint</dt><dd>Morgan (circular) fingerprint, radius 2, 2048 bits.</dd>
+          <dt>Similarity</dt><dd>Tanimoto coefficient, from 0 (nothing shared) to 1 (identical fingerprints).</dd>
+          <dt>Threshold</dt><dd>Minimum score to report (default 0.5). Results are sorted from most to least similar.</dd>
+          <dt>Software</dt><dd>RDKit.</dd>
+          <dt>Coverage</dt><dd>Only entries with a valid single-molecule structure are searched. Blank, unparsable and multi-drug (combination) entries are skipped, and each search reports how many.</dd>
+          </dl>
+        </details>
         <div class="container">
             <div class="search-container">
                 <form id="2D_search_form" method="POST" action="{% url 'tanimoto_search' %}">
                     {% csrf_token %}
                     <fieldset>
+                        <legend>Study type <span class="help-tip" tabindex="0" role="img" aria-label="Which set of studies to search. Example: Patient studies." data-tip="Which set of studies to search. Example: Patient studies.">?</span></legend>
                         <div class="checkbox-group">
-                          <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
+                          <label><input type="radio" name="field" value="cell_line" checked> Search In Cell Line</label>
                           <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
-                            <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
-                            
-                            
+                          <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
                         </div>
                     </fieldset>
                     <fieldset>
                         <legend>Please type or paste your SMILES sequence and Threshold in the box below.</legend>
-                        <label for="smilesInput2D">SMILES sequence:</label>
-                        <input type="text" id="smilesInput2D" name="smiles" placeholder="Example SMILES">
-                        <label for="threshold2D">Threshold:</label>
-                        <input type="text" id="threshold2D" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
-                        <button type="button" onclick="fillExample2DForm()">Example</button> <!-- Example Button -->
+                        <label for="smilesInput2D">SMILES sequence:<span class="help-tip" tabindex="0" role="img" aria-label="Text notation for a molecule&#x27;s structure. Example: cyclophosphamide is ClCCN(CCCl)P1(=O)NCCCO1. Pick a suggestion below the box to fill it in." data-tip="Text notation for a molecule&#x27;s structure. Example: cyclophosphamide is ClCCN(CCCl)P1(=O)NCCCO1. Pick a suggestion below the box to fill it in.">?</span></label>
+                        <input type="text" id="smilesInput2D" name="smiles" class="tool-smiles" placeholder="e.g. ClCCN(CCCl)P1(=O)NCCCO1 (cyclophosphamide)" required>
+                        <label for="threshold2D">Threshold:<span class="help-tip" tabindex="0" role="img" aria-label="Minimum similarity to report, from 0 to 1 (1 = identical). Example: 0.5. Lower values return more, looser matches." data-tip="Minimum similarity to report, from 0 to 1 (1 = identical). Example: 0.5. Lower values return more, looser matches.">?</span></label>
+                        <input type="text" id="threshold2D" name="threshold" value="0.5" inputmode="decimal" placeholder="0 to 1, e.g. 0.5">
+                        <button type="button" onclick="fillExample2DForm()">Example</button>
                     </fieldset>
                     <div class="form-buttons">
-                     
                         <button type="button" onclick="clear2DForm()">Clear All</button>
                         <button type="submit">Search</button>
                     </div>
@@ -630,6 +792,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
             </div>
             <div class="search_result" id="searchResults2" style="display:none;    overflow-y: auto;">
                 <h2>Search Results</h2>
+                <p class="search-info" id="toolInfo2D"></p>
                 <table id="resultsTable2">
                     <thead>
                         <tr id="tableHeaders2">
@@ -642,160 +805,186 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                 </table>
             </div>
         </div>
-    </section>
+      </section>
  
 
 
 
-    <section class="section" id='ThreeDsearch' style='display:none;'>
-      <div class="heading-container">
-          <h2 class="heading">3D Similarity Search</h2>
-      </div>
-      <p>The 3D Search page assists users in running a 3D similarity search against the database. After submitting a job, it returns a list of compounds similar to the query structure. The server provides options to select different parameters, such as similarity cutoff and search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
-      <div class="container">
-          <div class="search-container">
-              <form id="3D_search_form" method="POST" action="{% url 'third_search' %}">
-                  {% csrf_token %}
-                  <fieldset>
-                      <div class="checkbox-group">
-                        <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
-                        <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
+      <section class="section" id='ThreeDsearch' style='display:none;'>
+        <div class="heading-container">
+            <h2 class="heading">3D Similarity Search</h2>
+        </div>
+        <p>The 3D Search page assists users in running a 3D similarity search against the database. After submitting a job, it returns a list of compounds similar to the query structure. The server provides options to select different parameters, such as similarity cutoff and search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
+        <details class="tool-method">
+          <summary>How this search works</summary>
+          <dl>
+          <dt>Reference structures</dt><dd>3D models built with RDKit (conformer embedding followed by UFF optimisation). Entries added later are modelled on demand if they have 50 or fewer heavy atoms.</dd>
+          <dt>Query</dt><dd>Up to 10 conformers (5 for molecules above 40 heavy atoms) generated with RDKit ETKDGv3, pruned at 0.5 &Aring; RMS and UFF-optimised. Queries above 70 heavy atoms are not accepted.</dd>
+          <dt>Alignment</dt><dd>Each query conformer is aligned onto each reference structure with Crippen-O3A (RDKit).</dd>
+          <dt>Score</dt><dd>Shape Tanimoto of the aligned pair, from 0 to 1; the best conformer is reported. Unrelated structures typically score around 0.35&ndash;0.4, so the default threshold is 0.5. A flexible molecule can score below 1 even against itself, because only one stored conformer is compared; lower the threshold (for example to 0.4) for looser matches.</dd>
+          <dt>Run time</dt><dd>Typically 5&ndash;15 seconds, longer for large molecules.</dd>
+          <dt>Coverage</dt><dd>Only entries that have a 3D model are searched. Blank, unparsable, multi-drug (combination) and very large structures are skipped, and each search reports how many.</dd>
+          </dl>
+        </details>
+        <div class="container">
+            <div class="search-container">
+                <form id="3D_search_form" method="POST" action="{% url 'third_search' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend>Study type <span class="help-tip" tabindex="0" role="img" aria-label="Which set of studies to search. Example: Patient studies." data-tip="Which set of studies to search. Example: Patient studies.">?</span></legend>
+                        <div class="checkbox-group">
+                          <label><input type="radio" name="field" value="cell_line" checked> Search In Cell Line</label>
+                          <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
                           <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
-                        
-                          
-                      </div>
-                  </fieldset>
-                  <fieldset>
-                      <legend>Please type or paste your SMILES sequence and Threshold in the box below.</legend>
-                      <label for="smilesInput3D">SMILES sequence:</label>
-                      <input type="text" id="smilesInput3D" name="smiles" placeholder="Example SMILES">
-                      <label for="threshold3D">Threshold:</label>
-                      <input type="text" id="threshold3D" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
-                      <button type="button" onclick="fillExample3DForm()">Example</button> <!-- Example Button -->
-                  </fieldset>
-                  <div id="loadingMessage" style="display: none; color: red; margin-top: 10px;">
-                    It may take time.
-                </div>
-                  <div class="form-buttons">
-                    <button type="button" onclick="fillExample3DForm()">Example</button> <!-- Example Button -->
-                      <button type="button" onclick="clear3DForm()">Clear All</button>
-                      <button type="submit">Search</button>
-                  </div>
-              </form>
-          </div>
-          <div class="search_result" id="searchResults3" style="display:none;">
-              <h2>Search Results</h2>
-              <table id="resultsTable3">
-                  <thead>
-                      <tr id="tableHeaders3">
-                          <!-- Table headers will be added here dynamically -->
-                      </tr>
-                  </thead>
-                  <tbody id="tableBody3">
-                      <!-- Table rows will be added here dynamically -->
-                  </tbody>
-              </table>
-          </div>
-      </div>
-  </section>
-  
-  <section class="section" id='substructure' style='display:none;'>
-    <div class="heading-container">
-        <h2 class="heading">Substructure Search</h2>
-    </div>
-    <p>The Substructure Search page helps users find compounds in the database that contain the query substructure. After submitting a job, it returns a list of compounds that match the query substructure. The server provides options to select different parameters, such as search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
-    <div class="container">
-        <div class="search-container">
-            <form id="substructure_search_form" method="POST" action="{% url 'substructure_search' %}">
-                {% csrf_token %}
-                <fieldset>
-                    <div class="checkbox-group">
-                      <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
-                      <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
-                        <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
-                        
-                        
-
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Please type or paste your SMILES sequence and Threshold in the box below.</legend>
+                        <label for="smilesInput3D">SMILES sequence:<span class="help-tip" tabindex="0" role="img" aria-label="Text notation for a molecule&#x27;s structure. Example: cyclophosphamide is ClCCN(CCCl)P1(=O)NCCCO1. Pick a suggestion below the box to fill it in." data-tip="Text notation for a molecule&#x27;s structure. Example: cyclophosphamide is ClCCN(CCCl)P1(=O)NCCCO1. Pick a suggestion below the box to fill it in.">?</span></label>
+                        <input type="text" id="smilesInput3D" name="smiles" class="tool-smiles" placeholder="e.g. ClCCN(CCCl)P1(=O)NCCCO1 (cyclophosphamide)" required>
+                        <label for="threshold3D">Threshold:<span class="help-tip" tabindex="0" role="img" aria-label="Minimum 3D shape similarity to report, from 0 to 1 (1 = identical shape). Example: 0.5. Flexible molecules can score below 1 even against themselves, so lower it to 0.4 for looser matches." data-tip="Minimum 3D shape similarity to report, from 0 to 1 (1 = identical shape). Example: 0.5. Flexible molecules can score below 1 even against themselves, so lower it to 0.4 for looser matches.">?</span></label>
+                        <input type="text" id="threshold3D" name="threshold" value="0.5" inputmode="decimal" placeholder="0 to 1, e.g. 0.5">
+                        <button type="button" onclick="fillExample3DForm()">Example</button>
+                    </fieldset>
+                    <div id="loadingMessage" style="display: none; color: red; margin-top: 10px;">
+                        Searching&hellip; 3D alignment can take up to about 15 seconds.
                     </div>
-                </fieldset>
-                <fieldset>
-                    <legend>Please type or paste your SMILES sequence in the box below.</legend>
-                    <label for="smilesInput">SMILES sequence:</label>
-                    <input type="text" id="smilesInputsubs" name="smiles" placeholder="Example SMILES">
-                    <button type="button" onclick="fillExamplesubsForm()">Example</button> <!-- Example Button -->
-                </fieldset>
-                <div class="form-buttons">
-         
-                    <button type="button" onclick="clearSmilesForm()">Clear All</button>
-                    <button type="submit">Search</button>
-                </div>
-            </form>
+                    <div class="form-buttons">
+                        <button type="button" onclick="clear3DForm()">Clear All</button>
+                        <button type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="search_result" id="searchResults3" style="display:none;">
+                <h2>Search Results</h2>
+                <p class="search-info" id="toolInfo3D"></p>
+                <table id="resultsTable3">
+                    <thead>
+                        <tr id="tableHeaders3">
+                            <!-- Table headers will be added here dynamically -->
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody3">
+                        <!-- Table rows will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div  class="search_result" id="resultsTablesubs" style="display:none;">
-            <h2>Search Results</h2>
-            <table id="resultsTable">
-                <thead>
-                    <tr id="tableHeaderssubs">
-                        <!-- Table headers will be added here dynamically -->
-                    </tr>
-                </thead>
-                <tbody id="tableBodysubs">
-                    <!-- Table rows will be added here dynamically -->
-                </tbody>
-            </table>
+      </section>
+  
+      <section class="section" id='substructure' style='display:none;'>
+        <div class="heading-container">
+            <h2 class="heading">Substructure Search</h2>
         </div>
-    </div>
-</section>
+        <p>The Substructure Search page helps users find compounds in the database that contain the query substructure. After submitting a job, it returns a list of compounds that match the query substructure. The server provides options to select different parameters, such as search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
+        <details class="tool-method">
+          <summary>How this search works</summary>
+          <dl>
+          <dt>Matching</dt><dd>A database structure is returned if it contains your query as a substructure (RDKit HasSubstructMatch). Atoms are matched by element and bond type; stereochemistry and hydrogen counts are not considered, so a query containing [nH] also matches N-substituted indoles.</dd>
+          <dt>Query</dt><dd>A SMILES fragment, for example c1ccccc1 for a benzene ring.</dd>
+          <dt>Software</dt><dd>RDKit.</dd>
+          <dt>Coverage</dt><dd>Only entries with a valid single-molecule structure are searched. Blank, unparsable and multi-drug (combination) entries are skipped, and each search reports how many.</dd>
+          </dl>
+        </details>
+        <div class="container">
+            <div class="search-container">
+                <form id="substructure_search_form" method="POST" action="{% url 'substructure_search' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend>Study type <span class="help-tip" tabindex="0" role="img" aria-label="Which set of studies to search. Example: Patient studies." data-tip="Which set of studies to search. Example: Patient studies.">?</span></legend>
+                        <div class="checkbox-group">
+                          <label><input type="radio" name="field" value="cell_line" checked> Search In Cell Line</label>
+                          <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
+                          <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Please type or paste your SMILES sequence in the box below.</legend>
+                        <label for="smilesInputsubs">SMILES sequence:<span class="help-tip" tabindex="0" role="img" aria-label="Text notation for the part of a molecule you want to find. Example: c1ccccc1 is a benzene ring. Pick a suggestion below the box to fill it in." data-tip="Text notation for the part of a molecule you want to find. Example: c1ccccc1 is a benzene ring. Pick a suggestion below the box to fill it in.">?</span></label>
+                        <input type="text" id="smilesInputsubs" name="smiles" class="tool-smiles" placeholder="e.g. c1ccccc1 (benzene ring)" required>
+                        <button type="button" onclick="fillExamplesubsForm()">Example</button>
+                    </fieldset>
+                    <div class="form-buttons">
+                        <button type="button" onclick="clearSubstructureForm()">Clear All</button>
+                        <button type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="search_result" id="resultsTablesubs" style="display:none;">
+                <h2>Search Results</h2>
+                <p class="search-info" id="toolInfoSubs"></p>
+                <table id="resultsTable">
+                    <thead>
+                        <tr id="tableHeaderssubs">
+                            <!-- Table headers will be added here dynamically -->
+                        </tr>
+                    </thead>
+                    <tbody id="tableBodysubs">
+                        <!-- Table rows will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </section>
 
 
-<section class="section" id='maccs' style='display:none;'>
-  <div class="heading-container">
-    <h2 class="heading">MACCS Key-Based Similarity Search</h2>
-  </div>
-  <p>The MACCS Key-Based Search page helps users perform a similarity search against the database using MACCS keys. After submitting a job, it returns a list of compounds similar to the query structure based on MACCS key similarity. The server provides options to select different parameters, such as similarity cutoff and search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
-  <div class="container">
-    <div class="search-container">
-      <form id="maccs_search_form" method="POST" action="{% url 'maccs_search' %}">
-        {% csrf_token %}
-        <fieldset>
-          <div class="checkbox-group">
-            <label><input type="radio" name="field" value="cell_line"> Search In Cell Line</label>
-            <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
-            <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
-          
-            
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>Please type or paste your SMILES sequence and Threshold in the box below.</legend>
-          <label for="smilesInput">SMILES sequence:</label>
-          <input type="text" id="smilesInputmacc" name="smiles" placeholder="Example SMILES">
-          <label for="threshold">Threshold:</label>
-          <input type="text" id="thresholdmacc" name="threshold" placeholder="Eg. 0.5, 0.4, 1.0...">
-          <button type="button" onclick="fillExamplemaccForm()">Example</button> <!-- Example Button -->
-        </fieldset>
-        <div class="form-buttons">
-     
-          <button type="button" onclick="clearMaccsForm()">Clear All</button>
-          <button type="submit">Search</button>
+      <section class="section" id='maccs' style='display:none;'>
+        <div class="heading-container">
+            <h2 class="heading">MACCS Key-Based Similarity Search</h2>
         </div>
-      </form>
-    </div>
-    <div class="search_result" id="searchResultsm" style="display:none;">
-      <h2>Search Results</h2>
-      <table id="resultsTablem">
-        <thead>
-          <tr id="tableHeadersm">
-            <!-- Table headers will be added here dynamically -->
-          </tr>
-        </thead>
-        <tbody id="tableBodym">
-          <!-- Table rows will be added here dynamically -->
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
+        <p>The MACCS Key-Based Search page helps users perform a similarity search against the database using MACCS keys. After submitting a job, it returns a list of compounds similar to the query structure based on MACCS key similarity. The server provides options to select different parameters, such as similarity cutoff and search type. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
+        <details class="tool-method">
+          <summary>How this search works</summary>
+          <dl>
+          <dt>Fingerprint</dt><dd>The 166 public MACCS structural keys.</dd>
+          <dt>Similarity</dt><dd>Tanimoto coefficient, from 0 (nothing shared) to 1 (identical key sets).</dd>
+          <dt>Threshold</dt><dd>Minimum score to report (default 0.5). Results are sorted from most to least similar.</dd>
+          <dt>Software</dt><dd>RDKit.</dd>
+          <dt>Coverage</dt><dd>Only entries with a valid single-molecule structure are searched. Blank, unparsable and multi-drug (combination) entries are skipped, and each search reports how many.</dd>
+          </dl>
+        </details>
+        <div class="container">
+            <div class="search-container">
+                <form id="maccs_search_form" method="POST" action="{% url 'maccs_search' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend>Study type <span class="help-tip" tabindex="0" role="img" aria-label="Which set of studies to search. Example: Patient studies." data-tip="Which set of studies to search. Example: Patient studies.">?</span></legend>
+                        <div class="checkbox-group">
+                          <label><input type="radio" name="field" value="cell_line" checked> Search In Cell Line</label>
+                          <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
+                          <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Please type or paste your SMILES sequence and Threshold in the box below.</legend>
+                        <label for="smilesInputmacc">SMILES sequence:<span class="help-tip" tabindex="0" role="img" aria-label="Text notation for a molecule&#x27;s structure. Example: cyclophosphamide is ClCCN(CCCl)P1(=O)NCCCO1. Pick a suggestion below the box to fill it in." data-tip="Text notation for a molecule&#x27;s structure. Example: cyclophosphamide is ClCCN(CCCl)P1(=O)NCCCO1. Pick a suggestion below the box to fill it in.">?</span></label>
+                        <input type="text" id="smilesInputmacc" name="smiles" class="tool-smiles" placeholder="e.g. ClCCN(CCCl)P1(=O)NCCCO1 (cyclophosphamide)" required>
+                        <label for="thresholdmacc">Threshold:<span class="help-tip" tabindex="0" role="img" aria-label="Minimum similarity to report, from 0 to 1 (1 = identical). Example: 0.5. Lower values return more, looser matches." data-tip="Minimum similarity to report, from 0 to 1 (1 = identical). Example: 0.5. Lower values return more, looser matches.">?</span></label>
+                        <input type="text" id="thresholdmacc" name="threshold" value="0.5" inputmode="decimal" placeholder="0 to 1, e.g. 0.5">
+                        <button type="button" onclick="fillExamplemaccForm()">Example</button>
+                    </fieldset>
+                    <div class="form-buttons">
+                        <button type="button" onclick="clearMaccsForm()">Clear All</button>
+                        <button type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+            <div class="search_result" id="searchResultsm" style="display:none;">
+                <h2>Search Results</h2>
+                <p class="search-info" id="toolInfoMaccs"></p>
+                <table id="resultsTablem">
+                    <thead>
+                        <tr id="tableHeadersm">
+                            <!-- Table headers will be added here dynamically -->
+                        </tr>
+                    </thead>
+                    <tbody id="tableBodym">
+                        <!-- Table rows will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+      </section>
 
 
 <!--########################################## END Of Tools#####################################################################################################-->
@@ -803,26 +992,26 @@ CanIMMDB is a manually curated resource which provides comprehensive information
   <div class="container">
       <div class="search-container">
           <h1>Basic Search</h1>
-          <p>This module allows users to perform a simple search on any field within the CanImmDB. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
+          <p>This module allows users to perform a simple search on any field within the {{ site_name }}. For more information, see the <a href="#" onclick="openSection('assistance')">HELP</a> page.</p>
           <form id="searchForm" method="POST" action="{% url 'search' %}">
               {% csrf_token %}
               
               <fieldset>
-                  <legend>Please paste/insert/type your query to be searched:</legend>
-                  <input type="text" id="search-box" placeholder="Enter Keyword ..." name="query">
+                  <legend>Please paste/insert/type your query to be searched: <span class="help-tip" tabindex="0" role="img" aria-label="A word or phrase to look for in the selected study type. Example: gemcitabine." data-tip="A word or phrase to look for in the selected study type. Example: gemcitabine.">?</span></legend>
+                  <input type="text" id="search-box" placeholder="e.g. gemcitabine" name="query">
               </fieldset>
               
               <fieldset>
-                  <legend>Select Fields to be SEARCHED</legend>
+                  <legend>Select Fields to be SEARCHED <span class="help-tip" tabindex="0" role="img" aria-label="Which set of studies to search. Example: Patient studies." data-tip="Which set of studies to search. Example: Patient studies.">?</span></legend>
                   <div class="checkbox-group">
-                      <label><input type="radio" name="field" value="cell_line" onclick="loadColumns_search(this)"> Search In Cell Line</label>
+                      <label><input type="radio" name="field" value="cell_line" onclick="loadColumns_search(this)" checked> Search In Cell Line</label>
                       <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns_search(this)"> Search In Animal Studies</label>
                       <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns_search(this)"> Search In Patient Studies</label>
                   </div>
               </fieldset>
 
               <fieldset class="fields-to-search" id="fields-to-search" style="display: none;">
-                  <legend>Select Specific Columns to Search In</legend>
+                  <legend>Select Specific Columns to Search In <span class="help-tip" tabindex="0" role="img" aria-label="Tick the fields to search in; leave all unticked to search every field. Example: tick the drug field to match drug names only." data-tip="Tick the fields to search in; leave all unticked to search every field. Example: tick the drug field to match drug names only.">?</span></legend>
                   <div id="column-checkboxes" class="checkboxes-container">
                       <!-- Dynamic checkboxes will be added here -->
                   </div>
@@ -840,7 +1029,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
     <section id="Category_section" class="section" style = "display:none;" >
       <div class="container">
         <div class="browse">
-          <h1>Welcome to Browse by Drug Category Page of CanImmDB</h1>
+          <h1>Welcome to Browse by Drug Category Page of {{ site_name }}</h1>
           <p>
             This page provides the information regarding the immunomodulatory properties 
             of anticancer drugs/agents in different Drugs.
@@ -861,17 +1050,17 @@ CanIMMDB is a manually curated resource which provides comprehensive information
       </tbody>
   </table>
   <div class="stat-image">
-    <img src="{% static 'img/piechart_category.png'%}" alt="Statistical Information 1">
+    <img src="{% static 'img/stats_drug_category.png'%}" alt="Number of studies by drug category">
 </div>
 </div>
 </section>
 <section id="technique_section" class="section" style = "display:none;" >
   <div class="container">
     <div>
-      <h1>Welcome to Browse by Technique Category Page of CanImmDB</h1>
+      <h1>Welcome to Browse by Technique Category Page of {{ site_name }}</h1>
       <p>
         This page provides the information regarding the immunomodulatory properties 
-        of anticancer drugs/agents in different Techniques.
+        of anticancer drugs/agents in different Techniques. The assays are grouped under standardised names.
       </p>
     </div>
 <table id="peptidest-table">
@@ -888,7 +1077,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
   </tbody>
 </table>
 <div class="stat-image">
-  <img src="{% static 'img/piechart_technique.png'%}" alt="Statistical Information 1">
+  <img src="{% static 'img/stats_technique.png'%}" alt="Number of studies by assay or technique">
 </div>
 </div>
 </section>
@@ -896,7 +1085,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
 <section id="cancer_section" class="section" style = "display:none;" >
   <div class="container">
     <div>
-      <h1>Welcome to Browse by Cancer Type Category Page of CanImmDB</h1>
+      <h1>Welcome to Browse by Cancer Type Category Page of {{ site_name }}</h1>
       <p>
         This page provides the information regarding the immunomodulatory properties 
         of anticancer drugs/agents in different cancer types.
@@ -916,7 +1105,45 @@ CanIMMDB is a manually curated resource which provides comprehensive information
   </tbody>
 </table>
 <div class="stat-image">
-  <img src="{% static 'img/piechart_category.png'%}" alt="Statistical Information 1">
+  <img src="{% static 'img/stats_cancer_type.png'%}" alt="Number of studies by cancer type">
+</div>
+</div>
+</section>
+
+<section id="immune_section" class="section" style = "display:none;" >
+  <div class="container">
+    <div>
+      <h1>Welcome to Browse by Immune Term Page of {{ site_name }}</h1>
+      <p>
+        This page lists the standardised immune terms (cells, molecules and pathways) and how many studies report each.
+        Choose which outcome to count: <span class="help-tip" tabindex="0" role="img" aria-label="Which result to count. Example: Increased counts the studies in which the term went up after drug treatment." data-tip="Which result to count. Example: Increased counts the studies in which the term went up after drug treatment.">?</span>
+      </p>
+      <p style="margin-top: 10px;">
+        <label for="immune-outcome">Outcome:</label>
+        <select id="immune-outcome" onchange="fetchImmune()">
+          <option value="any">Any outcome</option>
+          <option value="enhanced">Increased (function or number)</option>
+          <option value="inhibited">Decreased (function or number)</option>
+          <option value="unaffected">Unaffected</option>
+          <option value="negative">Negative immune regulation</option>
+        </select>
+      </p>
+    </div>
+<table id="immune-table">
+  <thead>
+      <tr>
+          <th>Immune Term</th>
+          <th>Number of Cell line</th>
+          <th>Number of Animal Studies</th>
+          <th>Number of Patient Studies</th>
+      </tr>
+  </thead>
+  <tbody>
+      <!-- Rows will be populated by JavaScript -->
+  </tbody>
+</table>
+<div class="stat-image">
+  <img src="{% static 'img/stats_immune_terms.png'%}" alt="The 25 immune terms reported by the most studies">
 </div>
 </div>
 </section>
@@ -932,10 +1159,10 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                       <thead>
                           <tr>
                               <th>No.</th>
-                              <th>Database</th>
-                              <th>Field</th>
-                              <th>Query</th>
-                              <th>Operator</th>
+                              <th>Database <span class="help-tip" tabindex="0" role="img" aria-label="Set of studies to search; the first row decides for the whole search. Example: Patient Studies." data-tip="Set of studies to search; the first row decides for the whole search. Example: Patient Studies.">?</span></th>
+                              <th>Field <span class="help-tip" tabindex="0" role="img" aria-label="The field this condition applies to. Pick one to see what it holds. Example: Drug." data-tip="The field this condition applies to. Pick one to see what it holds. Example: Drug.">?</span></th>
+                              <th>Query <span class="help-tip" tabindex="0" role="img" aria-label="Text the field must contain, not case-sensitive. Example: gemcitabine." data-tip="Text the field must contain, not case-sensitive. Example: gemcitabine.">?</span></th>
+                              <th>Operator <span class="help-tip" tabindex="0" role="img" aria-label="How this row joins the next one: AND = both must match, OR = either, NOT = the next row must not match. Example: AND." data-tip="How this row joins the next one: AND = both must match, OR = either, NOT = the next row must not match. Example: AND.">?</span></th>
                               <th>Add</th>
                               <th>Remove</th>
                           </tr>
@@ -945,8 +1172,7 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                               <td>1</td>
                               <td>
                                   <select name="table[]" onchange="loadColumns(this, 1)">
-                                    <option value="all_fields">All Fields</option>
-                                      <option value="cell_line">Cell Line</option>
+                                      <option value="cell_line" selected>Cell Line</option>
                                       <option value="animal_studies">Animal Studies</option>
                                       <option value="patient_studies">Patient Studies</option>
                                       
@@ -987,10 +1213,11 @@ CanIMMDB is a manually curated resource which provides comprehensive information
           <form id="smilesSearchForm" method="POST" action="{% url 'smiles_search' %}">
             {% csrf_token %}
               <fieldset>
+              <legend>Study type <span class="help-tip" tabindex="0" role="img" aria-label="Which set of studies to search. Example: Patient studies." data-tip="Which set of studies to search. Example: Patient studies.">?</span></legend>
               <div class="checkbox-group">
-                <label><input type="radio" name="field" value="cell_line" onclick="loadColumns(this)"> Search In Cell Line</label>
-                <label><input type="radio" name="field" value="animal_studies" onclick="loadColumns(this)"> Search In Animal Studies</label>
-                  <label><input type="radio" name="field" value="patient_studies" onclick="loadColumns(this)"> Search In Patient Studies</label>
+                <label><input type="radio" name="field" value="cell_line" checked> Search In Cell Line</label>
+                <label><input type="radio" name="field" value="animal_studies"> Search In Animal Studies</label>
+                  <label><input type="radio" name="field" value="patient_studies"> Search In Patient Studies</label>
                   
                   
               </div>
@@ -998,16 +1225,16 @@ CanIMMDB is a manually curated resource which provides comprehensive information
                 <fieldset>
                   
                     <legend>Please type or paste your SMILES sequence in the box below.</legend>
-                    <label for="smilesInput">SMILES sequence:</label>
-                    <input type="text" id="smilesInput" name="smiles" placeholder="Example SMILES">
+                    <label for="smilesInput">SMILES sequence:<span class="help-tip" tabindex="0" role="img" aria-label="Text notation for a molecule&#x27;s structure; entries with exactly this text are returned. Example: ClCCN(CCCl)P1(=O)NCCCO1 (cyclophosphamide)." data-tip="Text notation for a molecule&#x27;s structure; entries with exactly this text are returned. Example: ClCCN(CCCl)P1(=O)NCCCO1 (cyclophosphamide).">?</span></label>
+                    <input type="text" id="smilesInput" name="smiles" placeholder="e.g. NC1=NC(=O)N(C=C1)[C@@H]1O[C@H](CO)[C@@H](O)C1(F)F">
                 </fieldset>
                 <fieldset>
-                    <legend>Select type of search:</legend>
+                    <legend>Select type of search: <span class="help-tip" tabindex="0" role="img" aria-label="Fill in one or more of the boxes; entries matching any of them are returned." data-tip="Fill in one or more of the boxes; entries matching any of them are returned.">?</span></legend>
                     <div class="radio-group">
-                      <label for="pubchemid">Pubchem Id:</label>
-                      <input type="text" id="pubchemid" name="pubchemid" placeholder="Example pubchemid">
-                      <label for="drugbankid">Drug Bank Id</label>
-                    <input type="text" id="drugbankid" name="drugbankid" placeholder="Example drugbankid">
+                      <label for="pubchemid">Pubchem Id:<span class="help-tip" tabindex="0" role="img" aria-label="Identifier of the drug in PubChem. Example: 60750 (gemcitabine)." data-tip="Identifier of the drug in PubChem. Example: 60750 (gemcitabine).">?</span></label>
+                      <input type="text" id="pubchemid" name="pubchemid" placeholder="e.g. 60750">
+                      <label for="drugbankid">Drug Bank Id<span class="help-tip" tabindex="0" role="img" aria-label="Identifier of the drug in DrugBank. Example: DB00441 (gemcitabine)." data-tip="Identifier of the drug in DrugBank. Example: DB00441 (gemcitabine).">?</span></label>
+                    <input type="text" id="drugbankid" name="drugbankid" placeholder="e.g. DB00441">
                        
                     </div>
                 </fieldset>
@@ -1087,22 +1314,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-  function fillExample2DForm() {
-    document.getElementById('smilesInput2D').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
-    document.getElementById('threshold2D').value = '0.5';
-}
-function fillExample3DForm() {
-    document.getElementById('smilesInput3D').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
-    document.getElementById('threshold3D').value = '0.5';
-}
-function fillExamplemaccForm() {
-    document.getElementById('smilesInputmacc').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
-    document.getElementById('thresholdmacc').value = '0.5';
-}
-function fillExamplesubsForm() {
-    document.getElementById('smilesInputsubs').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
-    
-}
 document.addEventListener('DOMContentLoaded', function() {
   const sidebar = document.querySelector('.sidebar');
   const expandButton = document.querySelector('.expand_sidebar');
@@ -1122,52 +1333,6 @@ document.addEventListener('DOMContentLoaded', function() {
     expandButton.style.display = 'flex';
   });
 });
-let slideIndex = 0;
-const slides = document.querySelector('.slides');
-const totalSlides = slides.children.length;
-
-// Function to move to the next slide
-function nextSlide() {
-  if (slideIndex === totalSlides - 1) {
-    slideIndex = 0; // Loop back to the first slide
-  } else {
-    slideIndex++;
-  }
-  updateSlidePosition();
-}
-
-// Function to move to the previous slide
-function prevSlide() {
-  if (slideIndex === 0) {
-    slideIndex = totalSlides - 1; // Loop to the last slide
-  } else {
-    slideIndex--;
-  }
-  updateSlidePosition();
-}
-
-// Function to update slide position based on slideIndex
-function updateSlidePosition() {
-  const slideWidth = slides.children[0].clientWidth;
-  slides.style.transform = `translateX(-${slideIndex * slideWidth}px)`;
-}
-
-// Automatically move to the next slide every 2 seconds
-setInterval(nextSlide, 2000);
-
- // Function to display the specified section
- function openSection(sectionId) {
-  const sections = document.querySelectorAll('.section');
-  sections.forEach(section => {
-      section.style.display = 'none'; // Hide all sections
-  });
-  
-  // Show only the target section
-  const targetSection = document.getElementById(sectionId);
-  if (targetSection) {
-      targetSection.style.display = 'block';
-  }
-}
 
 // Check for URL fragment or query parameter on page load
 window.onload = function() {
@@ -1192,48 +1357,7 @@ function toggleInformationSection() {
   }
 }
 
-function showSubsection(subsectionId) {
-  // Show the main information section directly
-  const infoSection = document.getElementById('information');
-  infoSection.style.display = 'block';
-
-  // Hide all subsections
-  const subsections = document.querySelectorAll('.information-subsection');
-  subsections.forEach(section => section.style.display = 'none');
-
-  // Display the selected subsection
-  const subsection = document.getElementById(subsectionId);
-  if (subsection) {
-      subsection.style.display = 'block';
-  }
-}
 document.addEventListener("DOMContentLoaded", function() {
-  // Example data for each field
-  const exampleData = {
-      "ID": "CANIMM/2016",
-      "Drug": "Cyclophosphamide",
-      "Drug_category": "Alkylating agents",
-      "Drugbank_ID": "DB00531",
-      "Target/s_or_mechanism_of_action": "Inhibition of protein synthesis",
-      "KEGG_Drug__ID": "D07760",
-      "Pubchem_ID": "2907",
-      "STR_LINK_(SMILES)": "ClCCN(CCCl)P1(=O)NCCCO1",
-      "Single/Combination": "Single Drug",
-      "PMID": "26156960",
-      "Cancer_Type": "Lung Cancer",
-      "Cancer_Type_Description": "Lung/Breast",
-      "System": "A375",
-      "Dose": "1 μM",
-      "Technique": "Flow cytometry",
-      "Immune_System-Function_enhanced/numbers_increased": "T cell",
-      "Immune_System-Function_inhibited/numbers_decreased": "CD4",
-      "Immune_System_function_unaffected": "CD4",
-      "Negative_Immune_System_regulation_-Function_enhanced/numbers_in": "CD4",
-      "Animal_Strain_used": "BALB/c",
-      "Cell_line_used_to_induce_tumor_in_mice": "CT26 cells",
-      "Patient_Sample": "14"
-  };
-
   // Load columns and add checkboxes with examples
   window.loadColumns_search = function(checkbox) {
     const field = checkbox.value;
@@ -1259,16 +1383,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     label.appendChild(input);
                     label.appendChild(document.createTextNode(` ${column}`));
 
-                    if (exampleData[column]) {
-                        const exampleSpan = document.createElement('span');
-                        exampleSpan.className = 'example-tag';
-                        exampleSpan.textContent = ` [ ${exampleData[column]} ]`;
-
-                        exampleSpan.addEventListener('click', function() {
-                            document.getElementById('search-box').value = exampleData[column];
-                        });
-
-                        label.appendChild(exampleSpan);
+                    const help = fieldHelp(column);
+                    if (help) {
+                        label.appendChild(makeHelpTip(help.text, help.example));
+                        if (help.example.length <= 40) {  // click the example to fill the search box with it
+                            const exampleSpan = document.createElement('span');
+                            exampleSpan.className = 'example-tag';
+                            exampleSpan.textContent = ` [ ${help.example} ]`;
+                            exampleSpan.addEventListener('click', function() {
+                                document.getElementById('search-box').value = help.example;
+                            });
+                            label.appendChild(exampleSpan);
+                        }
                     }
 
                     wrapper.appendChild(label);

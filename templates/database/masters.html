@@ -88,6 +88,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const pubchem = 'https://pubchem.ncbi.nlm.nih.gov/#query=';
     const kegg = 'https://www.genome.jp/entry/';
     const drugbank = 'https://go.drugbank.com/drugs/';
+    const anyValue = () => true;
+    const links = [
+        {matches: c => /pubchem/i.test(c), url: pubchem, none: 'No PubChem ID', accepts: anyValue},
+        {matches: c => /drugbank/i.test(c), url: drugbank, none: 'No DrugBank ID', accepts: anyValue},
+        {matches: c => /^kegg/i.test(c), url: kegg, none: 'No KEGG ID', accepts: anyValue},
+        {matches: c => c === 'PMID', url: 'https://pubmed.ncbi.nlm.nih.gov/', suffix: '/', none: '', accepts: v => /^\d+$/.test(v)}
+    ];
+    function linkFor(column) {
+        return links.find(link => link.matches(column));
+    }
     
     window.initRDKitModule().then(function (instance) {
         RDKitModule = instance;
@@ -139,15 +149,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (column === "Structure") {
                     const smiles = row["STR_LINK_(SMILES)"];
                     cell.innerHTML = smiles ? generateStructure(smiles) : "No SMILES available";
-                } else if (column === 'Pubchem_ID') {
+                } else if (linkFor(column)) {
+                    // identifiers link to their source database; the tables spell these column names differently
+                    const link = linkFor(column);
                     const value = row[column];
-                    cell.innerHTML = value ? `<a href="${pubchem}${value}" target="_blank">${value}</a>` : "No PubChem ID";
-                } else if (column === 'Drugbank_ID') {
-                    const value = row[column];
-                    cell.innerHTML = value ? `<a href="${drugbank}${value}" target="_blank">${value}</a>` : "No DrugBank ID";
-                } else if (column === 'KEGG_Drug__ID') {
-                    const value = row[column];
-                    cell.innerHTML = value ? `<a href="${kegg}${value}" target="_blank">${value}</a>` : "No KEGG ID";
+                    if (value && link.accepts(String(value))) {
+                        const anchor = document.createElement('a');
+                        anchor.href = link.url + encodeURIComponent(value) + (link.suffix || '');
+                        anchor.target = '_blank';
+                        anchor.rel = 'noopener';
+                        anchor.textContent = value;
+                        cell.appendChild(anchor);
+                    } else {
+                        cell.textContent = value || link.none;
+                    }
                 } else {
                     cell.textContent = row[column] || "";
                 }

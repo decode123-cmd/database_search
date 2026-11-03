@@ -16,66 +16,38 @@ function getCookie(name) {
 
 document.addEventListener('DOMContentLoaded', function() {
     function hideAllSections() {
-        const sections = document.querySelectorAll('.section');
-   
-        sections.forEach(section => {
+        document.querySelectorAll('.section').forEach(function (section) {
             section.style.display = 'none';
-            
         });
     }
-  
-    document.querySelector('.nav_link.conditional').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('conditionalSearchFormSection').style.display = 'block';
-    });
-    // ############################ Tools showing command #####################################################
-    document.querySelector('.nav_link.TwoD_search').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('2Dsearch').style.display = 'block';
-    });
-    document.querySelector('.nav_link.substructure').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('substructure').style.display = 'block';
-    });
-    document.querySelector('.nav_link.ThreeDsearch').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('ThreeDsearch').style.display = 'block';
-    });
-    document.querySelector('.nav_link.Maccs').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('maccs').style.display = 'block';
-    });
-  
-    // ################################### End of tools showing Command #####################################
-    document.querySelector('.nav_link.Smiles').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('smilesSearchSection').style.display = 'block';
-    });
-    document.querySelector('.nav_link.Cancer').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('cancer_section').style.display = 'block';
-    });
-  
-    document.querySelector('.nav_link.Drug_Category').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('Category_section').style.display = 'block';
-    });
-    
-  
-    document.querySelector('.nav_link.Technique').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('technique_section').style.display = 'block';
-    });
-    document.querySelector('.nav_link.basic').addEventListener('click', function() {
-        hideAllSections();
-        document.getElementById('searchFormSection').style.display = 'block';
-    });
-    
-  });
-  
- 
-  document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector('button[type="button"]').addEventListener("click", clearForm);
+
+    // Sidebar links show one page section. They only exist on the home page, so a missing one (on a result page) is skipped.
+    function showOnClick(linkSelector, sectionId) {
+        var link = document.querySelector(linkSelector);
+        if (!link) return;
+        link.addEventListener('click', function () {
+            hideAllSections();
+            document.getElementById(sectionId).style.display = 'block';
+        });
+    }
+    showOnClick('.nav_link.conditional', 'conditionalSearchFormSection');
+    // Tools
+    showOnClick('.nav_link.TwoD_search', '2Dsearch');
+    showOnClick('.nav_link.substructure', 'substructure');
+    showOnClick('.nav_link.ThreeDsearch', 'ThreeDsearch');
+    showOnClick('.nav_link.Maccs', 'maccs');
+    // Browse and search
+    showOnClick('.nav_link.Smiles', 'smilesSearchSection');
+    showOnClick('.nav_link.Cancer', 'cancer_section');
+    showOnClick('.nav_link.Drug_Category', 'Category_section');
+    showOnClick('.nav_link.Technique', 'technique_section');
+    showOnClick('.nav_link.Immune', 'immune_section');
+    showOnClick('.nav_link.basic', 'searchFormSection');
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    var button = document.querySelector('button[type="button"]');
+    if (button) button.addEventListener("click", clearForm);
 });
 
 function clearForm() {
@@ -102,94 +74,124 @@ function addConditionRow() {
           row.remove();
       }
   }
-  function fetchDrugCategoryData(event) {
-    console.log('jai');
-    event.preventDefault();  // Prevent the default anchor link behavior
+// ---- Browse pages: drug category, technique, cancer type, immune term -----------------------------------
+// One shared loader and renderer. Each count links to the studies behind it (/browse_term/), and the last rows
+// of every table say how many studies the rows above leave out.
+var BROWSE_PAGES = {
+    drug_category: {
+        url: '/drug_category/', table: '#peptides-table', noValue: 'Drug category not in the list',
+        note: 'Each study has one drug category and is counted once. Studies whose category is not in the list are shown in the last row.'
+    },
+    technique: {
+        url: '/technique/', table: '#peptidest-table', noValue: 'No technique from the list',
+        note: 'A study can use several techniques and is counted under each, so the rows do not add up to the number of studies. Studies with no technique from the list are shown in the last row.'
+    },
+    cancer_type: {
+        url: '/cancer_type/', table: '#peptidestc-table', noValue: 'Cancer type not in the list',
+        note: 'A study is counted under every cancer type it lists (almost all list one). Studies whose cancer type is not in the list are shown in the last row.'
+    },
+    immune: {
+        url: '/immune_terms/', table: '#immune-table', noValue: 'No immune term from the list',
+        note: 'A study can report several immune terms and is counted under each, so the rows do not add up to the number of studies. Studies with no term from the list are shown in the last row.'
+    }
+};
 
-    fetch('/drug_category')  // Make sure this is the correct URL to your Django view
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        
-        .then(data => {
-            console.log(data); // This will show you what the actual data structure is.
-            const tbody = document.querySelector('#peptides-table tbody');
-            tbody.innerHTML = '';  // Clear existing rows
-            Object.entries(data.table).forEach(([category, counts]) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${category}</td>                     
-                    <td><a href="#" data-category="${category},cell_count,Drug_category" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
-                    <td><a href="#" data-category="${category},animal_count,Drug_category" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
-                    <td><a href="#" data-category="${category},patient_count,Drug_category" onclick="fetchData(event)">${counts.Patient_Count}</a></td>
-                `;
-                tbody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Error loading the drug categories:', error));
+function browseLink(kind, field, term, outcome) {
+    var url = '/browse_term/?kind=' + kind + '&field=' + field + '&term=' + encodeURIComponent(term);
+    return outcome && kind === 'immune' ? url + '&outcome=' + outcome : url;
 }
 
-function fetchtechnique(event) {
-    console.log('jai');
-    event.preventDefault();  // Prevent the default anchor link behavior
-
-    fetch('/technique')  // Make sure this is the correct URL to your Django view
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        
-        .then(data => {
-            console.log(data); // This will show you what the actual data structure is.
-            const tbody = document.querySelector('#peptidest-table tbody');
-            tbody.innerHTML = '';  // Clear existing rows
-            Object.entries(data.table).forEach(([category, counts]) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${category}</td>
-                    <td><a href="#" data-category="${category},cell_count,Technique" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
-                    <td><a href="#" data-category="${category},animal_count,Technique" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
-                    <td><a href="#" data-category="${category},patient_count,Technique" onclick="fetchData(event)">${counts.Patient_Count}</a></td>
-                `;
-                tbody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Error loading the drug categories:', error));
+// Footer of a Browse table: the number of studies (each counted once), those the rows above leave out, and a note
+function appendBrowseTotals(tbody, data, page) {
+    if (!data.totals) return;
+    var rows = [
+        ['Total studies (each counted once)', data.totals, true],
+        [page.noValue, data.unassigned, false]
+    ];
+    rows.forEach(function (spec) {
+        var row = document.createElement('tr');
+        row.className = 'browse-total';
+        var label = document.createElement('td');
+        label.textContent = spec[0];
+        if (spec[2]) label.style.fontWeight = '600';
+        row.appendChild(label);
+        ['Cell_Count', 'Animal_Count', 'Patient_Count'].forEach(function (key) {
+            var cell = document.createElement('td');
+            cell.textContent = spec[1][key];
+            if (spec[2]) cell.style.fontWeight = '600';
+            row.appendChild(cell);
+        });
+        tbody.appendChild(row);
+    });
+    var table = tbody.closest('table');
+    var note = table.nextElementSibling;
+    if (!note || !note.classList.contains('browse-note')) {
+        note = document.createElement('p');
+        note.className = 'browse-note';
+        table.insertAdjacentElement('afterend', note);
+    }
+    var text = page.note;
+    if (data.mentions) {
+        text += ' ' + Math.round(100 * data.listed / data.mentions) + '% of the terms in the data are in this list; the rest are spelling variants or not yet standardised.';
+    }
+    note.textContent = text;
 }
 
-function fetchcancer(event) {
-    event.preventDefault();  // Prevent the default anchor link behavior
-
-    fetch('/cancer_type')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+function renderBrowse(kind, data) {
+    var page = BROWSE_PAGES[kind];
+    var tbody = document.querySelector(page.table + ' tbody');
+    tbody.innerHTML = '';
+    var outcome = kind === 'immune' ? document.getElementById('immune-outcome').value : null;
+    var table = tbody.closest('table');
+    var message = table.previousElementSibling;
+    if (message && message.classList.contains('browse-message')) message.remove();
+    if (data.missing) {
+        message = document.createElement('p');
+        message.className = 'browse-message browse-note';
+        message.textContent = 'These terms are not in the database yet. They appear once the updated data has been imported.';
+        table.insertAdjacentElement('beforebegin', message);
+        return;
+    }
+    Object.keys(data.table).forEach(function (name) {
+        var counts = data.table[name];
+        var row = document.createElement('tr');
+        var label = document.createElement('td');
+        label.textContent = name;
+        row.appendChild(label);
+        [['Cell_Count', 'cell_count'], ['Animal_Count', 'animal_count'], ['Patient_Count', 'patient_count']].forEach(function (pair) {
+            var cell = document.createElement('td');
+            if (counts[pair[0]] > 0) {
+                var link = document.createElement('a');
+                link.href = browseLink(kind, pair[1], name, outcome);
+                link.textContent = counts[pair[0]];
+                cell.appendChild(link);
+            } else {
+                cell.textContent = counts[pair[0]];
             }
+            row.appendChild(cell);
+        });
+        tbody.appendChild(row);
+    });
+    appendBrowseTotals(tbody, data, page);
+}
+
+function loadBrowse(kind, event) {
+    if (event) event.preventDefault();
+    var url = BROWSE_PAGES[kind].url;
+    if (kind === 'immune') url += '?outcome=' + encodeURIComponent(document.getElementById('immune-outcome').value);
+    fetch(url)
+        .then(function (response) {
+            if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
         })
-        .then(data => {
-            console.log(data); // This will show you what the actual data structure is.
-            const tbody = document.querySelector('#peptidestc-table tbody');
-            tbody.innerHTML = '';  // Clear existing rows
-            Object.entries(data.table).forEach(([category, counts]) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${category}</td>
-                    
-                    <td><a href="#" data-category="${category},cell_count,Cancer_Type" onclick="fetchData(event)">${counts.Cell_Count}</a></td>
-                    <td><a href="#" data-category="${category},animal_count,Cancer_Type" onclick="fetchData(event)">${counts.Animal_Count}</a></td>
-                    <td><a href="#" data-category="${category},patient_count,Cancer_Type" onclick="fetchData(event)">${counts.Patient_Count}</a></td>
-                `;
-                tbody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Error loading the drug categories:', error));
+        .then(function (data) { renderBrowse(kind, data); })
+        .catch(function (error) { console.error('Error loading the ' + kind + ' counts:', error); });
 }
+
+function fetchDrugCategoryData(event) { loadBrowse('drug_category', event); }
+function fetchtechnique(event) { loadBrowse('technique', event); }
+function fetchcancer(event) { loadBrowse('cancer_type', event); }
+function fetchImmune(event) { loadBrowse('immune', event); }
 
 
 function fetchCategoryData(event) {
@@ -290,8 +292,7 @@ function addConditionRow() {
         <td>${rowCount}</td>
         <td>
             <select name="table[]" onchange="loadColumns(this, ${rowCount})">
-                <option value="all_fields">All Fields</option>
-                <option value="cell_line">Cell Line</option>
+                <option value="cell_line" selected>Cell Line</option>
                 <option value="animal_studies">Animal Studies</option>
                 <option value="patient_studies">Patient Studies</option>
             </select>
@@ -314,6 +315,7 @@ function addConditionRow() {
         <td><button type="button" onclick="removeConditionRow(this)">-</button></td>
     `;
     tableBody.appendChild(newRow);
+    loadColumns(newRow.querySelector('select[name="table[]"]'), rowCount);  // preselected database -> fields ready
 }
 
 function removeConditionRow(button) {
@@ -335,6 +337,7 @@ function loadColumns(selectElement, rowIndex) {
                 option.textContent = column;
                 fieldSelect.appendChild(option);
             });
+            updateConditionHelp(fieldSelect);
         })
         .catch(error => console.error('Error loading columns:', error));
 }
@@ -342,326 +345,274 @@ function loadColumns(selectElement, rowIndex) {
 
 
 //##################################################################Tools Javascript Code#####################################################################
+// This file is loaded twice on the home page (head and end of body), so top-level state uses `var`
+// and the form wiring below is guarded to run only once.
 
-// 2-D search 
-document.getElementById('2D_search_form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form submission
+// Suggestions offered under the SMILES boxes. Every drug listed here has entries in the database.
+var TOOL_DRUG_EXAMPLES = [
+    {name: 'Daunorubicin', smiles: 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O'},
+    {name: 'Gemcitabine', smiles: 'NC1=NC(=O)N(C=C1)[C@@H]1O[C@H](CO)[C@@H](O)C1(F)F'},
+    {name: 'Lenalidomide', smiles: 'NC1=CC=CC2=C1CN(C1CCC(=O)NC1=O)C2=O'},
+    {name: 'Decitabine', smiles: 'NC1=NC(=O)N(C=N1)[C@H]1C[C@H](O)[C@@H](CO)O1'},
+    {name: 'Imatinib', smiles: 'CN1CCN(CC2=CC=C(C=C2)C(=O)NC2=CC(NC3=NC=CC(=N3)C3=CN=CC=C3)=C(C)C=C2)CC1'},
+    {name: 'Cyclophosphamide', smiles: 'ClCCN(CCCl)P1(=O)NCCCO1'},
+    {name: 'Sorafenib', smiles: 'CNC(=O)C1=NC=CC(OC2=CC=C(NC(=O)NC3=CC(=C(Cl)C=C3)C(F)(F)F)C=C2)=C1'}
+];
+// Substructure search takes a fragment rather than a whole drug.
+var TOOL_FRAGMENT_EXAMPLES = [
+    {name: 'Glutarimide ring', smiles: 'O=C1CCCC(=O)N1'},
+    {name: 'Benzene ring', smiles: 'c1ccccc1'},
+    {name: 'Pyrimidine ring', smiles: 'c1cncnc1'},
+    {name: 'Indole', smiles: 'c1ccc2[nH]ccc2c1'}
+];
 
-    const formData = new FormData(this);
-    fetch(this.action, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Response data:', data); // Debugging log
-        if (data.success) {
-            display2DResults(data.results);
-        } else {
-            // Handle error
-            alert('Error fetching results:', data);
-        }
-    })
-    .catch(error => console.error('Error:', error));
-});
+// One entry per tool form: where its results go, and the defaults used by its Example button.
+var TOOL_FORMS = {
+    '2D_search_form': {
+        results: 'searchResults2', headers: 'tableHeaders2', body: 'tableBody2', info: 'toolInfo2D',
+        smiles: 'smilesInput2D', threshold: 'threshold2D', defaultThreshold: '0.5', examples: TOOL_DRUG_EXAMPLES
+    },
+    '3D_search_form': {
+        results: 'searchResults3', headers: 'tableHeaders3', body: 'tableBody3', info: 'toolInfo3D',
+        smiles: 'smilesInput3D', threshold: 'threshold3D', defaultThreshold: '0.5', examples: TOOL_DRUG_EXAMPLES,
+        loading: 'loadingMessage', confirm: 'This process may take some time. Do you want to proceed?'
+    },
+    'substructure_search_form': {
+        results: 'resultsTablesubs', headers: 'tableHeaderssubs', body: 'tableBodysubs', info: 'toolInfoSubs',
+        smiles: 'smilesInputsubs', examples: TOOL_FRAGMENT_EXAMPLES
+    },
+    'maccs_search_form': {
+        results: 'searchResultsm', headers: 'tableHeadersm', body: 'tableBodym', info: 'toolInfoMaccs',
+        smiles: 'smilesInputmacc', threshold: 'thresholdmacc', defaultThreshold: '0.5', examples: TOOL_DRUG_EXAMPLES
+    }
+};
 
-function display2DResults(results) {
-    const searchResults = document.getElementById('searchResults2');
-    const tableHeaders = document.getElementById('tableHeaders2');
-    const tableBody = document.getElementById('tableBody2');
+function formatToolValue(value) {
+    if (value === null || value === undefined || value === '') return 'N/A';
+    if (typeof value === 'number' && !Number.isInteger(value)) return value.toFixed(3);
+    return String(value);
+}
 
-    // Clear previous results
+// "27 matches · searched 1019 of 1379 entries (360 without a usable structure were skipped) · method · ..."
+function toolSummary(info) {
+    if (!info) return '';
+    var searched = 'searched ' + info.entries_searched + ' of ' + info.entries_total + ' entries';
+    var skipped = info.entries_total - info.entries_searched;
+    if (skipped > 0) searched += ' (' + skipped + ' without a usable structure skipped)';
+    var parts = [info.matches + (info.matches === 1 ? ' match' : ' matches'), searched, info.method];
+    if (info.threshold !== undefined) parts.push('threshold ' + info.threshold);
+    if (info.software) parts.push(info.software);
+    return parts.join(' · ');
+}
+
+function renderToolResults(cfg, data) {
+    var results = data.results || [];
+    var headers = results.length ? (data.columns && data.columns.length ? data.columns : Object.keys(results[0])) : [];
+    var tableHeaders = document.getElementById(cfg.headers);
+    var tableBody = document.getElementById(cfg.body);
+    var info = document.getElementById(cfg.info);
+
     tableHeaders.innerHTML = '';
     tableBody.innerHTML = '';
 
-    // Populate table headers
-    if (results.length > 0) {
-        console.log('Results:', results); // Debugging log
-        const headers = Object.keys(results[0]);
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header;
-            tableHeaders.appendChild(th);
-        });
-
-        // Populate table rows
-        results.forEach(row => {
-            const tr = document.createElement('tr');
-            headers.forEach(header => {
-                const td = document.createElement('td');
-                td.textContent = row[header];
-                tr.appendChild(td);
-            });
-            tableBody.appendChild(tr);
-        });
-    }
-    // Show the results section
-    searchResults.style.display = 'block';
-}
-
-function clear2DForm() {
-    document.getElementById('2D_search_form').reset();
-    document.getElementById('searchResults2').style.display = 'none';
-}
-
-
-// 3-D search
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('3D_search_form');
-    if (form) {
-        form.addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent default form submission
-
-            // Show a confirmation dialog to the user
-            const userConfirmed = confirm("This process may take some time. Do you want to proceed?");
-
-            if (userConfirmed) {
-                const formData = new FormData(this); // FormData object
-                const loadingMessage = document.getElementById('loadingMessage');
-
-                if (loadingMessage) {
-                    // Show the "It may take time" message
-                    loadingMessage.style.display = 'block';
-                }
-
-                fetch(this.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-                    },
-                    body: formData,
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Response data:', data); // Debugging
-                        if (loadingMessage) {
-                            loadingMessage.style.display = 'none'; // Hide loading message
-                        }
-
-                        if (data.success) {
-                            display3DResults(data.results, data.columns); // Pass both results and columns
-                        } else {
-                            alert('Error fetching results: ' + JSON.stringify(data));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        if (loadingMessage) {
-                            loadingMessage.style.display = 'none'; // Hide loading message
-                        }
-                        alert('An error occurred while fetching results.');
-                    });
-            }
-        });
-    } else {
-        console.error('Form with id "3D_search_form" not found in the DOM.');
-    }
-});
-
-function display3DResults(results, columns) {
-    const tableHeaders = document.getElementById('tableHeaders3');
-    const tableBody = document.getElementById('tableBody3');
-
-    if (!columns || !results) {
-        console.error('Columns or results are undefined.');
-        return;
-    }
-
-    // Clear previous results
-    if (tableHeaders) tableHeaders.innerHTML = '';
-    if (tableBody) tableBody.innerHTML = '';
-
-    // Populate table headers
-    columns.forEach(column => {
-        const th = document.createElement('th');
-        th.textContent = column;
+    headers.forEach(function (header) {
+        var th = document.createElement('th');
+        th.textContent = header.replace(/_/g, ' ');
         tableHeaders.appendChild(th);
     });
-
-    // Populate table rows
-    results.forEach(row => {
-        const tr = document.createElement('tr');
-        columns.forEach(column => {
-            const td = document.createElement('td');
-            td.textContent = row[column] || 'N/A'; // Handle missing values
+    results.forEach(function (row) {
+        var tr = document.createElement('tr');
+        headers.forEach(function (header) {
+            var td = document.createElement('td');
+            td.textContent = formatToolValue(row[header]);
+            if (header === 'STR_LINK_(SMILES)') td.className = 'smiles-cell';
             tr.appendChild(td);
         });
         tableBody.appendChild(tr);
     });
 
-    // Show the results section
-    const searchResults = document.getElementById('searchResults3');
-    if (searchResults) {
-        searchResults.style.display = 'block';
+    if (info) {
+        info.textContent = toolSummary(data.info);
+        if (!results.length) {
+            info.textContent += (info.textContent ? ' — ' : '') +
+                'No entries matched. Try a lower threshold, a different study type, or one of the suggested examples.';
+        }
     }
+    document.getElementById(cfg.results).style.display = 'block';
 }
 
-function clear3DForm() {
-    // Reset the form fields
-    document.getElementById('3D_search_form').reset();
+function initToolForm(formId) {
+    var cfg = TOOL_FORMS[formId];
+    var form = document.getElementById(formId);
+    if (!form) return;
 
-    // Hide the search results and the loading message
-    document.getElementById('searchResults3').style.display = 'none';
-    document.getElementById('loadingMessage').style.display = 'none';
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (cfg.confirm && !confirm(cfg.confirm)) return;
+
+        var formData = new FormData(form);
+        var loading = cfg.loading && document.getElementById(cfg.loading);
+        var submit = form.querySelector('button[type="submit"]');
+        if (loading) loading.style.display = 'block';
+        if (submit) submit.disabled = true;  // a second click would start a second search
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: {'X-CSRFToken': formData.get('csrfmiddlewaretoken')},
+            body: formData
+        })
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            if (data.success) {
+                renderToolResults(cfg, data);
+            } else {
+                alert('Error fetching results: ' + (data.error || 'unknown error'));
+            }
+        })
+        .catch(function (error) {
+            console.error('Error:', error);
+            alert('An error occurred while fetching results.');
+        })
+        .then(function () {
+            if (loading) loading.style.display = 'none';
+            if (submit) submit.disabled = false;
+        });
+    });
 }
 
-//substructure 
-document.getElementById('substructure_search_form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form submission
-  
-    const formData = new FormData(this);
-    fetch(this.action, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Response data:', data); // Debugging log
-        if (data.success) {
-            displayResults(data.results);
-        } else {
-            // Handle error
-            alert('Error fetching results:', data);
-        }
-    })
-    .catch(error => console.error('Error:', error));
-  });
-  
-  function displayResults(results) {
-    const searchResults = document.getElementById('resultsTablesubs');
-    const tableHeaders = document.getElementById('tableHeaderssubs');
-    const tableBody = document.getElementById('tableBodysubs');
-  
-    // Clear previous results
-    tableHeaders.innerHTML = '';
-    tableBody.innerHTML = '';
-  
-    // Populate table headers
-    if (results.length > 0) {
-        console.log('Results:', results); // Debugging log
-        const headers = Object.keys(results[0]);
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header;
-            tableHeaders.appendChild(th);
-        });
-  
-        // Populate table rows
-        results.forEach(row => {
-            const tr = document.createElement('tr');
-            headers.forEach(header => {
-                const td = document.createElement('td');
-                td.textContent = row[header];
-                tr.appendChild(td);
-            });
-            tableBody.appendChild(tr);
-        });
-    }
-    // Show the results section
-    searchResults.style.display = 'block';
-  }
-  
-  function clearSmilesForm() {
-    document.getElementById('substructure_search_form').reset();
-    document.getElementById('resultsTablesubs').style.display = 'none';
-  }
+// Typeahead list plus clickable "Try:" chips under the SMILES box
+function initToolExamples(formId) {
+    var cfg = TOOL_FORMS[formId];
+    var input = document.getElementById(cfg.smiles);
+    if (!input) return;
 
-  
-// macc keys
+    var list = document.createElement('datalist');
+    list.id = cfg.smiles + 'Suggestions';
+    var chips = document.createElement('div');
+    chips.className = 'example-chips';
+    var label = document.createElement('span');
+    label.className = 'chips-label';
+    label.textContent = 'Try:';
+    chips.appendChild(label);
 
-document.getElementById('maccs_search_form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form submission
+    cfg.examples.forEach(function (example) {
+        var option = document.createElement('option');
+        option.value = example.smiles;
+        option.label = example.name;
+        list.appendChild(option);
 
-    const formData = new FormData(this);
-    fetch(this.action, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Response data:', data); // Debugging log
-        if (data.success) {
-            displayMaccsResults(data.results);
-        } else {
-            // Handle error
-            alert('Error fetching results:', data);
-        }
-    })
-    .catch(error => console.error('Error:', error));
+        var chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'example-chip';
+        chip.textContent = example.name;
+        chip.title = example.smiles;
+        chip.addEventListener('click', function () { input.value = example.smiles; });
+        chips.appendChild(chip);
+    });
+
+    input.setAttribute('list', list.id);
+    input.setAttribute('autocomplete', 'off');
+    input.parentNode.insertBefore(list, input.nextSibling);
+    input.parentNode.insertBefore(chips, list.nextSibling);
+}
+
+// Example buttons: first suggestion plus the tool's default threshold
+function fillToolExample(formId) {
+    var cfg = TOOL_FORMS[formId];
+    document.getElementById(cfg.smiles).value = cfg.examples[0].smiles;
+    if (cfg.threshold) document.getElementById(cfg.threshold).value = cfg.defaultThreshold;
+}
+function fillExample2DForm() { fillToolExample('2D_search_form'); }
+function fillExample3DForm() { fillToolExample('3D_search_form'); }
+function fillExamplemaccForm() { fillToolExample('maccs_search_form'); }
+function fillExamplesubsForm() { fillToolExample('substructure_search_form'); }
+
+function clearToolForm(formId) {
+    var cfg = TOOL_FORMS[formId];
+    document.getElementById(formId).reset();  // restores the default threshold and study type
+    document.getElementById(cfg.results).style.display = 'none';
+    var loading = cfg.loading && document.getElementById(cfg.loading);
+    if (loading) loading.style.display = 'none';
+}
+function clear2DForm() { clearToolForm('2D_search_form'); }
+function clear3DForm() { clearToolForm('3D_search_form'); }
+function clearSubstructureForm() { clearToolForm('substructure_search_form'); }
+function clearMaccsForm() { clearToolForm('maccs_search_form'); }
+
+document.addEventListener('DOMContentLoaded', function () {
+    if (window.__toolFormsReady) return;
+    window.__toolFormsReady = true;
+    Object.keys(TOOL_FORMS).forEach(function (formId) {
+        initToolForm(formId);
+        initToolExamples(formId);
+    });
 });
-
-function displayMaccsResults(results) {
-    const searchResults = document.getElementById('searchResultsm');
-    const tableHeaders = document.getElementById('tableHeadersm');
-    const tableBody = document.getElementById('tableBodym');
-
-    // Clear previous results
-    tableHeaders.innerHTML = '';
-    tableBody.innerHTML = '';
-
-    // Populate table headers
-    if (results.length > 0) {
-        console.log('Results:', results); // Debugging log
-        const headers = Object.keys(results[0]);
-        headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header;
-            tableHeaders.appendChild(th);
-        });
-
-        // Populate table rows
-        results.forEach(row => {
-            const tr = document.createElement('tr');
-            headers.forEach(header => {
-                const td = document.createElement('td');
-                td.textContent = row[header];
-                tr.appendChild(td);
-            });
-            tableBody.appendChild(tr);
-        });
-    }
-    // Show the results section
-    searchResults.style.display = 'block';
-}
-
-function clearMaccsForm() {
-    document.getElementById('maccs_search_form').reset();
-    document.getElementById('searchResultsm').style.display = 'none';
-}
-function fillExample2DForm() {
-    document.getElementById('smilesInput2D').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
-    document.getElementById('threshold2D').value = '0.5';
-}
-function fillExample3DForm() {
-    document.getElementById('smilesInput3D').value = 'Cc1ccccc1';
-    document.getElementById('threshold3D').value = '0.5';
-}
-function fillExamplemaccForm() {
-    document.getElementById('smilesInputmacc').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
-    document.getElementById('thresholdmacc').value = '0.5';
-}
-function fillExamplesubsForm() {
-    document.getElementById('smilesInputsubs').value = 'COC1=CC=CC2=C1C(=O)C1=C(O)C3=C(C[C@](O)(C[C@@H]3O[C@H]3C[C@H](N)[C@H](O)[C@H](C)O3)C(C)=O)C(O)=C1C2=O';
-    
-}
 //********************************************************************************end of tools function *****************************************************/
  
+// Shows one page section. Subsections of Information (FAQs, Architecture, Download & API ...) live inside
+// #information, so opening one has to open that parent as well, or it stays hidden.
 function openSection(sectionId) {
-    var sections = document.querySelectorAll('.section');
-    sections.forEach(section => {
+    var target = document.getElementById(sectionId);
+    if (!target) return;
+    document.querySelectorAll('.section').forEach(function (section) {
         section.style.display = 'none';
     });
-    document.getElementById(sectionId).style.display = 'block';
+    if (target.classList.contains('information-subsection')) {
+        showSubsection(sectionId);
+    } else {
+        target.style.display = 'block';
+    }
 }
+
+function showSubsection(subsectionId) {
+    var info = document.getElementById('information');
+    var subsection = document.getElementById(subsectionId);
+    if (!info || !subsection) return;
+    info.style.display = 'block';
+    document.querySelectorAll('.information-subsection').forEach(function (section) {
+        section.style.display = 'none';
+    });
+    subsection.style.display = 'block';
+}
+
+// Entry counts in the Download & API table come from the status endpoint
+function loadApiCounts() {
+    var cells = document.querySelectorAll('.api-count');
+    if (!cells.length) return;
+    fetch('/api/v1/status/')
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            if (!data.studies) return;
+            cells.forEach(function (cell) {
+                var count = cell.dataset.study === 'all' ? data.total : data.studies[cell.dataset.study];
+                if (count !== undefined) cell.textContent = count.toLocaleString();
+            });
+        })
+        .catch(function () { /* the table is still useful without counts */ });
+}
+document.addEventListener('DOMContentLoaded', loadApiCounts);
+
+// Galleries (home page figures, Help page): a list of descriptions on the left, the clicked image on the right.
+// Nothing changes by itself; the first item is shown until another one is clicked.
+function initGalleries() {
+    if (window.__galleriesReady) return;
+    window.__galleriesReady = true;
+    document.querySelectorAll('[data-gallery]').forEach(function (gallery) {
+        var image = gallery.querySelector('.gallery-view img');
+        var items = gallery.querySelectorAll('.gallery-item');
+        items.forEach(function (item) {
+            item.addEventListener('click', function () {
+                items.forEach(function (other) {
+                    other.classList.toggle('active', other === item);
+                    other.setAttribute('aria-pressed', other === item ? 'true' : 'false');
+                });
+                image.src = item.dataset.src;
+                image.alt = item.dataset.alt || '';
+            });
+        });
+    });
+}
+document.addEventListener('DOMContentLoaded', initGalleries);
 
 // Open the home section by default
 function loadColumns1(element) {
@@ -685,17 +636,21 @@ function createDynamicFields(columns) {
     dynamicFieldsDiv.innerHTML = ''; // Clear previous content
 
     columns.forEach(column => {
+        const help = fieldHelp(column);
+
         const label = document.createElement('label');
         label.setAttribute('for', column);
         label.className = 'data-submission-label';
         label.textContent = column + ':';
-        
+        if (help) label.appendChild(makeHelpTip(help.text, help.example));
+
         const input = document.createElement('input');
         input.type = 'text';
         input.id = column;
         input.name = column;
         input.className = 'data-submission-input';
-        
+        if (help) input.placeholder = 'e.g. ' + help.example;
+
         dynamicFieldsDiv.appendChild(label);
         dynamicFieldsDiv.appendChild(input);
     });
@@ -736,3 +691,90 @@ function submitData() {
     // Export the Excel file
     XLSX.writeFile(workbook, 'submitted_data.xlsx');
 }
+
+// ---------------------------------------------------------------------------------------------
+// Field help: one description and one example per database field, used by every form that shows
+// fields (Basic search, Conditional search, Data Submission). Examples are real values from the
+// database. Fields are matched on a normalised name (lower case, letters and digits only), so
+// 'KEGG DRUG ID' and 'KEGG_Drug__ID' are the same field.
+// ---------------------------------------------------------------------------------------------
+var FIELD_HELP = [
+    {key: /^id$/, text: 'Unique identifier of the entry in the database.', example: 'CANIMM/1054'},
+    {key: /^drug$/, text: 'Name of the drug as given in the research article.', example: 'Gemcitabine'},
+    {key: /^drugcategory$/, text: 'Class of drugs the drug belongs to.', example: 'Nucleoside Analogue'},
+    {key: /^drugbankid$/, text: 'Identifier of the drug in DrugBank.', example: 'DB00441'},
+    {key: /^targetsormechanismofaction$/, text: 'Target(s) or mechanism of action of the drug.', example: 'Inhibition of DNA polymerase'},
+    {key: /^keggdrugid$/, text: 'Identifier of the drug in KEGG.', example: 'D02368'},
+    {key: /^(drugpubchem|pubchemid|pubchem)$/, text: 'Identifier of the drug in PubChem.', example: '60750'},
+    {key: /^strlinksmiles$/, text: 'Chemical structure of the drug as a SMILES string (a text notation for molecules).', example: 'NC1=NC(=O)N(C=C1)[C@@H]1O[C@H](CO)[C@@H](O)C1(F)F'},
+    {key: /^singlecombination$/, text: 'Whether the drug was given alone or together with other drugs.', example: 'Single Drug'},
+    {key: /^pmid$/, text: 'PubMed ID of the article the information was curated from.', example: '27687804'},
+    {key: /^cancertype$/, text: 'Cancer studied in the article.', example: 'Pancreas Cancer'},
+    {key: /^cancertypedescription$/, text: 'More specific description of the cancer or tissue studied.', example: 'Pancreatic Adenocarcinoma'},
+    {key: /^(system|celllinesystem)$/, text: 'Cell line (or expression system) the experiment was performed on.', example: 'HCT116'},
+    {key: /^dose$/, text: 'Dose or concentration of the drug with its units, as reported in the article. Units differ between study types, for example µM for cell lines and mg/kg for animals.', example: '1 µM'},
+    {key: /^technique$/, text: 'Assay used to study the effect of the drug.', example: 'Flow cytometry'},
+    {key: /^negativeimmune/, text: 'Immune components whose number or function increased after drug treatment and resulted in decreased anticancer immunity.', example: 'PD-L1 levels'},
+    {key: /^immune.*enhanced/, text: 'Immune components whose number or function increased after drug treatment and resulted in increased anticancer immunity.', example: 'effector T cells'},
+    {key: /^immune.*inhibited/, text: 'Immune components whose number or function decreased after drug treatment and resulted in decreased anticancer immunity.', example: 'Treg'},
+    {key: /^immune.*unaffected/, text: 'Immune components whose number or function was not changed by the drug treatment.', example: 'TNFα expression and secretion by the macrophages'},
+    {key: /^controlledtechnique$/, text: 'The assay, written with a standardised name. Several names are separated by semicolons.', example: 'Flow cytometry'},
+    {key: /^controlledterms.*enhanced/, text: 'Standardised immune terms for what increased after drug treatment and resulted in increased anticancer immunity. Several terms are separated by semicolons.', example: 'NK cells; T cells'},
+    {key: /^controlledterms.*inhibited/, text: 'Standardised immune terms for what decreased after drug treatment and resulted in decreased anticancer immunity. Several terms are separated by semicolons.', example: 'Regulatory T cells (Tregs)'},
+    {key: /^controlledterms.*unaffected/, text: 'Standardised immune terms for what was not changed by the drug treatment. Several terms are separated by semicolons.', example: 'NK cells; CD8+ T cells; T cells'},
+    {key: /^controlledterms.*negative/, text: 'Standardised immune terms for what increased after drug treatment and resulted in decreased anticancer immunity. Several terms are separated by semicolons.', example: 'PD-L1 / CD274'},
+    {key: /^animalstrain/, text: 'Strain of the animal in which the anticancer activity was tested in vivo.', example: 'BALB/c'},
+    {key: /^celllineusedtoinducetumor/, text: 'Cell line used to induce the tumor in the animals.', example: 'CT26 cells'},
+    {key: /^patientsample/, text: 'Number of patient samples the study was carried out on.', example: '10 patients'},
+    {key: /^malefemale$/, text: 'Number of male and female patients.', example: '8M/9F'},
+    {key: /^medianage/, text: 'Median age or age range of the patients.', example: '62 (range 33–82)'},
+    {key: /^(tertiaryremark|comment|unnamed\d*)$/, text: 'Additional notes from the curators on the study.', example: 'T cell infiltration occurred in all patients early after treatment initiation'}
+];
+
+function fieldKey(name) {
+    return String(name).toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function fieldHelp(name) {
+    var key = fieldKey(name);
+    for (var i = 0; i < FIELD_HELP.length; i++) {
+        if (FIELD_HELP[i].key.test(key)) return FIELD_HELP[i];
+    }
+    return null;
+}
+
+// The "?" icon used on every form; the text shows on hover or keyboard focus (see .help-tip in index.css)
+function makeHelpTip(text, example) {
+    var tip = document.createElement('span');
+    var full = text + (example ? ' Example: ' + example + '.' : '');
+    tip.className = 'help-tip';
+    tip.tabIndex = 0;
+    tip.setAttribute('role', 'img');
+    tip.setAttribute('aria-label', full);
+    tip.dataset.tip = full;
+    tip.textContent = '?';
+    return tip;
+}
+
+// Conditional search: the Field drop-down gets a tip (and the Query box a placeholder) for the chosen field
+function updateConditionHelp(fieldSelect) {
+    var row = fieldSelect.closest('tr');
+    if (!row) return;
+    var help = fieldHelp(fieldSelect.value);
+    var cell = fieldSelect.parentNode;
+    var old = cell.querySelector('.help-tip');
+    if (old) old.remove();
+    if (help) cell.appendChild(makeHelpTip(help.text, help.example));
+    var query = row.querySelector('input[name="query[]"]');
+    if (query) query.placeholder = help ? 'e.g. ' + help.example : '';
+}
+document.addEventListener('change', function (event) {
+    if (event.target.matches && event.target.matches('#conditionRows select[name="field[]"]')) {
+        updateConditionHelp(event.target);
+    }
+});
+document.addEventListener('DOMContentLoaded', function () {
+    // fill the first row's Field list for the preselected database, so the form works without any clicks
+    var first = document.querySelector('#conditionRows select[name="table[]"]');
+    if (first) loadColumns(first, 1);
+});

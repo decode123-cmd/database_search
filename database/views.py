@@ -6,7 +6,7 @@ from .all_search_count import *
 import json 
 import re
 from .tools import *
-from rdkit import Chem
+from rdkit import Chem, rdBase
 from rdkit.Chem import AllChem, DataStructs, MACCSkeys
 from rdkit.Chem import rdMolAlign
 from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer
@@ -90,40 +90,42 @@ from django.db import connection
 #     context = {'d': data, 'column_names': column_names}
 
 #     return render(request, 'database/masters.html', context)
+def _browse_response(kind, outcome='any'):
+    try:
+        return JsonResponse(browse(kind, outcome))
+    except ValueError as e:
+        return JsonResponse({'error': str(e)}, status=400)
+    except Exception as e:
+        print(f"Error processing request: {e}")  # This will log to your server logs
+        return JsonResponse({'error': 'Internal server error'}, status=500)
+
+
 def drug_category(request):
-    try:
-        response_data = {}
-        counts = category()
-        response_data['table'] = counts
-        return JsonResponse(response_data)
+    return _browse_response('drug_category')
 
-    except Exception as e:
-        print(f"Error processing request: {e}")  # This will log to your server logs
-        return JsonResponse({'error': 'Internal server error'}, status=500)
-    
+
 def technique(request):
-    
+    return _browse_response('technique')
+
+
+def cancer_type(request):
+    return _browse_response('cancer_type')
+
+
+def immune_terms(request):
+    return _browse_response('immune', request.GET.get('outcome', 'any'))
+
+
+def browse_term(request):
+    """The studies behind one Browse count (kind: drug_category, cancer_type, technique or immune)."""
     try:
-        response_data = {}
-        counts = techniques()
-        response_data['table'] = counts
-        return JsonResponse(response_data)
+        results = studies_with(request.GET.get('kind', ''), request.GET.get('field', ''), request.GET.get('term', ''),
+                               request.GET.get('outcome', 'any'))
+    except (ValueError, KeyError) as e:
+        return render(request, 'database/error.html', {'error_message': str(e)}, status=400)
+    context = {'d': results.to_json(orient='records'), 'column_names': json.dumps(list(results.columns))}
+    return render(request, 'database/masters.html', context)
 
-    except Exception as e:
-        print(f"Error processing request: {e}")  # This will log to your server logs
-        return JsonResponse({'error': 'Internal server error'}, status=500)
-
-def cancer_type(request):    
-    try:
-        response_data = {}
-        counts = cancer()
-        response_data['table'] = counts
-        return JsonResponse(response_data)
-
-    except Exception as e:
-        print(f"Error processing request: {e}")  # This will log to your server logs
-        return JsonResponse({'error': 'Internal server error'}, status=500)
-    
 
 def get_category_data(request, category):
     # Replace placeholder with `/`
@@ -263,6 +265,10 @@ def conditional_datasearch(request):
     return render(request,'database/msters.html')
 
 
+# How a row's operator joins it to the next row ("not" means: and the next row must not match)
+CONDITION_CONNECTORS = {'and': 'AND', 'or': 'OR', 'not': 'AND NOT'}
+
+
 def conditional_search(request):
     if request.method == "POST":
         tables = request.POST.getlist('table[]')
@@ -270,43 +276,41 @@ def conditional_search(request):
         queries = request.POST.getlist('query[]')
         operators = request.POST.getlist('operator[]')
 
-        # Initialize where clauses and parameters
-        where_clauses = []
-        params = []
-
-        # Mapping to correct table names in the database
-        table_mapping = {
-            'patient_studies': 'Browse_by_patient_studies',
-            'animal_studies': 'Browse_by_animal_studies',
-            'cell_line': 'Browse_by_cell_line'
-        }
+        if not tables or not (len(tables) == len(fields) == len(queries)):
+            return JsonResponse({'error': 'Incomplete search conditions'}, status=400)
 
         # Determine the primary table from the first entry
-        primary_table = table_mapping.get(tables[0], None)
+        primary_table = TOOL_TABLES.get(tables[0], None)
         if not primary_table:
             return JsonResponse({'error': 'Invalid table selection'}, status=400)
 
-        # Construct WHERE conditions
+        # Field names go into the SQL text, so only names that are real columns of the table are accepted
+        with connection.cursor() as cursor:
+            cursor.execute(f'SELECT * FROM "{primary_table}" LIMIT 0')
+            valid_columns = {col[0] for col in cursor.description}
+
+        # Construct the WHERE clause; values are always passed as parameters
+        where_clause = ""
+        params = []
+        previous_operator = None
         for i in range(len(tables)):
-            table_name = table_mapping.get(tables[i])
-            if table_name != primary_table:
+            if TOOL_TABLES.get(tables[i]) != primary_table:
                 continue  # Only filtering on the primary table for simplicity
 
-            # Build condition using ILIKE for case-insensitive search
-            if operators[i] == 'NOT':
-                condition = f"\"{fields[i]}\" NOT ILIKE %s"
-            else:
-                condition = f"\"{fields[i]}\" ILIKE %s"
+            if fields[i] not in valid_columns:
+                return JsonResponse({'error': f"Unknown field '{fields[i]}'"}, status=400)
 
-            where_clauses.append(condition)
+            # Join to the previous condition with that row's operator
+            if where_clause:
+                connector = CONDITION_CONNECTORS.get(previous_operator)
+                if connector is None:
+                    return JsonResponse({'error': 'Invalid operator'}, status=400)
+                where_clause += f" {connector} "
+
+            # Case-insensitive "contains" search
+            where_clause += f"\"{fields[i]}\" ILIKE %s"
             params.append(f"%{queries[i]}%")
-
-            # Insert the operator between conditions (except for the first)
-            if i > 0:
-                where_clauses[i] = f"{operators[i-1]} " + where_clauses[i]
-
-        # Combine all conditions with the selected operators
-        where_clause = " ".join(where_clauses)
+            previous_operator = operators[i].lower() if i < len(operators) else 'and'
 
         # Construct the final SQL query
         final_query = f"SELECT * FROM \"{primary_table}\" WHERE {where_clause}"
@@ -418,241 +422,170 @@ def smiles_search(request):
     
     
 #*******************************************************Tools Funtion Start**************************************************************************************
+TOOL_TABLES = {
+    'patient_studies': 'Browse_by_Patient_Studies',
+    'animal_studies': 'Browse_by_animal_studies',
+    'cell_line': 'Browse_by_cell_line',
+}
+TOOL_RESULT_COLUMNS = [
+    'ID', 'STR_LINK_(SMILES)', None,  # None is replaced by each tool's score column
+    'Immune_System_function_unaffected',
+    'Immune_System-Function_enhanced/numbers_increased',
+    'Immune_System-Function_inhibited/numbers_decreased',
+    'Negative_Immune_System_regulation_-Function_enhanced/numbers_in',
+]
+DEFAULT_THRESHOLD = 0.5      # 2D (Morgan) and MACCS fingerprint searches
+DEFAULT_THRESHOLD_3D = 0.5   # unrelated structures score ~0.35-0.4 in 3D, so 0.4 would return a quarter to a half of the database
+
+
+def _tool_error(message, status=400):
+    return JsonResponse({'success': False, 'error': message}, status=status)
+
+
+def _parse_threshold(raw, default):
+    """Parse a 0-1 similarity cut-off. Returns (value, error message); blank means default."""
+    if raw is None or str(raw).strip() == '':
+        return default, None
+    try:
+        value = float(raw)
+    except ValueError:
+        return None, 'Threshold must be a number between 0 and 1.'
+    if not 0 <= value <= 1:
+        return None, 'Threshold must be between 0 and 1.'
+    return value, None
+
+
+def _tool_dataframe(field):
+    """Study table for the tools, with parsed molecules; None for an unknown study type."""
+    table = TOOL_TABLES.get(field)
+    return load_data(table) if table else None
+
+
+def _tool_results(hits, score_column):
+    """Result rows for the tool tables; missing values become null, not NaN (invalid JSON)."""
+    columns = [score_column if c is None else c for c in TOOL_RESULT_COLUMNS]
+    rows = hits[columns].astype(object)
+    return rows.where(rows.notna(), None).to_dict(orient='records')
+
+
+def _tool_info(method, total, searched, matches, threshold=None):
+    """Summary shown above the results: what was searched and how many entries had no usable structure."""
+    info = {'method': method, 'software': f'RDKit {rdBase.rdkitVersion}', 'entries_total': int(total),
+            'entries_searched': int(searched), 'matches': int(matches)}
+    if threshold is not None:
+        info['threshold'] = threshold
+    return info
+
+
+# The search functions below are shared by the web views and by the API (database/api.py).
+# Each takes the study table (with parsed molecules), the query molecule and a threshold, and returns
+# (hits, name of the score column, summary); entries without a usable structure never match.
+def _per_structure(df, score):
+    """score(mol) for every row, computed once per distinct structure: the same drug appears in many studies."""
+    distinct = df.drop_duplicates('STR_LINK_(SMILES)')
+    scores = {smiles: score(mol) for smiles, mol in zip(distinct['STR_LINK_(SMILES)'], distinct['mol'])}
+    return df['STR_LINK_(SMILES)'].map(scores)
+
+
+def _search_2d(df, query_mol, threshold):
+    df['2d_similarity'] = _per_structure(df, lambda mol: calculate_2d_similarity(query_mol, mol))
+    df['2d_similarity'] = df.apply(lambda row: row['2d_similarity'] if row['valid_smiles'] else -1, axis=1)
+    hits = df[df['2d_similarity'] >= threshold].sort_values(by='2d_similarity', ascending=False)
+    info = _tool_info(f'Morgan fingerprint (radius {MORGAN_RADIUS}, {MORGAN_NBITS} bits), Tanimoto coefficient',
+                      len(df), df['valid_smiles'].sum(), len(hits), threshold)
+    return hits, '2d_similarity', info
+
+
+def _search_3d(df, query_mol, threshold):
+    # Align the query's conformers onto each stored 3D model and score the shape overlap (raises ValueError for unusable queries)
+    scores, _, _ = similarity_3d_scores(query_mol, df['STR_LINK_(SMILES)'])
+    df['3d_similarity'] = df['STR_LINK_(SMILES)'].map(scores)  # NaN where there is no 3D model
+    hits = df[df['3d_similarity'] >= threshold].sort_values(by='3d_similarity', ascending=False)
+    info = _tool_info(f'Shape Tanimoto after Crippen-O3A alignment (RDKit); best of up to {QUERY_CONFORMERS} query conformers',
+                      len(df), df['3d_similarity'].notna().sum(), len(hits), threshold)
+    return hits, '3d_similarity', info
+
+
+def _search_substructure(df, query_mol, threshold=None):
+    # Keep database molecules that contain the query
+    df['substructure_match'] = df['mol'].apply(lambda mol: is_substructure(query_mol, mol))
+    hits = df[df['substructure_match'] == True]
+    info = _tool_info('Exact substructure match (RDKit HasSubstructMatch)',
+                      len(df), df['valid_smiles'].sum(), len(hits))
+    return hits, 'substructure_match', info
+
+
+def _search_maccs(df, query_mol, threshold):
+    df['maccs_similarity'] = _per_structure(df, lambda mol: calculate_maccs_similarity(query_mol, mol) if mol is not None else -1).fillna(-1)
+    hits = df[df['maccs_similarity'] >= threshold].sort_values(by='maccs_similarity', ascending=False)
+    info = _tool_info('MACCS keys (166 bits), Tanimoto coefficient',
+                      len(df), df['valid_smiles'].sum(), len(hits), threshold)
+    return hits, 'maccs_similarity', info
+
+
+# method -> (search function, default threshold or None when the method has no threshold)
+SIMILARITY_METHODS = {
+    '2d': (_search_2d, DEFAULT_THRESHOLD),
+    '3d': (_search_3d, DEFAULT_THRESHOLD_3D),
+    'maccs': (_search_maccs, DEFAULT_THRESHOLD),
+    'substructure': (_search_substructure, None),
+}
+
+
+def _run_tool(request, method):
+    if request.method != "POST":
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+    query_smiles = request.POST.get('smiles')
+    field = request.POST.get('field')
+    if not query_smiles or not field:
+        return _tool_error('Please enter a SMILES string and select a study type.')
+
+    search, default_threshold = SIMILARITY_METHODS[method]
+    threshold = None
+    if default_threshold is not None:
+        threshold, error = _parse_threshold(request.POST.get('threshold'), default_threshold)
+        if error:
+            return _tool_error(error)
+
+    query_mol = smiles_to_mol(query_smiles)
+    if query_mol is None:
+        return _tool_error('Invalid SMILES')
+
+    df = _tool_dataframe(field)
+    if df is None:
+        return _tool_error('Invalid field selection')
+
+    try:
+        hits, score_column, info = search(df, query_mol, threshold)
+    except ValueError as e:
+        return _tool_error(str(e))
+
+    results = _tool_results(hits, score_column)
+    response = {'success': True, 'results': results, 'info': info}
+    if method == '3d':
+        response['columns'] = list(results[0].keys()) if results else []
+    return JsonResponse(response)
+
+
 # View for Tanimoto 2D similarity search
 def tanimoto_search(request):
-    if request.method == "POST":
-        query_smiles = request.POST.get('smiles')
-        field = request.POST.get('field')
-        threshold = request.POST.get('threshold')
-        
-        if not query_smiles or not field or not threshold:
-            return JsonResponse({'error': 'Invalid SMILES, field, or threshold'}, status=400)
-        
-        try:
-            threshold = float(threshold)
-        except ValueError:
-            return JsonResponse({'error': 'Invalid threshold value'}, status=400)
-
-        query_mol = smiles_to_mol(query_smiles)
-        if query_mol is None:
-            return JsonResponse({'error': 'Invalid SMILES'}, status=400)
-
-        # Load data based on the selected field
-        if field == 'patient_studies':
-            df = load_data('Browse_by_Patient_Studies')
-            print(df)
-        elif field == 'animal_studies':
-            df = load_data('Browse_by_animal_studies')
-        elif field == 'cell_line':
-            df = load_data('Browse_by_cell_line')
-        else:
-            return JsonResponse({'error': 'Invalid field selection'}, status=400)
-        
-        print("Data Loaded:", df.shape)
-        print("Columns in DataFrame:", df.columns)
-
-        # Perform 2D similarity search
-        df['2d_similarity'] = df['mol'].apply(lambda mol: calculate_2d_similarity(query_mol, mol))
-        
-        # Handle invalid SMILES by setting a very low similarity score
-        df['2d_similarity'] = df.apply(lambda row: row['2d_similarity'] if row['valid_smiles'] else -1, axis=1)
-        
-        # Filter and sort results
-        results_2d = df[df['2d_similarity'] >= threshold]
-        
-        print("Filtered Results:", results_2d.shape)
-
-        # Create a results dictionary
-        results_dict = results_2d[['ID','STR_LINK_(SMILES)', '2d_similarity','Immune_System_function_unaffected','Immune_System-Function_enhanced/numbers_increased','Immune_System-Function_inhibited/numbers_decreased','Negative_Immune_System_regulation_-Function_enhanced/numbers_in']].to_dict(orient='records')
-        return JsonResponse({'success': True, 'results': results_dict}, safe=False)
-    
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    return _run_tool(request, '2d')
 
 
-import pandas as pd
-from rdkit import Chem
-from rdkit.Chem import AllChem, rdMolAlign
-from django.http import JsonResponse
-
-# Function to load a molecule from a MolBlock string
-def mol_from_molblock(molblock):
-    try:
-        mol = Chem.MolFromMolBlock(molblock)
-        return mol
-    except Exception as e:
-        print(f"Error loading molecule from MolBlock: {e}")
-        return None
-
-# Function to convert SMILES to an RDKit molecule
-def smiles3d_to_mol(smiles):
-    try:
-        mol = Chem.MolFromSmiles(smiles)
-        if mol:
-            mol = Chem.AddHs(mol)  # Add hydrogens
-            AllChem.EmbedMolecule(mol, randomSeed=42)  # Generate 3D coordinates
-            AllChem.UFFOptimizeMolecule(mol)  # Optimize the molecule
-            return mol
-        else:
-            return None
-    except Exception as e:
-        print(f"Error converting SMILES to molecule: {e}")
-        return None
-
-# Function to calculate 3D similarity between two molecules
-def calculate_3d_similarity(mol1, mol2):
-    if mol1 is None or mol2 is None:
-        return -1  # Return -1 similarity if either molecule is invalid
-    
-    try:
-        # Align molecules and calculate similarity score
-        o3a = rdMolAlign.GetO3A(mol1, mol2)
-        return o3a.Score()
-    except Exception as e:
-        print(f"Error in 3D similarity calculation: {e}")
-        return -1  # Return -1 to indicate an error in similarity calculation
-
-# Function to perform 3D similarity search
+# View for 3D shape similarity search
 def third_search(request):
-    if request.method == "POST":
-        query_smiles = request.POST.get('smiles', None)
-        field = request.POST.get('field', None)
+    return _run_tool(request, '3d')
 
-        if not query_smiles:
-            return JsonResponse({'error': 'SMILES input is required'}, status=400)
-
-        try:
-            # Convert threshold to float
-            threshold = float(request.POST.get('threshold', 0.5))
-        except ValueError:
-            return JsonResponse({'error': 'Threshold must be a numeric value'}, status=400)
-
-        # Convert SMILES to molecule
-        target_molecule = Chem.MolFromSmiles(query_smiles)
-        if not target_molecule:
-            return JsonResponse({'error': 'Invalid SMILES input'}, status=400)
-
-        target_fp = AllChem.GetMorganFingerprintAsBitVect(target_molecule, radius=2, nBits=2048)
-
-        # Load dataset based on selected field
-        try:
-            if field == 'patient_studies':
-                df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='patient_studies')
-            elif field == 'animal_studies':
-                df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='animal_studies')
-            elif field == 'cell_line':
-                df = pd.read_excel('tools3d_with_mol_3d.xlsx', sheet_name='cell_line')
-            else:
-                return JsonResponse({'error': 'Invalid field selection'}, status=400)
-        except Exception as e:
-            return JsonResponse({'error': f'Error loading dataset: {str(e)}'}, status=500)
-
-        # Process and compute similarity
-        similarity_results = []
-        for _, row in df.iterrows():
-            smiles = row.get('STR_LINK (SMILES)')
-            if isinstance(smiles, str):
-                molecule = Chem.MolFromSmiles(smiles)
-                if molecule:
-                    dataset_fp = AllChem.GetMorganFingerprintAsBitVect(molecule, radius=2, nBits=2048)
-                    similarity = DataStructs.TanimotoSimilarity(target_fp, dataset_fp)
-                    if similarity >= threshold:
-                        similarity_results.append({
-                            'ID': row.get('ID', 'Unknown'),
-                            'STR_LINK_(SMILES)': smiles,
-                            '3d_similarity': similarity,
-                            'Immune_System_function_unaffected': row.get('Immune System function unaffected', 'N/A'),
-                            'Immune_System-Function_enhanced/numbers_increased': row.get('Immune System-Function enhanced/numbers increased', 'N/A'),
-                            'Immune_System-Function_inhibited/numbers_decreased': row.get('Immune System-Function inhibited/numbers decreased', 'N/A'),
-                            'Negative_Immune_System_regulation_-Function_enhanced/numbers_in': row.get('Negative Immune System regulation -Function enhanced/numbers increased', 'N/A'),
-                        })
-
-        # Convert results to DataFrame and prepare response
-        similarity_df = pd.DataFrame(similarity_results)
-        similarity_df.fillna('N/A', inplace=True)
-        column_names = list(similarity_df.columns)
-        results_dict = similarity_df.to_dict(orient='records')
-
-        return JsonResponse({'success': True, 'columns': column_names, 'results': results_dict}, safe=False)
-
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 # View for substructure search
 def substructure_search(request):
-    if request.method == "POST":
-        query_smiles = request.POST.get('smiles', None)
-        field = request.POST.get('field', None)
-        
-        if not query_smiles or not field:
-            return JsonResponse({'error': 'Invalid SMILES or field'}, status=400)
+    return _run_tool(request, 'substructure')
 
-        query_mol = smiles_to_mol(query_smiles)
-        if query_mol is None:
-            return JsonResponse({'error': 'Invalid SMILES'}, status=400)
-
-        # Load data based on the selected field
-        if field == 'patient_studies':
-            df = load_data('Browse_by_Patient_Studies')
-        elif field == 'animal_studies':
-            df = load_data('Browse_by_animal_studies')
-        elif field == 'cell_line':
-            df = load_data('Browse_by_cell_line')
-        else:
-            return JsonResponse({'error': 'Invalid field selection'}, status=400)
-
-        # Perform substructure search
-        df['substructure_match'] = df['mol'].apply(lambda mol: is_substructure(query_mol, mol))
-        
-        # Filter results
-        results_substructure = df[df['substructure_match'] == True]
-        
-        # Create a results dictionary
-        results_dict = results_substructure[['ID','STR_LINK_(SMILES)', 'substructure_match','Immune_System_function_unaffected','Immune_System-Function_enhanced/numbers_increased','Immune_System-Function_inhibited/numbers_decreased','Negative_Immune_System_regulation_-Function_enhanced/numbers_in']].to_dict(orient='records')
-        
-        return JsonResponse({'success': True, 'results': results_dict}, safe=False)
-    
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 # View for MACCS key-based similarity search
 def maccs_search(request):
-    if request.method == "POST":
-        query_smiles = request.POST.get('smiles', None)
-        field = request.POST.get('field', None)
-        threshold = request.POST.get('threshold', 0.5)
-        
-        if not query_smiles or not field:
-            return JsonResponse({'error': 'Invalid SMILES or field'}, status=400)
-        
-        try:
-            threshold = float(threshold)
-        except ValueError:
-            return JsonResponse({'error': 'Invalid threshold value'}, status=400)
-
-        query_mol = smiles_to_mol(query_smiles)
-        if query_mol is None:
-            return JsonResponse({'error': 'Invalid SMILES'}, status=400)
-
-        # Load data based on the selected field
-        if field == 'patient_studies':
-            df = load_data('Browse_by_Patient_Studies')
-        elif field == 'animal_studies':
-            df = load_data('Browse_by_animal_studies')
-        elif field == 'cell_line':
-            df = load_data('Browse_by_cell_line')
-        else:
-            return JsonResponse({'error': 'Invalid field selection'}, status=400)
-
-        # Perform MACCS key-based similarity search
-        df['maccs_similarity'] = df['mol'].apply(lambda mol: calculate_maccs_similarity(query_mol, mol) if mol is not None else -1)
-        
-        # Filter and sort results
-        results_maccs = df[df['maccs_similarity'] >= threshold].sort_values(by='maccs_similarity', ascending=False)
-               
-        # Create a results dictionary
-        results_dict = results_maccs[['ID','STR_LINK_(SMILES)', 'maccs_similarity','Immune_System_function_unaffected','Immune_System-Function_enhanced/numbers_increased','Immune_System-Function_inhibited/numbers_decreased','Negative_Immune_System_regulation_-Function_enhanced/numbers_in']].to_dict(orient='records')
-        
-        return JsonResponse({'success': True, 'results': results_dict}, safe=False)
-    
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    return _run_tool(request, 'maccs')
 
 
 

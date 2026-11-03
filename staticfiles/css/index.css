@@ -1165,3 +1165,267 @@ body {
 .sidebar::-webkit-scrollbar {
   display: none;
 }
+
+/* ---- Tools: example chips, help tooltips, method notes, result summary ---- */
+.example-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 12px;
+}
+
+.example-chips .chips-label {
+  font-size: 13px;
+  color: #555;
+}
+
+.search-container .example-chips button.example-chip {
+  padding: 3px 10px;
+  background-color: #e6f2f2;
+  color: #2d6a6a;
+  border: 1px solid cadetblue;
+  border-radius: 14px;
+  font-size: 12px;
+}
+
+.search-container .example-chips button.example-chip:hover {
+  background-color: cadetblue;
+  color: #fff;
+}
+
+.help-tip {
+  display: inline-block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background-color: cadetblue;
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 16px;
+  text-align: center;
+  cursor: help;
+}
+
+.help-tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 130%;
+  left: -10px;
+  width: 260px;
+  max-width: 70vw;
+  padding: 8px 10px;
+  background-color: #333;
+  color: #fff;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.4;
+  text-align: left;
+  border-radius: 6px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.help-tip:hover::after,
+.help-tip:focus::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tool-method {
+  margin: 10px 0 32px;  /* room for the search card, which has a negative top margin */
+  padding: 8px 14px;
+  background-color: #f4fafa;
+  border: 1px solid #cfe3e3;
+  border-radius: 8px;
+}
+
+.tool-method summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #2d6a6a;
+}
+
+.tool-method dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 14px;
+  margin: 8px 0 2px;
+  font-size: 13px;
+}
+
+.tool-method dt {
+  font-weight: 600;
+}
+
+.search-info {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #444;
+}
+
+.search-container input.tool-smiles {
+  width: 60%;
+  min-width: 240px;
+}
+
+/* long SMILES strings otherwise push the score column off-screen */
+.search_result {
+  overflow-x: auto;
+}
+
+.search_result td.smiles-cell {
+  min-width: 200px;
+  max-width: 360px;
+  word-break: break-all;
+}
+
+/* ---- Download & API page ---- */
+.information-subsection h4 {
+  margin: 20px 0 8px;
+  font-size: 16px;
+}
+
+.information-subsection p.api-intro {
+  margin-bottom: 10px;
+}
+
+.information-subsection p {
+  margin: 10px 0;
+}
+
+.information-subsection code {
+  padding: 1px 5px;
+  background-color: #eef3f6;
+  border-radius: 4px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+}
+
+pre.api-example {
+  margin: 8px 0 14px;
+  padding: 12px 14px;
+  background-color: #12303f;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e8f3f8;
+}
+
+/* Conditional search: long field names must not push the Add/Remove columns off the screen */
+.condition-table select {
+  max-width: 230px;
+}
+
+.condition-table input[type="text"] {
+  max-width: 220px;
+}
+
+#conditionalSearchFormSection .search-container {
+  overflow-x: auto;
+}
+
+/* ---- Gallery: descriptions on the left, the clicked image on the right (home page figures, Help page) ---- */
+.gallery {
+  display: grid;
+  grid-template-columns: minmax(250px, 34%) 1fr;
+  gap: 20px;
+  align-items: start;
+  margin: 10px 0;
+}
+
+.gallery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gallery-item {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  text-align: left;
+  background-color: #f4fafa;
+  border: 1px solid #cfe3e3;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.gallery-item:hover {
+  background-color: #eaf5f5;
+}
+
+.gallery-item.active {
+  background-color: #e0f0f0;
+  border-color: cadetblue;
+  box-shadow: inset 4px 0 0 cadetblue;
+}
+
+.gallery-title {
+  display: block;
+  font-weight: 600;
+  color: #2d6a6a;
+}
+
+.gallery-text {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.gallery-steps {
+  display: none;
+  margin: 10px 0 0 18px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.gallery-steps li {
+  margin-bottom: 5px;
+}
+
+.gallery-item.active .gallery-steps {
+  display: block;
+}
+
+.gallery-view {
+  position: sticky;
+  top: 80px;
+  margin: 0;
+}
+
+.gallery-view img {
+  display: block;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+}
+
+.gallery-note {
+  margin: 8px 0;
+  font-size: 13px;
+  color: #444;
+}
+
+@media (max-width: 800px) {
+  .gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-view {
+    position: static;
+  }
+}
