@@ -57,6 +57,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'cancer_immuno.urls'
 
+# The name shown on every page (templates use {{ site_name }}); the manuscript title is CancerImmunoDB
+SITE_NAME = 'CancerImmunoDB'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -68,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'database.context_processors.site',
             ],
         },
     },
