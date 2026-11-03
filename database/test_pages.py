@@ -1,7 +1,10 @@
+import os
 import re
+import tempfile
 from unittest import mock
 
 import pandas as pd
+from django.template import Context, Template
 from django.test import SimpleTestCase
 
 from .test_api import FakeConnection
@@ -38,3 +41,38 @@ class HomePageTests(SimpleTestCase):
         self.assertIn('class="nav_link Immune"', self.page)
         self.assertIn('id="immune_section"', self.page)
         self.assertIn('id="immune-outcome"', self.page)
+
+    def test_css_and_js_addresses_carry_a_version_so_browsers_do_not_keep_old_files(self):
+        for name in ('css/index.css', 'css/mediaquaries.css', 'js/script.js'):
+            self.assertRegex(self.page, rf'/static/{re.escape(name)}\?v=[0-9a-f]{{10}}"')
+
+    def test_the_tool_is_spelled_similarity(self):
+        self.assertNotIn('Smilarity', self.page)
+
+
+class StaticVersionTagTests(SimpleTestCase):
+    def render(self, path):
+        return Template('{% load static_v %}{% static_v path %}').render(Context({'path': path}))
+
+    def test_the_address_changes_exactly_when_the_file_changes(self):
+        with tempfile.TemporaryDirectory() as root, self.settings(STATIC_ROOT=root, STATICFILES_DIRS=[]):
+            target = os.path.join(root, 'site.css')
+            with open(target, 'w') as handle:
+                handle.write('a { color: red }')
+            first = self.render('site.css')
+            self.assertRegex(first, r'^/static/site\.css\?v=[0-9a-f]{10}$')
+            self.assertEqual(self.render('site.css'), first)
+            with open(target, 'w') as handle:
+                handle.write('a { color: blue; margin: 0 }')
+            self.assertNotEqual(self.render('site.css'), first)
+
+    def test_a_file_that_does_not_exist_gives_the_plain_address(self):
+        with tempfile.TemporaryDirectory() as root, self.settings(STATIC_ROOT=root, STATICFILES_DIRS=[]):
+            self.assertEqual(self.render('nothing.css'), '/static/nothing.css')
+
+    def test_the_source_folder_is_used_when_the_collected_copy_is_missing(self):
+        with tempfile.TemporaryDirectory() as collected, tempfile.TemporaryDirectory() as source, \
+                self.settings(STATIC_ROOT=collected, STATICFILES_DIRS=[source]):
+            with open(os.path.join(source, 'only_here.js'), 'w') as handle:
+                handle.write('1')
+            self.assertRegex(self.render('only_here.js'), r'^/static/only_here\.js\?v=[0-9a-f]{10}$')

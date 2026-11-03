@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 .~lock*
 .ipynb_checkpoints/
+local.sqlite3
