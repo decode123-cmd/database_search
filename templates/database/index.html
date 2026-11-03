@@ -1,4 +1,4 @@
-{% load static %}
+{% load static static_v %}
 {%include 'database/base.html'%}
 
 <!DOCTYPE html>
@@ -13,11 +13,11 @@
     <!-- Boxicons CSS -->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.2/css/boxicons.min.css">
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mediaquaries.css' %}">
+    <link rel="stylesheet" href="{% static_v 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static_v 'css/mediaquaries.css' %}">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static_v 'js/script.js' %}"></script>
     <title>{{ site_name }}</title>
   </head>
   <body>
@@ -163,7 +163,7 @@
               <span class="navlink_icon">
                 <i class="bx bxs-magic-wand"></i>
               </span>
-              <span class="navlink">3D Smilarity Search</span>
+              <span class="navlink">3D Similarity Search</span>
             </a>
           </li>
           <!-- End -->
@@ -1252,7 +1252,7 @@ df &lt;- read.csv("{{ request.scheme }}://{{ request.get_host }}/api/v1/download
     <!-- JavaScript -->
   
 
-<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static_v 'js/script.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 
 <script>

@@ -1,9 +1,9 @@
 {% include 'database/base.html' %}
-{% load static %}
+{% load static static_v %}
 <head>
 <script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
 <script src="https://unpkg.com/smiles-drawer/dist/smiles-drawer.min.js"></script>
-<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static_v 'js/script.js' %}"></script>
 
 </head>
 <section class="mechanism_section" id='mechanismSection'>
