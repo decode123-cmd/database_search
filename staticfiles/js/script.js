@@ -594,12 +594,17 @@ document.addEventListener('DOMContentLoaded', loadApiCounts);
 
 // Galleries (home page figures, Help page): a list of descriptions on the left, the clicked image on the right.
 // Nothing changes by itself; the first item is shown until another one is clicked.
+// A gallery can name a heading and a text (data-heading-target, data-text-target) that follow the chosen figure:
+// an item with data-heading / data-text replaces them, an item without brings back what the page was loaded with.
 function initGalleries() {
     if (window.__galleriesReady) return;
     window.__galleriesReady = true;
     document.querySelectorAll('[data-gallery]').forEach(function (gallery) {
         var image = gallery.querySelector('.gallery-view img');
         var items = gallery.querySelectorAll('.gallery-item');
+        var heading = gallery.dataset.headingTarget ? document.querySelector(gallery.dataset.headingTarget) : null;
+        var text = gallery.dataset.textTarget ? document.querySelector(gallery.dataset.textTarget) : null;
+        var original = {heading: heading ? heading.textContent : '', text: text ? text.textContent : ''};
         items.forEach(function (item) {
             item.addEventListener('click', function () {
                 items.forEach(function (other) {
@@ -608,6 +613,8 @@ function initGalleries() {
                 });
                 image.src = item.dataset.src;
                 image.alt = item.dataset.alt || '';
+                if (heading) heading.textContent = item.dataset.heading || original.heading;
+                if (text) text.textContent = item.dataset.text || original.text;
             });
         });
     });
