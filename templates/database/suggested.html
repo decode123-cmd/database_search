@@ -1,0 +1,139 @@
+{% include 'database/base.html' %}
+<style>
+  .suggested { max-width: 1240px; margin: 90px auto 40px; padding: 0 16px; font-family: "Poppins", Arial, sans-serif; color: #1f2937; background: #fff; line-height: 1.55; }
+  .suggested h1 { font-size: 1.7rem; margin: 0 0 6px; color: #111827; }
+  .suggested h2 { font-size: 1.15rem; margin: 26px 0 8px; color: #111827; }
+  .suggested p { margin: 0 0 10px; }
+  .suggested a { color: #1d4ed8; }
+  .sg-lead { color: #4b5563; margin-bottom: 14px; }
+  .sg-notice { border: 1px solid #f59e0b; background: #fffbeb; border-radius: 8px; padding: 12px 14px; margin: 12px 0 6px; }
+  .sg-notice strong { color: #92400e; }
+  .sg-steps { margin: 0 0 10px 20px; padding: 0; }
+  .sg-steps li { margin-bottom: 6px; }
+  .sg-tiles { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+  .sg-tile { flex: 1 1 140px; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; background: #f9fafb; }
+  .sg-tile b { display: block; font-size: 1.5rem; color: #1d4ed8; }
+  .sg-tile span { font-size: .82rem; color: #4b5563; }
+  .suggested table.sg-years { width: auto; border-collapse: collapse; margin: 6px 0 4px; font-size: .9rem; }
+  .sg-years th, .sg-years td { border: 1px solid #e5e7eb; padding: 4px 14px; text-align: right; background: #fff; }
+  .sg-years th { background: #f3f4f6; }
+  .sg-years th:first-child, .sg-years td:first-child { text-align: left; }
+  .suggested form.sg-form { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 10px 14px; align-items: flex-end; margin: 10px 0; padding: 12px; background: #f3f4f6; border-radius: 8px; }
+  .sg-form label { display: flex; flex-direction: column; font-size: .8rem; color: #374151; gap: 3px; }
+  .sg-form select, .sg-form input { padding: 6px 8px; border: 1px solid #9ca3af; border-radius: 6px; font: inherit; background: #fff; color: #111827; min-width: 130px; }
+  .sg-form input[type=search] { min-width: 220px; }
+  .sg-button { padding: 7px 16px; border: 0; border-radius: 6px; background: #1d4ed8; color: #fff; font: inherit; cursor: pointer; }
+  .sg-wrap { overflow-x: auto; border: 1px solid #e5e7eb; border-radius: 8px; }
+  .suggested table.sg-table { border-collapse: collapse; width: 100%; margin: 0; font-size: .85rem; }
+  .sg-table th { background: #1d4ed8; color: #fff; text-align: left; padding: 8px 10px; white-space: nowrap; border: 0; }
+  .sg-table td { padding: 8px 10px; border: 0; border-top: 1px solid #e5e7eb; vertical-align: top; }
+  .suggested .sg-table tbody tr { background: #fff; }
+  .suggested .sg-table tbody tr:nth-child(even) { background: #f9fafb; }
+  .sg-table td:nth-child(3) { min-width: 280px; }
+  .sg-table td:last-child { min-width: 120px; }
+  .sg-table td:last-child .sg-badge { white-space: normal; }
+  .sg-table td:nth-child(4), .sg-table td:nth-child(7) { min-width: 150px; }
+  .sg-note { display: block; color: #6b7280; font-size: .78rem; margin-top: 3px; }
+  .sg-badge { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: .75rem; white-space: nowrap; background: #e5e7eb; color: #374151; }
+  .sg-badge.relevant { background: #dcfce7; color: #166534; }
+  .sg-badge.uncertain { background: #fef3c7; color: #92400e; }
+  .sg-badge.decided { background: #dbeafe; color: #1e40af; }
+  .sg-pages { display: flex; gap: 14px; align-items: center; margin: 12px 0; }
+  .sg-small { font-size: .82rem; color: #6b7280; }
+  @media (max-width: 1024px) { .suggested { margin-top: 310px; } }   /* the site's menu stacks at this width and is taller */
+</style>
+
+<section class="suggested">
+  <h1>Suggested recent literature</h1>
+  <p class="sg-lead">Articles found by an AI-assisted PubMed search that may be missing from {{ site_name }}, shared so that curators and users can see what is being considered.</p>
+
+  <div class="sg-notice">
+    <strong>These articles are not part of the database yet.</strong>
+    Each one is a suggestion. The AI judged it from the title and abstract only and can be wrong. A curator reads the full paper, and only then is it added to {{ site_name }}. A column on this page shows the curators' decision as soon as there is one.
+  </div>
+
+  <h2>How the list is made</h2>
+  <ol class="sg-steps">
+    <li><b>Search.</b> For every year from 2021 to 2026, PubMed is searched for primary research on cancer drugs together with immune terms, and the 100 best matches of each year are taken. Every PubMed ID comes from PubMed itself, never from the AI.</li>
+    <li><b>AI screening.</b> Google Gemini reads each title and abstract and says whether the study tests a named anticancer drug and measures its effect on the immune system, the same scope as the database. In a first check, it marked 33 of 40 articles that curators had already accepted as likely relevant (and 1 as uncertain), and it rejected all 20 unrelated cancer articles.</li>
+    <li><b>Curator check.</b> Curators read each suggested paper in full and decide. Accepted papers are entered into the database with their doses, techniques and immune terms.</li>
+  </ol>
+  <p class="sg-small">Why this exists: the database holds only about 10 articles a year for 2021&ndash;2024, and a plain PubMed search cannot judge whether a paper fits the scope.</p>
+
+  {% if total %}
+  <div class="sg-tiles">
+    <div class="sg-tile"><b>{{ total }}</b><span>articles screened</span></div>
+    <div class="sg-tile"><b>{{ counts.relevant }}</b><span>likely relevant</span></div>
+    <div class="sg-tile"><b>{{ counts.uncertain }}</b><span>uncertain</span></div>
+    <div class="sg-tile"><b>{{ counts.not_relevant }}</b><span>not relevant</span></div>
+    <div class="sg-tile"><b>{{ checked }}</b><span>checked by a curator</span></div>
+    <div class="sg-tile"><b>{{ accepted }}</b><span>accepted into the database</span></div>
+  </div>
+
+  <table class="sg-years">
+    <tr><th>Year</th><th>Screened</th><th>Likely relevant</th></tr>
+    {% for line in per_year %}<tr><td>{{ line.year }}</td><td>{{ line.screened }}</td><td>{{ line.relevant }}</td></tr>{% endfor %}
+  </table>
+
+  <h2>Browse the suggestions</h2>
+  <form class="sg-form" method="get" action="/suggested-literature/">
+    <label>Show
+      <select name="verdict">
+        {% for key, label in verdicts.items %}<option value="{{ key }}"{% if verdict == key %} selected{% endif %}>{{ label }}</option>{% endfor %}
+        <option value="all"{% if verdict == 'all' %} selected{% endif %}>All</option>
+      </select>
+    </label>
+    <label>Year
+      <select name="year"><option value="">All years</option>{% for y in years %}<option value="{{ y }}"{% if year == y %} selected{% endif %}>{{ y }}</option>{% endfor %}</select>
+    </label>
+    <label>Study type
+      <select name="study"><option value="">All types</option>{% for key, label in study_types.items %}<option value="{{ key }}"{% if study == key %} selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+    </label>
+    <label>Search title, drug or cancer
+      <input type="search" name="q" value="{{ query }}" maxlength="100" placeholder="e.g. pembrolizumab">
+    </label>
+    <button class="sg-button" type="submit">Apply</button>
+    <a href="/suggested-literature/">Reset</a>
+    <a href="/suggested-literature/download.csv" style="margin-left:auto;">Download the full list (CSV)</a>
+  </form>
+
+  <p class="sg-small">{{ found }} article{{ found|pluralize }} shown. &ldquo;In the database&rdquo; counts the entries the database already has for each drug the AI named (cell line / animal / patient).</p>
+
+  <div class="sg-wrap">
+    <table class="sg-table">
+      <thead><tr><th>PMID</th><th>Year</th><th>Article</th><th>Drugs</th><th>Study type</th><th>Cancer type</th><th>In the database</th><th>Curator status</th></tr></thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td><a href="{{ r.url }}" target="_blank" rel="noopener noreferrer">{{ r.pmid }}</a></td>
+          <td>{{ r.year }}</td>
+          <td><a href="{{ r.url }}" target="_blank" rel="noopener noreferrer">{{ r.title }}</a>
+            <span class="sg-note">{{ r.journal }}</span>
+            {% if r.reason %}<span class="sg-note"><span class="sg-badge {{ r.verdict }}">{{ r.verdict_label }}</span> {{ r.reason }}</span>{% endif %}
+          </td>
+          <td>{{ r.drugs }}</td>
+          <td>{{ r.study_label }}</td>
+          <td>{{ r.cancer_type }}</td>
+          <td>{{ r.in_database }}</td>
+          <td>{% if r.decided %}<span class="sg-badge decided">{{ r.status }}</span>{% else %}<span class="sg-badge">Awaiting curator check</span>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8">No articles match these filters.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if pages > 1 %}
+  <div class="sg-pages">
+    {% if has_previous %}<a href="?{% if base_query %}{{ base_query }}&amp;{% endif %}page={{ previous_page }}">&larr; Previous</a>{% endif %}
+    <span>Page {{ page }} of {{ pages }}</span>
+    {% if has_next %}<a href="?{% if base_query %}{{ base_query }}&amp;{% endif %}page={{ next_page }}">Next &rarr;</a>{% endif %}
+  </div>
+  {% endif %}
+  {% else %}
+  <p>The list of suggested articles is not available right now.</p>
+  {% endif %}
+</section>
+</body>
+</html>
