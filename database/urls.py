@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 
-from . import api, views
+from . import api, suggested, views
 urlpatterns = [
     path('', views.index, name='index'),
     #path('masters/', views.master_list, name='master_list'),
@@ -26,6 +26,9 @@ urlpatterns = [
     path('get_columns1/',views.get_columns1,name='get_columns1'),
     
     path('submit_data/',views.submit_data,name='submit_data'),
+
+    path('suggested-literature/', suggested.suggested_literature, name='suggested_literature'),
+    path('suggested-literature/download.csv', suggested.download, name='suggested_download'),
 
     #*********************************************API ***********************************************************
 

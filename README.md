@@ -33,6 +33,7 @@ database it is about to replace and waits for you to type `yes`.
 
 - `python manage.py check_coverage --drug NAME --pmid ID` (or `--file list.csv`) shows whether drugs or articles are already in the database.
 - `python scripts/publication_years.py` looks up the publication year of every article in the data.
+- `python scripts/find_missing_papers.py` searches PubMed for recent articles the database may be missing and lets Gemini screen their abstracts (set `GEMINI_API_KEY` first; the key is never stored). It writes `reports/candidate_papers.csv`. The public page `/suggested-literature/` shows that file, labelled as not yet curated. Curators fill in the `curator_decision` column (for example `accepted` or `rejected`) after reading each paper, and the page shows it as soon as the file is deployed. Nothing is added to the database automatically.
 - `benchmarks/benchmark_tools.py` compares the structure searches with Open Babel (results in `benchmarks/RESULTS.md`).
 - `python manage.py test database` runs the tests. They never open a database connection.
 
