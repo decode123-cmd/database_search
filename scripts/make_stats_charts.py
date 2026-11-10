@@ -33,7 +33,7 @@ CHARTS = [
 NOTES = {
     'technique': 'A study is counted under every technique it lists.',
     'immune': 'A study is counted under every immune term it lists, in any outcome.',
-    'cancer_type': 'Each study is counted once.',
+    'cancer_type': 'A study that lists several cancer types is counted under each of them.',
     'drug_category': 'Each study is counted once.',
 }
 

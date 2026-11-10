@@ -49,6 +49,13 @@ class HomePageTests(SimpleTestCase):
     def test_the_tool_is_spelled_similarity(self):
         self.assertNotIn('Smilarity', self.page)
 
+    def test_the_text_under_the_figures_follows_the_chosen_figure(self):
+        self.assertIn('data-heading-target="#mechanismHeading" data-text-target="#mechanismText"', self.page)
+        self.assertIn('id="mechanismHeading"', self.page)
+        self.assertIn('id="mechanismText"', self.page)
+        self.assertEqual(self.page.count('data-heading="'), 4)   # the four charts; figure 1 keeps the text the page was loaded with
+        self.assertEqual(self.page.count('data-text="'), 4)
+
 
 class StaticVersionTagTests(SimpleTestCase):
     def render(self, path):

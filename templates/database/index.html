@@ -705,7 +705,7 @@ df &lt;- read.csv("{{ request.scheme }}://{{ request.get_host }}/api/v1/download
       <section class="section" id='mechanismSection'style="
     margin-top: var(--navbar-height)" >
         <div class="container">
-          <div class="gallery" data-gallery>
+          <div class="gallery" data-gallery data-heading-target="#mechanismHeading" data-text-target="#mechanismText">
           <ul class="gallery-list" aria-label="Figures">
             <li>
               <button type="button" class="gallery-item active" aria-pressed="true" data-src="{% static 'img/front_img.png' %}" data-alt="Anticancer agents inhibit immunosuppressive cells and activate immune cells (figure 1)">
@@ -714,25 +714,25 @@ df &lt;- read.csv("{{ request.scheme }}://{{ request.get_host }}/api/v1/download
               </button>
             </li>
             <li>
-              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_technique.png' %}" data-alt="Stacked bar chart of the number of studies for each standardised assay name">
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_technique.png' %}" data-alt="Stacked bar chart of the number of studies for each standardised assay name" data-heading="Studies by assay or technique" data-text="Each bar is one standardised assay or technique from the controlled list. Its height is the number of studies that used it, split into cell line (blue), animal (orange) and patient (green) studies. A study that used several assays is counted under each of them, so the bars add up to more than the number of studies. Studies with no assay from the list are not shown. To open the studies behind a bar, use Browse, Technique.">
                 <span class="gallery-title">Studies by assay</span>
                 <span class="gallery-text">Cell line, animal and patient studies for each standardised assay name, the most used first.</span>
               </button>
             </li>
             <li>
-              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_cancer_type.png' %}" data-alt="Stacked bar chart of the number of studies for each cancer type">
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_cancer_type.png' %}" data-alt="Stacked bar chart of the number of studies for each cancer type" data-heading="Studies by cancer type" data-text="Each bar is one cancer type from the index list. Its height is the number of studies on that cancer type, split into cell line (blue), animal (orange) and patient (green) studies. A study that lists several cancer types is counted under each of them. To open the studies behind a bar, use Browse, Cancer Type.">
                 <span class="gallery-title">Studies by cancer type</span>
                 <span class="gallery-text">Cell line, animal and patient studies for each cancer type, the most studied first.</span>
               </button>
             </li>
             <li>
-              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_drug_category.png' %}" data-alt="Stacked bar chart of the number of studies for each drug category">
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_drug_category.png' %}" data-alt="Stacked bar chart of the number of studies for each drug category" data-heading="Studies by drug category" data-text="Each bar is one drug category from the index list. Its height is the number of studies on drugs of that category, split into cell line (blue), animal (orange) and patient (green) studies. Each study is counted once, under its own category. Studies whose category is not in the index list are not shown in the bars. To open the studies behind a bar, use Browse, Drug Category.">
                 <span class="gallery-title">Studies by drug category</span>
                 <span class="gallery-text">Cell line, animal and patient studies for each drug category, the largest first.</span>
               </button>
             </li>
             <li>
-              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_immune_terms.png' %}" data-alt="Stacked bar chart of the 25 immune terms reported by the most studies">
+              <button type="button" class="gallery-item" aria-pressed="false" data-src="{% static 'img/stats_immune_terms.png' %}" data-alt="Stacked bar chart of the 25 immune terms reported by the most studies" data-heading="Most reported immune terms" data-text="The 25 standardised immune terms that the most studies report. A study is counted under every immune term it lists, in any outcome (enhanced, inhibited, unaffected or negatively regulated), so the bars add up to more than the number of studies. Studies with no term from the list are not shown. To see one outcome at a time and open the studies behind a count, use Browse, Immune Term.">
                 <span class="gallery-title">Most reported immune terms</span>
                 <span class="gallery-text">The 25 standardised immune terms that the most studies report, in any outcome.</span>
               </button>
@@ -743,8 +743,8 @@ df &lt;- read.csv("{{ request.scheme }}://{{ request.get_host }}/api/v1/download
           </figure>
         </div>
         <p class="gallery-note">Click a title to show its figure. A study can be counted under more than one assay or cancer type, so the bars do not add up to the total number of studies.</p>
-          <h1>Immunomodulation by anticancer drugs/agents (figure 1) </h1>
-          <p>Anticancer agents/drugs can alter  immune associated parameters- cell types, phenotypes and function of the host immune system.The Mechanisms (figure 1) by which anticancer  agents alter immune function include depleting immunosuppressive populations (both in circulation and tumor infiltrating) such as myeloid-derived suppressor cells (MDSCs) and Regulatory T cells. and downregulating PD-L2 mediated immunosuppression.These anticancer agents can trigger immunogenic cell death  and antibody-dependent cellular cytotoxicity (ADCC). Anticancer agents induce various effector cell populations including tumor specific IL-17–producing γδ T cells , IFN-γ producing CD8 T cells,  CD4+ T helper 17 (Th17), Natural killer cells, dendritic cells , macrophages and B cells. Anticancer agents suppress Protumor cytokines including IL-4, IL-10, and IL-13 and induce  anti tumor  immune response by releasing MCP-1, IFN-gamma, IL-17, Upregulating Class I and Class II MHC expression on tumor. In addition to these, many other mechanisms are cataloged in this database.</p>
+          <h1 id="mechanismHeading">Immunomodulation by anticancer drugs/agents (figure 1) </h1>
+          <p id="mechanismText">Anticancer agents/drugs can alter  immune associated parameters- cell types, phenotypes and function of the host immune system.The Mechanisms (figure 1) by which anticancer  agents alter immune function include depleting immunosuppressive populations (both in circulation and tumor infiltrating) such as myeloid-derived suppressor cells (MDSCs) and Regulatory T cells. and downregulating PD-L2 mediated immunosuppression.These anticancer agents can trigger immunogenic cell death  and antibody-dependent cellular cytotoxicity (ADCC). Anticancer agents induce various effector cell populations including tumor specific IL-17–producing γδ T cells , IFN-γ producing CD8 T cells,  CD4+ T helper 17 (Th17), Natural killer cells, dendritic cells , macrophages and B cells. Anticancer agents suppress Protumor cytokines including IL-4, IL-10, and IL-13 and induce  anti tumor  immune response by releasing MCP-1, IFN-gamma, IL-17, Upregulating Class I and Class II MHC expression on tumor. In addition to these, many other mechanisms are cataloged in this database.</p>
         </div>
       </section>
       
