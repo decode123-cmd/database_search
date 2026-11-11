@@ -56,6 +56,17 @@ class HomePageTests(SimpleTestCase):
         self.assertEqual(self.page.count('data-heading="'), 4)   # the four charts; figure 1 keeps the text the page was loaded with
         self.assertEqual(self.page.count('data-text="'), 4)
 
+    def test_field_description_table_lists_every_field_with_the_agreed_wording(self):
+        start = self.page.index('id="field-description"')
+        section = self.page[start:self.page.index('id="acknowldgement"', start)]
+        self.assertEqual(section.count('<tr>') - 1, 17)   # the header row is not a field
+        self.assertIn('<th>Field Name</th>', section)
+        for text in ('Specifies the name of the drug as reported in the original research article.',
+                     'Immune System – Function Unaffected',
+                     'Specifies the number of patient-derived samples analysed in the study, wherever applicable.'):
+            self.assertIn(text, section)
+        self.assertNotIn('Sytem', section)
+
 
 class StaticVersionTagTests(SimpleTestCase):
     def render(self, path):
