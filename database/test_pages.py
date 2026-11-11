@@ -67,6 +67,17 @@ class HomePageTests(SimpleTestCase):
             self.assertIn(text, section)
         self.assertNotIn('Sytem', section)
 
+    def test_acknowledgement_table_lists_the_seven_resources_with_the_agreed_wording(self):
+        start = self.page.index('id="acknowldgement"')
+        section = self.page[start:self.page.index('class="information-subsection"', start + 40)]   # +40: skip this div's own class
+        self.assertEqual(section.count('<tr>') - 1, 7)   # the header row is not a resource
+        for name in ('DrugBank', 'KEGG', 'PubChem', 'PubMed', 'PostgreSQL', 'Python', 'HTML, CSS, and JavaScript'):
+            self.assertIn(f'<td>{name}</td>', section)
+        self.assertIn('Python is used for backend processing, while the Django web framework connects the web interface to the database.', section)
+        self.assertIn('within CancerImmunoDB.', section)
+        for old in ('PostgresSQL', 'Java script', 'Pubchem database is a chemical information database'):
+            self.assertNotIn(old, section)
+
 
 class StaticVersionTagTests(SimpleTestCase):
     def render(self, path):
